@@ -1,27 +1,12 @@
-
-
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
-import Sidebar from './components/types/Sidebar';
-import Header from './components/types/Header';
+import Sidebar from './components/side_bar/Sidebar';
+import Header from './components/side_bar/Header';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'; 
-import CarouselComponent from './components/pages/carousel';
-import CaravanComponent from './components/pages/caravan';
-import TuningComponent from './components/pages/tuning';
-import UsedCarComponent from './components/pages/usedCar';
-import CampingPlaceComponent from './components/pages/campingPlace';
-import UserListComponent from './components/pages/userList';
-import MassageComponent from './components/pages/massage';
-import OmaterialMoto from './components/hook/OmaterialMoto';
-import Omaterialcaravan from './components/hook/OmaterialCaravan';
-import Omaterialtuning from './components/hook/OmaterialTuning';
-import OmaterialusedCar from './components/hook/OmaterialUsed';
 import ErrorComponent from './components/error/404';
-import OmaterialCamp from './components/hook/Omaterial';
-import MotorComponent from './components/pages/motor';
-import NameComponent from './components/test/name';
+import AddTodo from './components/add.data/add.datas';
 
 interface JoyOrderDashboardTemplateProps {
   isLoggedIn: boolean;
@@ -63,26 +48,7 @@ export default function JoyOrderDashboardTemplate({ isLoggedIn }: JoyOrderDashbo
 
           
           <Routes>
-            <Route path='/motor' element={<MotorComponent />} />
-            <Route path="/omaterial/motor/:id" element={<OmaterialMoto onClose={() => navigate(-1)} />} />
-
-            <Route path='/caravan' element={<CaravanComponent />} />
-            <Route path="/omaterial/caravan/:id" element={<Omaterialcaravan onClose={() => navigate(-1)} />} />
-
-
-            <Route path='/tuning' element={<TuningComponent />} />
-            <Route path="/omaterial/tuning/:id" element={<Omaterialtuning onClose={() => navigate(-1)} />} />
-
-            <Route path='/usedCar' element={<UsedCarComponent />} />
-            <Route path="/omaterial/usedCar/:id" element={<OmaterialusedCar onClose={() => navigate(-1)} />} />
-
-            <Route path='/campingPlace' element={<CampingPlaceComponent />} />
-            <Route path="/omaterial/camping/:id" element={<OmaterialCamp onClose={() => navigate(-1)} />} />
-
-            <Route path='/userList' element={<UserListComponent />} />
-            <Route path='/carousel' element={<CarouselComponent />} />
-            <Route path='/message' element={<MassageComponent />} />
-
+            <Route path='/data/:id' element={<AddTodo />} /> 
             <Route path='*' element={<ErrorComponent />} />
           </Routes>
         </Box>

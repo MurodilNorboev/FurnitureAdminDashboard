@@ -1,8 +1,7 @@
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import RouterComponent from './components/router';
-import TestComponent from './components/test/name';
 
 
 const root = ReactDOM.createRoot(
@@ -12,7 +11,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <RouterComponent />
-    {/* <TestComponent /> */}
   </BrowserRouter>
 );
 

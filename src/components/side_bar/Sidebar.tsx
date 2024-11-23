@@ -1,8 +1,3 @@
-
-
-
-
-import '../styles/styleCon.css'
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -23,11 +18,14 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
 import ColorSchemeToggle from './ColorSchemeToggle';
-import { closeSidebar } from '../types/utils';
+import { closeSidebar } from '../side_bar/utils';
+import { useEffect, useState } from 'react';
+import { Data, DataType } from '../mock/furniture.mock';
 import { NavLink } from '../styles/style';
 
 export default function Sidebar() {
-
+  const [data, setData] = useState<DataType[] | null>(null);
+  useEffect(() => {setData(Data as [])}, [])
   return (
     <Sheet
       className="Sidebar"
@@ -84,7 +82,7 @@ export default function Sidebar() {
         <IconButton variant="soft" color="primary" size="sm">
           <BrightnessAutoRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">Camping</Typography>
+        <Typography level="title-lg">Furniture</Typography>
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>
       <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" />
@@ -108,95 +106,18 @@ export default function Sidebar() {
             '--ListItem-radius': (theme) => theme.vars.radius.sm,
           }}
         >
-          <NavLink to={"motor"}>
-            <ListItem>
-            <ListItemButton>
-            <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Motor</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
+          {data?.map((val, ind) => (
+            <NavLink to={`/data/${val.id}`}>
+              <ListItem key={ind}>
+                <ListItemButton>
+                  <DashboardRoundedIcon />
+                    <ListItemContent>
+                        <Typography level="title-sm">{val.label}</Typography>
+                    </ListItemContent>
+                </ListItemButton>
+              </ListItem>
           </NavLink>
-
-          <NavLink to={"caravan"}><ListItem>
-            <ListItemButton>
-              <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Caravan</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
-          <NavLink to={"tuning"}><ListItem>
-            <ListItemButton>
-            <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Tuning</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
-          <NavLink to={"usedCar"}><ListItem>
-            <ListItemButton>
-            <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Used Car</Typography> 
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
-          <NavLink to={"campingPlace"}><ListItem>
-            <ListItemButton>
-            <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Camping Place</Typography> 
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
-          <NavLink to={"userList"}><ListItem>
-            <ListItemButton>
-            <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">User List</Typography> 
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
-          <NavLink to={"carousel"}><ListItem>
-            <ListItemButton>
-            <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Carousel</Typography> 
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
-          <NavLink to={"message"}> 
-            <ListItem>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              href="/joy-ui/getting-started/templates/messages/"
-            >
-              <QuestionAnswerRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Messages</Typography>
-              </ListItemContent>
-              <Chip size="sm" color="primary" variant="solid">
-                4
-              </Chip>
-            </ListItemButton>
-          </ListItem>
-          </NavLink>
-
+          ))}
 
         </List>
 

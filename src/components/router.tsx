@@ -1,9 +1,8 @@
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import JoyOrderDashboardTemplate from '../App';
 import Register from './login/register';
-import Login from './login/login';
 import { useState, useEffect } from 'react';
-import ErrorComponent from './error/404';
+import Login from './login/login';
 
 const RouterComponent = () => {
   const navigate = useNavigate();
@@ -26,9 +25,9 @@ const RouterComponent = () => {
 
   return (
     <Routes>
-      <Route path='/login' element={<Login setIsLoggedIn={setIsLoggedIn} navigate={navigate} />} />
-      <Route path='/' element={<Login setIsLoggedIn={setIsLoggedIn} navigate={navigate} />} />
-      <Route path='/register' element={<Register navigate={navigate} />} />
+      <Route path='/login' element={<Login  />} />
+      <Route path='/' element={<Login  />} />
+      <Route path='/register' element={<Register />} />
       <Route path='/' element={<JoyOrderDashboardTemplate isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
       <Route path='/*' element={<JoyOrderDashboardTemplate isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
     </Routes>
@@ -36,8 +35,4 @@ const RouterComponent = () => {
 };
 
 export default RouterComponent;
-
-
-
-
 
