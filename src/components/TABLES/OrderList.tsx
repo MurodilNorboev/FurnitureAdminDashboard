@@ -219,7 +219,7 @@ export default function OrderList() {
     <Box sx={{ 
       display: { xs: 'block', sm: 'none' },
        }}>
-      <div style={{display:"flex",flexDirection:'column',justifyContent:"space-between",height:"120vw"}}>
+      <div style={{display:"flex",flexDirection:'column',justifyContent:"space-between",height:"45rem"}}>
       <div>
       {currentTodos.map((listItem) => (
         <List key={listItem.id} size="sm" sx={{ '--ListItem-paddingX': 0 }}>

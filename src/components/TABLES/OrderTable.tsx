@@ -418,10 +418,7 @@ export default function OrderTable() {
             pt: 2,
             gap: 1,
             [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
-            display: {
-              xs: 'none',
-              md: 'flex',
-            },
+            display: { xs: 'none', sm: 'flex' },
           }}
         >
           <Button
