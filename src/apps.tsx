@@ -129,10 +129,10 @@ import ErrorComponent from './components/error/404';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import Header from './components/test/Header';
-import Sidebar from './components/test/Sidebar';
-import OrderTable from './components/test/OrderTable';
-import OrderList from './components/test/OrderList';
+import Header from './components/TABLES/Header';
+import Sidebar from './components/TABLES/Sidebar';
+import OrderTable from './components/TABLES/OrderTable';
+import OrderList from './components/TABLES/OrderList';
 import { useEffect } from 'react';
 
 interface JoyOrderDashboardTemplateProps {

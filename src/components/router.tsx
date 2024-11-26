@@ -3,6 +3,7 @@ import Register from './login/register';
 import { useState, useEffect } from 'react';
 import Login from './login/login';
 import JoyOrderDashboardTemplates from '../apps';
+import OrderTables from './tests/ts';
 
 const RouterComponent = () => {
   const navigate = useNavigate();
@@ -30,9 +31,10 @@ const RouterComponent = () => {
       <Route path='/login' element={<Login  />} />
       <Route path='/' element={<Login  />} />
       <Route path='/register' element={<Register />} />
+      <Route path='/r' element={<OrderTables />} />
 
       {/* <Route path='/' element={<JoyOrderDashboardTemplate isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />  */}
-      {/* <Route path='/*' element={<JoyOrderDashboardTemplate isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} /> */}  {/* <AddTodo /> */}
+      {/* <Route path='/*' element={<JoyOrderDashboardTemplate isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} /> */}  {/* <AddTodo /> */} 
       
       <Route path='/*' element={<JoyOrderDashboardTemplates isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
       <Route path='/*' element={<JoyOrderDashboardTemplates isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
