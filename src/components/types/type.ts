@@ -7,4 +7,6 @@ export interface ResponseType {
     success: boolean; 
     message: string; 
     new_todo: any; 
+    _id: string;
+    response: any;
 }

@@ -38,24 +38,23 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      // Backendga so'rov yuborish
+
       const response = await axios.post<Type>(baseAPI + '/user/login', formData);
       
-      console.log('API javobi:', response.data); // API javobini konsolga chiqarish
+      console.log('API javobi:', response.data);
 
-      // Agar response-da access_token mavjud bo'lsa
       if (response.data.access_token) {
-        console.log('Token muvaffaqiyatli olindi:', response.data.access_token); // Tokenni konsolga chiqarish
-        localStorage.setItem('token', response.data.access_token); // Tokenni localStorage ga saqlash
+        console.log('Token muvaffaqiyatli olindi:', response.data.access_token);
+        localStorage.setItem('token', response.data.access_token); 
 
-        // Token saqlangandan so'ng Home sahifasiga o'tish
-        navigate('/data/:id'); 
+
+        navigate('/orders'); 
       } else {
         console.log('Token qaytarilmadi');
         setError('Token qaytarilmadi. Iltimos, qayta urinib ko\'ring.');
       }
     } catch (err) {
-      // Agar so'rovda xatolik yuz bersa
+
       console.error('Xatolik yuz berdi:', err);
       setError('Login yoki parol noto\'g\'ri.');
     } finally {

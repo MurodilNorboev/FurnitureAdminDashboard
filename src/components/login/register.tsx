@@ -45,7 +45,7 @@ const Register: React.FC = () => {
     try {
       const response = await axios.post<Type>(baseAPI + '/user/sign-up', formData);
       if (response.data.success) {
-        navigate('/login');  // Ro'yxatdan o'tganidan keyin Login sahifasiga o'tish
+        navigate('/login');  
       }
     } catch (err) {
       setError('Ro\'yxatdan o\'tishda xatolik yuz berdi.');

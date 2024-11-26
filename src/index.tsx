@@ -2,6 +2,8 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import RouterComponent from './components/router';
+import Apps from './apps'
+import JoyOrderDashboardTemplate from './apps';
 
 
 const root = ReactDOM.createRoot(
