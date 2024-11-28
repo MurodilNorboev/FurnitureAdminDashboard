@@ -1,4 +1,3 @@
-import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
@@ -7,7 +6,6 @@ import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
-import Typography from '@mui/joy/Typography';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
@@ -20,12 +18,19 @@ import autoTable from 'jspdf-autotable';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { baseAPI } from '../../utils/constants';
-import { AddDataForm, ResponseType } from '../types/type';
-import { Modal, ModalContent, CloseButton, Input, SubmitButton, ErrorMessage } from '../styles/style';
+import { AddDataForm, ResponseType } from '../../components/types/type';
+import { Modal, ModalContent,  Input, CloseButton, SubmitButton, ErrorMessage } from '../../components/styles/style';
 import { toast } from 'react-toastify';
 import { VariantProp } from '@mui/joy/styles';
 import ButtonGroup from '@mui/joy/ButtonGroup';
 import Add from '@mui/icons-material/Add';
+import OrderList from './OrderList';
+import Typography from '@mui/joy/Typography';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Link from '@mui/joy/Link';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 
 
 export default function OrderTable() {
@@ -124,7 +129,7 @@ export default function OrderTable() {
       const headers = ['Title', 'Description', 'Image URL', 'Date', 'ID'];
   
       const rows = selected
-        .map((id) => {
+        .map((id, ind) => {
           const todo = todos.find((item) => item._id === id);
           return todo ? [todo.title, todo.desc, todo.image, todo.sana, todo._id] : [];
         })
@@ -158,7 +163,7 @@ export default function OrderTable() {
   
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.checked) {
-        const allIds = todos.map((todo) => todo._id);
+        const allIds = todos.map((todo, ind) => todo._id);
         setSelected(allIds);
       } else {
         setSelected([]);
@@ -178,12 +183,10 @@ export default function OrderTable() {
         
         if (data.success) {
             setTodos(data.data)
-          console.log(data.data);
         }
     
     
         } catch (error) {
-          console.log(error);
         }
     } 
     useEffect(() => {
@@ -191,7 +194,6 @@ export default function OrderTable() {
     }, [])
     
     useEffect(() => {
-        console.log('Todos:', todos); 
         if (search.trim() === '') {
           setFilteredTodos(todos);
         } else {
@@ -224,7 +226,6 @@ export default function OrderTable() {
             },
           }}
         >
-
           <FormControl sx={{ flex: 1,maxWidth:"300px" }} size="sm">
             <FormLabel >Search for order</FormLabel>
             <Input  placeholder="Search" 
@@ -241,7 +242,7 @@ export default function OrderTable() {
             </div>
 
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-              <Button startDecorator={<Add />} onClick={handleDownloadPDF}>Add to cart</Button>
+              <Button startDecorator={<Add />} onClick={handleDownloadPDF}>Download PDF</Button>
             </Box>
 
               <ButtonGroup
@@ -249,7 +250,7 @@ export default function OrderTable() {
                variant={variant} 
                size="sm" 
                aria-label="neutral button group" >
-              <Button sx={{width:"130px",height:"35px"}} onClick={createOnClick('outlined')}>Add To Cart</Button>
+              <Button sx={{width:"130px",height:"35px"}} onClick={createOnClick('outlined')}>Add Cart</Button>
               </ButtonGroup>
   
           </div>
@@ -258,7 +259,7 @@ export default function OrderTable() {
         {showModal && (
           <Modal style={{zIndex:99}}>
             <ModalContent>
-              <CloseButton style={{marginTop:"-35px",marginRight:"-22px",color:"#FFF"}} onClick={() => setShowModal(false)}>&times;</CloseButton>
+              <CloseButton style={{marginTop:"-35px",marginRight:"-22px",color:"#FFF"}} onClick={() => setShowModal(false)}>c</CloseButton>
               <form onSubmit={handleSubmit}>
                 <Input style={{background:"#FFF"}} type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Title" required />
                 <Input style={{background:"#FFF"}} type="text" name="desc" value={formData.desc} onChange={handleChange} placeholder="Description" required />
@@ -317,8 +318,8 @@ export default function OrderTable() {
       </tr>
     </thead>
     <tbody>
-      {currentTodos.map((todo) => (
-        <tr key={todo._id}>
+      {currentTodos.map((todo, ind) => (
+        <tr key={ind}>
           <td style={{ textAlign: 'center' }}>
             <Checkbox
               sx={{ verticalAlign: 'text-bottom'}}
@@ -432,24 +433,24 @@ export default function OrderTable() {
           </Button>
   
           <Box sx={{ flex: 1 }} />
-          {['1'].map((page) => (
-            <>
-            <IconButton
-              size="sm"
-              variant={Number(page) ? 'outlined' : 'plain'}
-              color="neutral"
-            >
-              {currentPage}     
-            </IconButton>
-            <IconButton
-              size="sm"
-              variant={Number(page) ? 'outlined' : 'plain'}
-              color="neutral"
-            >
-              {totalPages}
-            </IconButton>
-            </>
-          ))} 
+            {['1'].map((page, ind) => (
+              <React.Fragment key={ind}> 
+                <IconButton
+                    size="sm"
+                    variant={Number(page) ? 'outlined' : 'plain'}
+                    color="neutral"
+                  >
+                    {currentPage}
+                  </IconButton>
+                  <IconButton
+                    size="sm"
+                    variant={Number(page) ? 'outlined' : 'plain'}
+                    color="neutral"
+                  >
+                    {totalPages}
+                </IconButton>
+              </React.Fragment>
+            ))}
           <Box sx={{ flex: 1 }} />
   
           <Button
@@ -462,6 +463,7 @@ export default function OrderTable() {
             Next
           </Button>
         </Box>
+        <OrderList />
       </React.Fragment>
     );
   }

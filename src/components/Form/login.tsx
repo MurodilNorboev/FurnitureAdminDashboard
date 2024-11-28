@@ -47,8 +47,7 @@ const Login: React.FC = () => {
         console.log('Token muvaffaqiyatli olindi:', response.data.access_token);
         localStorage.setItem('token', response.data.access_token); 
 
-
-        navigate('/orders'); 
+        navigate('/home'); 
       } else {
         console.log('Token qaytarilmadi');
         setError('Token qaytarilmadi. Iltimos, qayta urinib ko\'ring.');
@@ -99,7 +98,7 @@ const Login: React.FC = () => {
 
           {error && <div style={{ color: 'red' }}>{error}</div>}
           <div className="loginis4">
-             <button type="submit" disabled={loading}>
+             <button type="submit" disabled={loading} onClick={handleSubmit}>
                 {loading ? 'Yuborilmoqda...' : 'SIGN IN'}
              </button>
           </div>

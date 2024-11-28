@@ -15,25 +15,15 @@ import Dropdown from '@mui/joy/Dropdown';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Table from '@mui/joy/Table';
-import Sheet from '@mui/joy/Sheet';
-import Checkbox from '@mui/joy/Checkbox';
-import { iconButtonClasses } from '@mui/joy/IconButton';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { baseAPI } from '../../utils/constants';
-import { AddDataForm, ResponseType } from '../types/type';
-import { Modal, ModalContent, CloseButton, Input, SubmitButton, ErrorMessage } from '../styles/style';
-import { toast } from 'react-toastify';
+import { AddDataForm, ResponseType } from '../../components/types/type';
 import { VariantProp } from '@mui/joy/styles';
-import ButtonGroup from '@mui/joy/ButtonGroup';
-import Add from '@mui/icons-material/Add';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Link from '@mui/joy/Link';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 
 
 export default function OrderList() {
@@ -42,14 +32,12 @@ export default function OrderList() {
   const [todos, setTodos] = useState(todo);
   const [filteredTodo, setFilteredTodos] = useState(todo);
   const [formData, setFormData] = useState<AddDataForm>({ title: '', desc: '', image: '' });
-  const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [todosPerPage] = useState(7);
   const totalPages = Math.ceil(todos.length / todosPerPage);
   const [variant, setVariant] = React.useState<VariantProp>('outlined');
+
   const createOnClick = (value: VariantProp) => () => {
     setVariant(value);
   };
@@ -58,120 +46,6 @@ export default function OrderList() {
     window.addEventListener('resize', () => {});
     return () => window.removeEventListener('resize', () => {});
   }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-    if (!token) return setError('Iltimos, tizimga kiring.');
-    setLoading(true);
-    try {
-      const { data } = await axios.post<ResponseType>(`${baseAPI}/todo/add`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (data.success) {
-        const updatedTodos = [data.new_todo, ...todos];
-        setTodos(updatedTodos);
-        localStorage.setItem('todos', JSON.stringify(updatedTodos));
-        setFormData({ title: '', desc: '', image: '' });
-      } else {
-        setError(data.message || 'Xatolik yuz berdi.');
-      }
-    } catch {
-      setError('Xatolik yuz berdi.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (_id: string) => {
-    const token = localStorage.getItem('token');
-    if (!token) return setError('Iltimos, tizimga kiring.');
-    try {
-      const { data } = await axios.delete<ResponseType>(`${baseAPI}/todo/delete/${_id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (data.success) {
-        toast.success("Data o'chirildi");
-        const updatedTodos = todos.filter((todo) => todo && todo._id !== _id);
-        setTodos(updatedTodos);
-        localStorage.setItem('todos', JSON.stringify(updatedTodos));
-      } else {
-        setError('O‘chirishda xatolik.');
-      }
-    } catch {
-      setError('O‘chirishda xatolik.');
-    }
-  };
-
-  const handleCheckboxChange = (id: string) => {
-    setSelected((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((selectedId) => selectedId !== id)
-        : [...prevSelected, id]
-    );
-  };
-
-  const handleDownloadPDF = () => {
-    if (selected.length === 0) {
-      setError('No selected!');
-      setTimeout(() => {
-        setError('')
-      }, 2000);
-      return;
-    }
-
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-
-    doc.setFontSize(30);
-    doc.text('Furniture', 140, 20, { align: 'center' });
-
-    const headers = ['Title', 'Description', 'Image URL', 'Date', 'ID'];
-
-    const rows = selected
-      .map((id) => {
-        const todo = todos.find((item) => item._id === id);
-        return todo ? [todo.title, todo.desc, todo.image, todo.sana, todo._id] : [];
-      })
-      .filter((row) => row.length > 0);
-
-    autoTable(doc,{
-      head: [headers], 
-      body: rows, 
-      startY: 30, 
-      bodyStyles: {
-        lineWidth: 0.1, 
-        lineColor: [0, 0, 0], 
-        textColor: [0, 0, 0], 
-        fillColor: '#FFF',
-      },
-      headStyles: {
-        fillColor: '#395cf8', 
-        textColor: [255, 255, 255],
-        fontSize: 12, 
-        halign: 'center',
-      },
-      tableId: '#FFF',
-      tableLineColor: [0, 0, 0], 
-      tableLineWidth: 0.1,
-    });
-    
-    doc.save('table.pdf'); 
-    doc.save('todos.pdf');
-    setSelected([]);
-  };
-
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const allIds = todos.map((todo) => todo._id);
-      setSelected(allIds);
-    } else {
-      setSelected([]);
-    }
-  };
 
   const handlePagination = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -186,12 +60,10 @@ export default function OrderList() {
       
       if (data.success) {
           setTodos(data.data)
-        console.log(data.data);
       }
   
   
       } catch (error) {
-        console.log(error);
       }
   } 
   useEffect(() => {
@@ -199,7 +71,6 @@ export default function OrderList() {
   }, [])
   
   useEffect(() => {
-      console.log('Todos:', todos); 
       if (search.trim() === '') {
         setFilteredTodos(todos);
       } else {
@@ -219,10 +90,45 @@ export default function OrderList() {
     <Box sx={{ 
       display: { xs: 'block', sm: 'none' },
        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Breadcrumbs
+              size="sm"
+              aria-label="breadcrumbs"
+              separator={<ChevronRightRoundedIcon />}
+              sx={{ pl: 0 }}
+            >
+              <Link
+                underline="none"
+                color="neutral"
+                href="#some-link"
+                aria-label="Home"
+              >
+                <HomeRoundedIcon />
+              </Link>
+
+              {/* <Link
+                underline="hover"
+                color="neutral"
+                href="#some-link"
+                sx={{ fontSize: 12, fontWeight: 500 }}
+              >
+                Dashboard
+              </Link> */}
+
+              <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
+                Orders
+              </Typography>
+
+            </Breadcrumbs>
+          </Box>
       <div style={{display:"flex",flexDirection:'column',justifyContent:"space-between",height:"45rem"}}>
       <div>
-      {currentTodos.map((listItem) => (
-        <List key={listItem.id} size="sm" sx={{ '--ListItem-paddingX': 0 }}>
+      {currentTodos.map((listItem, ind) => (
+        <List
+        key={ind} 
+        size="sm" 
+        sx={{ '--ListItem-paddingX': 0 }}
+        >
           <ListItem
             sx={{
               display: 'flex',
@@ -294,7 +200,24 @@ export default function OrderList() {
         </IconButton>
 
         <Typography level="body-sm" sx={{ mx: 'auto' }}>
-        {currentPage}     
+        {['1'].map((page, ind) => (
+              <React.Fragment key={ind}> 
+                <IconButton
+                    size="sm"
+                    variant={Number(page) ? 'outlined' : 'plain'}
+                    color="neutral"
+                  >
+                    {currentPage}
+                  </IconButton>
+                  <IconButton
+                    size="sm"
+                    variant={Number(page) ? 'outlined' : 'plain'}
+                    color="neutral"
+                  >
+                    {totalPages}
+                </IconButton>
+              </React.Fragment>
+            ))}
         </Typography>
 
         <IconButton

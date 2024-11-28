@@ -1,0 +1,21 @@
+import Navbar from "./layout/navbar";
+import HomeComponent from "./Home/home";
+import CategorieComponent from "./Categories/categorie";
+import UserComponents from "./Users/user";
+import DashboardCompoent from "./Dashboard/dashboard";
+import MessageComponent from "./Messages/message";
+import OrderTable from "./Orders/OrderTable";
+import SupportComponent from "./Support/support";
+import Settingcomponent from "./Settings/setting";
+
+export {
+    Navbar,
+    HomeComponent,
+    CategorieComponent,
+    UserComponents,
+    DashboardCompoent,
+    MessageComponent,
+    OrderTable,
+    SupportComponent,
+    Settingcomponent,
+}

@@ -28,7 +28,7 @@ export const ModalContent = styled.div`
   width: 400px; 
   position: relative;
 `;
-export const CloseButton = styled.span`
+export const CloseButton = styled.div`
   position: absolute; 
   top: 10px; 
   right: 10px; 

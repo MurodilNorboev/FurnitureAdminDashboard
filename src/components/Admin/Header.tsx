@@ -5,6 +5,7 @@ import IconButton from '@mui/joy/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { toggleSidebar } from './utils';
+import { Headers } from '../../scenes/Home/StyledComponents';
 
 export default function Header() {
   return (
@@ -13,20 +14,20 @@ export default function Header() {
         display: { xs: 'flex', md: 'none' },
         alignItems: 'center',
         justifyContent: 'space-between',
-        position: 'fixed',
+        position: 'absolute',
+         borderRadius:"5px",
+        background:"transparent",
         top: 0,
-        width: '100vw',
         height: 'var(--Header-height)',
         zIndex: 9995,
         p: 2,
         gap: 1,
-        borderBottom: '1px solid',
-        borderColor: 'background.level1',
-        boxShadow: 'sm',
       }}
     >
       <GlobalStyles
         styles={(theme) => ({
+          borderColor: 'background.level1',
+          zIndex: 9995,
           ':root': {
             '--Header-height': '52px',
             [theme.breakpoints.up('md')]: {
@@ -41,8 +42,9 @@ export default function Header() {
         color="neutral"
         size="sm"
       >
-        <MenuIcon />
+        <MenuIcon /> 
       </IconButton>
     </Sheet>
   );
 }
+

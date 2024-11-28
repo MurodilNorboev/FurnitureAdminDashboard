@@ -26,6 +26,8 @@ import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from './utils';
+import { Navlink } from '../styles/link';
+import { Datas, TypesDatas } from './array';
 
 function Toggler({
   defaultExpanded = false,
@@ -62,6 +64,13 @@ function Toggler({
 }
 
 export default function Sidebar() {
+  const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
+  const handleClick = (item: string) => {
+    setSelectedItem(item);
+  };
+  const [data, setData] = React.useState<TypesDatas[] | null>(null);
+  React.useEffect(() => {setData(Datas)}, [])
+
   return (
     <Sheet
       className="Sidebar"
@@ -142,41 +151,49 @@ export default function Sidebar() {
             '--ListItem-radius': (theme) => theme.vars.radius.sm,
           }}
         >
-          <ListItem>
-            <ListItemButton>
-              <HomeRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
+          <Navlink to="/home">
+            <ListItem onClick={() => handleClick('home')}>
+              <ListItemButton selected={selectedItem === 'home'}>
+                <HomeRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Home</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
 
-          <ListItem>
-            <ListItemButton>
-              <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Dashboard</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
+          <Navlink to="/dashboard">
+            <ListItem onClick={() => handleClick('dashboard')}> 
+              <ListItemButton selected={selectedItem === 'dashboard'}>
+                <DashboardRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Dashboard</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
 
-          <ListItem>
-            <ListItemButton selected>
-              <ShoppingCartRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Orders</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
+          <Navlink to="/orders">
+            <ListItem onClick={() => handleClick('orders')}>
+              <ListItemButton selected={selectedItem === 'orders'}>
+                <ShoppingCartRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Orders</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
 
           <ListItem nested>
             <Toggler
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
                   <AssignmentRoundedIcon />
+
                   <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
+                    <Typography level="title-sm">Categories</Typography>
                   </ListItemContent>
+
                   <KeyboardArrowDownIcon
                     sx={[
                       open
@@ -192,78 +209,51 @@ export default function Sidebar() {
               )}
             >
               <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
+                {data?.map((val) => (
+                <Navlink to={`/categorie/${val.id}`} key={val.id}>
+                  <ListItem sx={{ mt: 0.5 }} onClick={() => handleClick(`${val.name}`)}>
+                    <ListItemButton selected={selectedItem === `${val.name}`}>
+                      {val.name}
+                    </ListItemButton>
+                  </ListItem>
+                </Navlink>
+                ))}
               </List>
+
             </Toggler>
           </ListItem>
-          <ListItem>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              href="/joy-ui/getting-started/templates/messages/"
-            >
-              <QuestionAnswerRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Messages</Typography>
-              </ListItemContent>
-              <Chip size="sm" color="primary" variant="solid">
-                4
-              </Chip>
-            </ListItemButton>
-          </ListItem>
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <GroupRoundedIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm">Users</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={[
-                      open
-                        ? {
-                            transform: 'rotate(180deg)',
-                          }
-                        : {
-                            transform: 'none',
-                          },
-                    ]}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton
-                    role="menuitem"
-                    component="a"
-                    href="/joy-ui/getting-started/templates/profile-dashboard/"
-                  >
-                    My profile
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Create a new user</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Roles & permission</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem>
+
+          <Navlink to="/messages">
+            <ListItem onClick={() => handleClick('messages')}>
+              <ListItemButton selected={selectedItem === 'messages'}
+                role="menuitem"
+                // component="a"
+                // href="/joy-ui/getting-started/templates/messages/"
+              >
+                <QuestionAnswerRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Messages</Typography>
+                </ListItemContent>
+                <Chip size="sm" color="primary" variant="solid">
+                  4
+                </Chip>
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
+
+          <Navlink to="/user">
+            <ListItem onClick={() => handleClick('user')}>
+              <ListItemButton selected={selectedItem === 'user'}>
+                <GroupRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Users</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
+
         </List>
+
         <List
           size="sm"
           sx={{
@@ -274,21 +264,29 @@ export default function Sidebar() {
             mb: 2,
           }}
         >
-          <ListItem>
-            <ListItemButton>
-              <SupportRoundedIcon />
-              Support
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton>
-              <SettingsRoundedIcon />
-              Settings
-            </ListItemButton>
-          </ListItem>
+          <Navlink to="/support">
+            <ListItem onClick={() => handleClick('support')}>
+              <ListItemButton selected={selectedItem === 'support'}>
+                <SupportRoundedIcon />
+                Support
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
+
+          <Navlink to="/setting">
+            <ListItem onClick={() => handleClick('settings')}>
+              <ListItemButton selected={selectedItem === 'settings'}>
+                <SettingsRoundedIcon />
+                Settings
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
+
         </List>
       </Box>
+
       <Divider />
+      
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
         <Avatar
           variant="outlined"
@@ -306,3 +304,5 @@ export default function Sidebar() {
     </Sheet>
   );
 }
+
+
