@@ -6,23 +6,23 @@ import JoyOrderDashboardTemplates from '../apps';
 import OrderList from '../scenes/Orders/OrderList';
 
 const RouterComponent = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    return loggedIn === 'true';
-  });
+  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  //   const loggedIn = localStorage.getItem('isLoggedIn');
+  //   return loggedIn === 'true';
+  // });
 
-  useEffect(() => {
-    localStorage.setItem('isLoggedIn', String(isLoggedIn));
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   localStorage.setItem('isLoggedIn', String(isLoggedIn));
+  // }, [isLoggedIn]);
 
-  useEffect(() => {
-    if (!isLoggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
-      navigate('/login');
-    }
-  }, [isLoggedIn, location.pathname, navigate]);
+  // useEffect(() => {
+  //   if (!isLoggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
+  //     navigate('/login');
+  //   }
+  // }, [isLoggedIn, location.pathname, navigate]);
 
   
 
@@ -32,8 +32,11 @@ const RouterComponent = () => {
       <Route path='/' element={<Login  />} />      
       <Route path='/register' element={<Register />} />
       
-      <Route path='/*' element={<JoyOrderDashboardTemplates isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
-      <Route path='/*' element={<JoyOrderDashboardTemplates isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+      {/* <Route path='/*' element={<JoyOrderDashboardTemplates isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+      <Route path='/*' element={<JoyOrderDashboardTemplates isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} /> */}
+
+<Route path='/*' element={<JoyOrderDashboardTemplates  />} />
+<Route path='/*' element={<JoyOrderDashboardTemplates />} />
     </Routes>
   );
 };

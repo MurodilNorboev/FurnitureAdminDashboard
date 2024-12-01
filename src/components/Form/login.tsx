@@ -40,11 +40,8 @@ const Login: React.FC = () => {
     try {
 
       const response = await axios.post<Type>(baseAPI + '/user/login', formData);
-      
-      console.log('API javobi:', response.data);
 
       if (response.data.access_token) {
-        console.log('Token muvaffaqiyatli olindi:', response.data.access_token);
         localStorage.setItem('token', response.data.access_token); 
 
         navigate('/home'); 

@@ -99,7 +99,7 @@ export default function Sidebar() {
           ':root': {
             '--Sidebar-width': '220px',
             [theme.breakpoints.up('lg')]: {
-              '--Sidebar-width': '240px',
+              '--Sidebar-width': '220px',
             },
           },
         })}

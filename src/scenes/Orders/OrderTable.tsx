@@ -27,10 +27,6 @@ import Add from '@mui/icons-material/Add';
 import OrderList from './OrderList';
 import Typography from '@mui/joy/Typography';
 import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Link from '@mui/joy/Link';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 
 
 export default function OrderTable() {
@@ -47,6 +43,7 @@ export default function OrderTable() {
     const [todosPerPage] = useState(20);
     const totalPages = Math.ceil(todos.length / todosPerPage);
     const [variant, setVariant] = React.useState<VariantProp>('outlined');
+    
     const createOnClick = (value: VariantProp) => () => {
       setVariant(value);
     };
@@ -285,132 +282,130 @@ export default function OrderTable() {
           }}
         >
 
-{currentTodos.length > 0 ? (
-  <Table
-    aria-labelledby="tableTitle"
-    stickyHeader
-    hoverRow
-    sx={{
-      '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
-      '--Table-headerUnderlineThickness': '1px',
-      '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
-      '--TableCell-paddingY': '4px',
-      '--TableCell-paddingX': '8px',
-    }}
-  >
-    <thead>
-      <tr>
-        <th style={{ width: 48, textAlign: 'center' }}>
-          <Checkbox
-            onChange={handleSelectAll}
-            checked={selected.length === todos.length}
-            size="md"
-            color="primary"
-            sx={{ cursor: 'pointer' }}
-          />
-        </th>
-        <th style={{ width: 50, padding: '12px 0px' }}>row</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>title</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>desc</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>img</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>Data</th>
-        <th style={{ width: 80, padding: '12px 6px' }}></th>
-      </tr>
-    </thead>
-    <tbody>
-      {currentTodos.map((todo, ind) => (
-        <tr key={ind}>
-          <td style={{ textAlign: 'center' }}>
-            <Checkbox
-              sx={{ verticalAlign: 'text-bottom'}}
-              size="md"
-              checked={selected.includes(todo._id)}
-              onChange={() => handleCheckboxChange(todo._id)}
-            />
-          </td>
-          <td>
-            <Typography level="body-xs">1</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{todo.title}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{todo.desc}</Typography>
-          </td>
-          <td>
-            {todo.image ? (
-              <img src={todo.image} alt={todo.title} style={{ width: '50px', height: '50px' }} />
-            ) : 'No Image'}
-          </td>
-          <td>
-            <Typography level="body-xs">{todo.sana}</Typography>
-          </td>
-          <td>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Dropdown>
-                <MenuButton
-                  slots={{ root: IconButton }}
-                  slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-                >
-                  <MoreHorizRoundedIcon />
-                </MenuButton>
-                <Menu size="sm" sx={{ minWidth: 100 }}>
-                  <MenuItem>Edit</MenuItem>
-                  <MenuItem>Rename</MenuItem>
-                  <MenuItem>Move</MenuItem>
-                  <Divider />
-                  <MenuItem color="danger" onClick={() => handleDelete(todo._id)}>
-                    Delete
-                  </MenuItem>
-                </Menu>
-              </Dropdown>
-            </Box>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </Table>
-) : (
-  <Table
-    aria-labelledby="tableTitle"
-    stickyHeader
-    hoverRow
-    sx={{
-      '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
-      '--Table-headerUnderlineThickness': '1px',
-      '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
-      '--TableCell-paddingY': '4px',
-      '--TableCell-paddingX': '8px',
-    }}
-  >
-    <thead>
-      <tr>
-        <th style={{ width: 48, textAlign: 'center' }}>
-          <Checkbox
-            onChange={handleSelectAll}
-            checked={selected.length === todos.length}
-            size="md"
-            color="primary"
-            sx={{ cursor: 'pointer' }}
-          />
-        </th>
-        <th style={{ width: 50, padding: '12px 0px' }}>row</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>title</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>desc</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>img</th>
-        <th style={{ width: 140, padding: '12px 6px' }}>Data</th>
-        <th style={{ width: 80, padding: '12px 6px' }}></th>
-      </tr>
-    </thead>
-    <tbody>
-    <Typography  sx={{ textAlign: 'center', marginTop: 2,width:"100%",position:"absolute" }}>
-    No search results found
-  </Typography>
-    </tbody>
-  </Table>
-)}
-
-  
+            {currentTodos.length > 0 ? (
+              <Table
+                aria-labelledby="tableTitle"
+                stickyHeader
+                hoverRow
+                sx={{
+                  '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
+                  '--Table-headerUnderlineThickness': '1px',
+                  '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
+                  '--TableCell-paddingY': '4px',
+                  '--TableCell-paddingX': '8px',
+                }}
+              >
+                <thead style={{zIndex:2}}>
+                  <tr>
+                    <th style={{ width: 48, textAlign: 'center' }}>
+                      <Checkbox
+                        onChange={handleSelectAll}
+                        checked={selected.length === todos.length}
+                        size="md"
+                        color="primary"
+                        sx={{ cursor: 'pointer' }}
+                      />
+                    </th>
+                    <th style={{ width: 50, padding: '12px 0px' }}>row</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>title</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>desc</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>img</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>Data</th>
+                    <th style={{ width: 80, padding: '12px 6px' }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentTodos.map((todo, ind) => (
+                    <tr key={ind}>
+                      <td style={{ textAlign: 'center' }}>
+                        <Checkbox
+                          sx={{ verticalAlign: 'text-bottom'}}
+                          size="md"
+                          checked={selected.includes(todo._id)}
+                          onChange={() => handleCheckboxChange(todo._id)}
+                        />
+                      </td>
+                      <td>
+                        <Typography level="body-xs">1</Typography>
+                      </td>
+                      <td>
+                        <Typography level="body-xs">{todo.title}</Typography>
+                      </td>
+                      <td>
+                        <Typography level="body-xs">{todo.desc}</Typography>
+                      </td>
+                      <td>
+                        {todo.image ? (
+                          <img src={todo.image} alt={todo.title} style={{ width: '50px', height: '50px' }} />
+                        ) : 'No Image'}
+                      </td>
+                      <td>
+                        <Typography level="body-xs">{todo.sana}</Typography>
+                      </td>
+                      <td>
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                          <Dropdown>
+                            <MenuButton
+                              slots={{ root: IconButton }}
+                              slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+                            >
+                              <MoreHorizRoundedIcon />
+                            </MenuButton>
+                            <Menu size="sm" sx={{ minWidth: 100 }}>
+                              <MenuItem>Edit</MenuItem>
+                              <MenuItem>Rename</MenuItem>
+                              <MenuItem>Move</MenuItem>
+                              <Divider />
+                              <MenuItem color="danger" onClick={() => handleDelete(todo._id)}>
+                                Delete
+                              </MenuItem>
+                            </Menu>
+                          </Dropdown>
+                        </Box>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <Table
+                aria-labelledby="tableTitle"
+                stickyHeader
+                hoverRow
+                sx={{
+                  '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
+                  '--Table-headerUnderlineThickness': '1px',
+                  '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
+                  '--TableCell-paddingY': '4px',
+                  '--TableCell-paddingX': '8px',
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th style={{ width: 48, textAlign: 'center' }}>
+                      <Checkbox
+                        onChange={handleSelectAll}
+                        checked={selected.length === todos.length}
+                        size="md"
+                        color="primary"
+                        sx={{ cursor: 'pointer' }}
+                      />
+                    </th>
+                    <th style={{ width: 50, padding: '12px 0px' }}>row</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>title</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>desc</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>img</th>
+                    <th style={{ width: 140, padding: '12px 6px' }}>Data</th>
+                    <th style={{ width: 80, padding: '12px 6px' }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                <Typography  sx={{ textAlign: 'center', marginTop: 2,width:"100%",position:"absolute" }}>
+                No search results found
+              </Typography>
+                </tbody>
+              </Table>
+            )}
         </Sheet>
   
         <Box

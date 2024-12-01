@@ -208,8 +208,9 @@ export default function OrderList() {
                     color="neutral"
                   >
                     {currentPage}
-                  </IconButton>
-                  <IconButton
+                </IconButton>
+                
+                <IconButton
                     size="sm"
                     variant={Number(page) ? 'outlined' : 'plain'}
                     color="neutral"
