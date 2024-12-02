@@ -16,3 +16,8 @@ code {
   padding: 0;
   box-sizing: border-box;
 }
+.ContainerExplored {
+  &:active {
+    background-color: #e8ecf1;
+  }
+}

@@ -1,9 +1,12 @@
-import React from 'react'
-import { Container } from '../event.sty'
+import '../../../index.css'
+
+import { Container, ExploreContainer } from '../event.sty'
 
 const Explore = () => {
   return (
-    <Container>Explore your data</Container>
+    <Container className='ContainerExplored'>
+      <ExploreContainer />
+    </Container>
   )
 }
 

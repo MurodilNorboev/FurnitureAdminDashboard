@@ -28,6 +28,7 @@ import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from './utils';
 import { Navlink } from '../styles/link';
 import { Datas, TypesDatas } from './array';
+import { useNavigate } from 'react-router-dom';
 
 function Toggler({
   defaultExpanded = false,
@@ -65,11 +66,18 @@ function Toggler({
 
 export default function Sidebar() {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
+  const navigate = useNavigate();
+
   const handleClick = (item: string) => {
     setSelectedItem(item);
   };
   const [data, setData] = React.useState<TypesDatas[] | null>(null);
   React.useEffect(() => {setData(Datas)}, [])
+
+  const logaut = () => {
+    localStorage.clear();
+    navigate('/login')
+  }
 
   return (
     <Sheet
@@ -297,7 +305,7 @@ export default function Sidebar() {
           <Typography level="title-sm">Siriwat K.</Typography>
           <Typography level="body-xs">siriwatk@test.com</Typography>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
+        <IconButton size="sm" variant="plain" color="neutral" onClick={logaut}>
           <LogoutRoundedIcon />
         </IconButton>
       </Box>

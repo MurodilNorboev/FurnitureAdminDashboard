@@ -9,11 +9,13 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import { useNavigate } from 'react-router-dom';
 
 const MyCalendar = () => {
   const [data, setData] = useState(false);
   const [date, setDate] = useState(new Date());
   const [isFirstVisit, setIsFirstVisit] = useState(true);
+  const navigate = useNavigate();
 
   // Calendar modalini yopish
   const handleClose = () => {
@@ -92,7 +94,7 @@ const MyCalendar = () => {
             </div>
           </div>
         )}
-        <Avatars src={avatar} alt="imag🌌" />
+        <Avatars src={avatar} alt="imag🌌" onClick={() => navigate('/profile')} />
       </Wrapper>
     </Container>
   );

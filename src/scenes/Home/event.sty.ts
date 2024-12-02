@@ -3,7 +3,6 @@ import styled, { DefaultTheme } from "styled-components";
 interface ContainerProps {
   theme: DefaultTheme; 
 }
-
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,4 +35,10 @@ export const LinePositio = styled.div<ContainerProps>`
   justify-content: center;
   align-items: center;
   position: relative;
+`;
+//// === explore === 
+export const ExploreContainer = styled.div`
+   display: flex;
+   width: 100%;
+   height: 100%;
 `;
