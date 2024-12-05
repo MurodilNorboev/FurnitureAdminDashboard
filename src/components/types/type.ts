@@ -1,8 +1,18 @@
-export interface AddDataForm { 
-    title: string; 
-    desc: string; 
-    image: string; 
+export interface Todo {
+    title: string;
+    desc: string;
+    image: string;
+    full_name: string;
+    phone_number: string;
+    _id: string;
+    sana: string;
 }
+export interface AddDataForm { 
+    title: any; 
+    desc: string; 
+    image: any; 
+}
+
 export interface ResponseType { 
     success: boolean; 
     message: string; 
@@ -10,4 +20,8 @@ export interface ResponseType {
     _id: string;
     response: any;
     data: any;
+    title: any;
+    desc: any;
+    image: string;
 }
+

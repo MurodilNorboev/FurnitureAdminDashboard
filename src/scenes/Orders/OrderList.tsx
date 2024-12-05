@@ -31,8 +31,6 @@ export default function OrderList() {
   const [search, setSearch] = useState('');
   const [todos, setTodos] = useState(todo);
   const [filteredTodo, setFilteredTodos] = useState(todo);
-  const [formData, setFormData] = useState<AddDataForm>({ title: '', desc: '', image: '' });
-  const [selected, setSelected] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [todosPerPage] = useState(7);
   const totalPages = Math.ceil(todos.length / todosPerPage);

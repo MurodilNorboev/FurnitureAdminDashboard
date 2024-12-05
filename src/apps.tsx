@@ -13,7 +13,6 @@ import Settingcomponent from './scenes/Settings/setting';
 import SupportComponent from './scenes/Support/support';
 import CategorieComponent from './scenes/Categories/categorie';
 import { Navbar } from './scenes';
-import DashboardComponent from './scenes/Dashboard/dashboard';
 import Test from './test/test';
 import Login from './components/Profile/profile';
 
@@ -48,7 +47,6 @@ export default function JoyOrderDashboardTemplates() {
          <Navbar />
           <Routes>
              <Route path="/home" element={<HomeComponent />} /> 
-             <Route path="/dashboard" element={<DashboardComponent />} />   
              <Route path="/orders" element={<OrderTable />} /> 
              <Route path="/categorie/:id" element={<CategorieComponent />} /> 
              <Route path="/messages" element={<MessageComponent />} /> 

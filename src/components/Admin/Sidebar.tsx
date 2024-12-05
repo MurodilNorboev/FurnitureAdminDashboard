@@ -162,18 +162,7 @@ export default function Sidebar() {
           <Navlink to="/home">
             <ListItem onClick={() => handleClick('home')}>
               <ListItemButton selected={selectedItem === 'home'}>
-                <HomeRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Home</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
-
-          <Navlink to="/dashboard">
-            <ListItem onClick={() => handleClick('dashboard')}> 
-              <ListItemButton selected={selectedItem === 'dashboard'}>
-                <DashboardRoundedIcon />
+              <DashboardRoundedIcon />
                 <ListItemContent>
                   <Typography level="title-sm">Dashboard</Typography>
                 </ListItemContent>
