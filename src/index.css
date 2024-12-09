@@ -18,6 +18,6 @@ code {
 }
 .ContainerExplored {
   &:active {
-    background-color: #e8ecf1;
+    background-color: #1976e8d7;
   }
 }

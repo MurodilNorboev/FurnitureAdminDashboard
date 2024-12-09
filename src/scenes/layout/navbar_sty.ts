@@ -6,6 +6,7 @@ export const StyledCalendar = styled(Calendar)`
   border: none;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: 380px;
+  padding: 0px 10px;
 
   .react-calendar__navigation__arrow, .react-calendar__navigation__arrow .react-calendar__navigation__label, .react-calendar__navigation__arrow, .react-calendar__navigation__arrow:hover {
     border-radius: 10px;
@@ -47,6 +48,7 @@ export const Dashboard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-left: 100px;
 `;
 export const Container = styled.div`
     display: flex;

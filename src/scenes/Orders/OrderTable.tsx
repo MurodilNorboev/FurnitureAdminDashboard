@@ -29,6 +29,9 @@ import autoTable from 'jspdf-autotable';
 import { ErrorMessage } from '../../components/styles/style';
 import { Todo } from '../../components/types/type';
 import OrderList from './OrderList';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 
 export default function OrderTable() {
   const [data, setData] = useState<Todo[]>([]);
@@ -143,8 +146,8 @@ export default function OrderTable() {
     }
   };
   const DeleteTodo = async (id: string) => { // todo ni delet qilish
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
       const { data } = await axios.delete<any>(`${baseAPI}/todo/delete/` + id, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -256,6 +259,27 @@ export default function OrderTable() {
   
   return (
     <React.Fragment>
+
+      <Box sx={{ display: 'flex', alignItems: 'center',position:"fixed", top: 30 }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon />}
+          sx={{ pl: 0 }}
+        >
+          <Link
+            underline="none"
+            color="neutral"
+            href="#some-link"
+            aria-label="Home"
+          >
+            <HomeRoundedIcon />
+          </Link>
+          <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
+            Dashboard
+          </Typography>
+        </Breadcrumbs>
+      </Box>
 
       {isOpen && (
         <div
@@ -528,6 +552,9 @@ export default function OrderTable() {
             id="myModal"
             onClick={closeModal}
             style={{
+              display:"flex",
+              justifyContent:"center",
+              alignItems:"center",
               position: 'fixed',
               zIndex: 99999,
               left: 0,
@@ -556,12 +583,12 @@ export default function OrderTable() {
               alt="Modal Tasvir"
               style={{
                 borderRadius:"20px",
-                margin:"30% 20% 30% 20%",
+                margin:"30px 20px",
+                width:"100%",
+                height:"100%",
                 display:"block",
                 maxWidth: '800px',
                 maxHeight:"600px",
-                width: '100vw',
-                height:"100vw",
               }}
             />
           </div>

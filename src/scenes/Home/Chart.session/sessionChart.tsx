@@ -44,7 +44,6 @@ function LineChart() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
-    // Detect the system theme and update state
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setIsDarkMode(mediaQuery.matches);
     mediaQuery.addEventListener('change', (e) => setIsDarkMode(e.matches));
@@ -110,15 +109,15 @@ function LineChart() {
   }, []);
 
   const userCountPerDay = Array.from({ length: daysInMonth }, (_, index) => {
-    const day = (index + 1).toString().padStart(2, "0"); // 01, 02, ..., 31 format
+    const day = (index + 1).toString().padStart(2, "0"); 
     const dateString = moment(`${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${day}`, "YYYY-MM-DD").format("YYYY-MM-DD");
     const count = userCountByDate[dateString] || 0;
 
     return { day, userCount: count };
   });
-
+  
   const data: ChartData<"line"> = {
-    labels: userCountPerDay.map((data) => data.day),
+    labels: userCountPerDay.map((data) => data.day),    
     datasets: [
       {
         label: "Revenue",
@@ -153,7 +152,7 @@ function LineChart() {
         legend: { display: false },
         tooltip: {
           enabled: true,
-          mode: "nearest",  // This is the default mode, no need to specify "nearest" again
+          mode: "nearest", 
           intersect: false,
           callbacks: {
             title: (context: any) => {
@@ -184,10 +183,11 @@ function LineChart() {
       layout: {
         padding: {
           bottom: 0,
-          top: 20 // Adding space below the chart for tooltip
+          top: 20 
     },
   },
   };
+  // console.log(userCountPerDay);
 
   const lastMonthPercentage = userCount ? ((lastMonthUserCount / userCount) * 100).toFixed(2) : "0.00";
   const thisMonthPercentage = userCount ? ((thisMonthUserCount / userCount) * 100).toFixed(2) : "0.00";
@@ -235,5 +235,3 @@ function LineChart() {
 }
 
 export default LineChart;
-
-

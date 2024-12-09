@@ -3,36 +3,37 @@ import 'react-calendar/dist/Calendar.css'; // Stilni qo'shish
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import avatar from '../../assets/avatar.png';
 import { Avatars, Button, Container, Dashboard, StyledCalendar, Wrapper } from './navbar_sty';
-import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Typography from '@mui/joy/Typography';
-import Link from '@mui/joy/Link';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/joy/Box';
+import Skeleton from '@mui/joy/Skeleton';
 
 const MyCalendar = () => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState(false);
   const [date, setDate] = useState(new Date());
   const [isFirstVisit, setIsFirstVisit] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false)
+    }, 5000);
+  }, [])
+
   // Calendar modalini yopish
   const handleClose = () => {
     setData(false);
   };
-
   // Calendarning ichiga bosilganda modal yopilmasligi uchun
   const handleClickInsideCalendar = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
-
   // Tanlangan sanani o'zgartirish
   const handleDateChange = (selectedDate: Date) => {
     setDate(selectedDate);
     setData(false); // Sana tanlanganidan keyin modalni yopish
   };
-
   // Xush kelibsiz xabarini faqat bir marta ko'rsatish
   useEffect(() => {
     setIsFirstVisit(false);
@@ -41,28 +42,8 @@ const MyCalendar = () => {
   return (
     <Container>
       
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Breadcrumbs
-              size="sm"
-              aria-label="breadcrumbs"
-              separator={<ChevronRightRoundedIcon />}
-              sx={{ pl: 0 }}
-            >
-              <Link
-                underline="none"
-                color="neutral"
-                href="#some-link"
-                aria-label="Home"
-              >
-                <HomeRoundedIcon />
-              </Link>
-              <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-                Home
-              </Typography>
-            </Breadcrumbs>
-          </Box>
-
-      <Dashboard>
+        
+      <Dashboard >
         {isFirstVisit && (
           <div>
             <h2>Xush kelibsiz, Admin!</h2>
@@ -70,7 +51,18 @@ const MyCalendar = () => {
           </div>
         )}
       </Dashboard>
-      <Wrapper>
+
+      {loading ? (
+        <div style={{display:"flex",width:"100%",justifyContent:"end",paddingTop:"5px",gap:'20px'}}>
+             <div>
+               <Skeleton variant="rectangular" width={150} height="2em" />
+             </div>
+             <Skeleton variant="circular" width={35} height={35} />
+        </div>
+      )
+      : 
+      (
+       <Wrapper>
         <Button onClick={() => setData(true)}>
           <CalendarTodayIcon /> {new Date().toDateString()}
         </Button>
@@ -78,6 +70,7 @@ const MyCalendar = () => {
           <div
             style={{
               position: 'fixed',
+              zIndex:99999,
               top: 0,
               left: 0,
               width: '100vw',
@@ -95,7 +88,9 @@ const MyCalendar = () => {
           </div>
         )}
         <Avatars src={avatar} alt="imag🌌" onClick={() => navigate('/profile')} />
-      </Wrapper>
+      </Wrapper> 
+      )
+      }
     </Container>
   );
 };

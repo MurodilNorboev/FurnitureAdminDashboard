@@ -23,37 +23,28 @@ const CategorieComponent = () => {
 
   return (
     <div>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Breadcrumbs
-              size="sm"
-              aria-label="breadcrumbs"
-              separator={<ChevronRightRoundedIcon />}
-              sx={{ pl: 0 }}
-            >
-              <Link
-                underline="none"
-                color="neutral"
-                href="#some-link"
-                aria-label="Home"
-              >
-                <HomeRoundedIcon />
-              </Link>
-
-              {/* <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                sx={{ fontSize: 12, fontWeight: 500 }}
-              >
-                Dashboard
-              </Link> */}
-
-              <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-                {filteredData?.map((val, ind) => (<div key={ind}>{val.name}</div>))}
-              </Typography>
-
-            </Breadcrumbs>
-          </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center',position:"fixed", top: 30 }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon />}
+          sx={{ pl: 0 }}
+        >
+          <Link
+            underline="none"
+            color="neutral"
+            href="#some-link"
+            aria-label="Home"
+          >
+            <HomeRoundedIcon />
+          </Link>
+          <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
+            {filteredData?.map((val, ind) => (
+              <div key={ind}>{val.name}</div>
+            ))}
+          </Typography>
+        </Breadcrumbs>
+      </Box>
       <div>
         {filteredData && filteredData.length > 0 ? (
           filteredData.map(item => (
