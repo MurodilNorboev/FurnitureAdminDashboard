@@ -50,7 +50,7 @@ function LineChart() {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${baseAPI}/user/user-count`);
+        const response = await fetch(`${baseAPI}/userFur/user-count`);
         const data = await response.json();
 
         if (data.success) {
@@ -59,7 +59,7 @@ function LineChart() {
           const token = localStorage.getItem("token");
 
           if (token) {
-            const userResponse = await fetch(`${baseAPI}/user/all-users`, {
+            const userResponse = await fetch(`${baseAPI}/userFur/all-users`, {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },
             });
@@ -187,7 +187,6 @@ function LineChart() {
     },
   },
   };
-  // console.log(userCountPerDay);
 
   const lastMonthPercentage = userCount ? ((lastMonthUserCount / userCount) * 100).toFixed(2) : "0.00";
   const thisMonthPercentage = userCount ? ((thisMonthUserCount / userCount) * 100).toFixed(2) : "0.00";

@@ -15,53 +15,18 @@ import Sheet from '@mui/joy/Sheet';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from './utils';
 import { Navlink } from '../styles/link';
-import { Datas, TypesDatas } from './array';
 import { useNavigate } from 'react-router-dom';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 
-function Toggler({
-  defaultExpanded = false,
-  renderToggle,
-  children,
-}: {
-  defaultExpanded?: boolean;
-  children: React.ReactNode;
-  renderToggle: (params: {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  }) => React.ReactNode;
-}) {
-  const [open, setOpen] = React.useState(defaultExpanded);
-  return (
-    <React.Fragment>
-      {renderToggle({ open, setOpen })}
-      <Box
-        sx={[
-          {
-            display: 'grid',
-            transition: '0.2s ease',
-            '& > *': {
-              overflow: 'hidden',
-            },
-          },
-          open ? { gridTemplateRows: '1fr' } : { gridTemplateRows: '0fr' },
-        ]}
-      >
-        {children}
-      </Box>
-    </React.Fragment>
-  );
-}
 
 export default function Sidebar() {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
@@ -70,13 +35,12 @@ export default function Sidebar() {
   const handleClick = (item: string) => {
     setSelectedItem(item);
   };
-  const [data, setData] = React.useState<TypesDatas[] | null>(null);
-  React.useEffect(() => {setData(Datas)}, [])
 
   const logaut = () => {
     localStorage.clear();
     navigate('/login')
   }
+
 
   return (
     <Sheet
@@ -180,44 +144,17 @@ export default function Sidebar() {
             </ListItem>
           </Navlink>
 
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <AssignmentRoundedIcon />
-
-                  <ListItemContent>
-                    <Typography level="title-sm">Categories</Typography>
-                  </ListItemContent>
-
-                  <KeyboardArrowDownIcon
-                    sx={[
-                      open
-                        ? {
-                            transform: 'rotate(180deg)',
-                          }
-                        : {
-                            transform: 'none',
-                          },
-                    ]}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                {data?.map((val) => (
-                <Navlink to={`/categorie/${val.id}`} key={val.id}>
-                  <ListItem sx={{ mt: 0.5 }} onClick={() => handleClick(`${val.name}`)}>
-                    <ListItemButton selected={selectedItem === `${val.name}`}>
-                      {val.name}
-                    </ListItemButton>
-                  </ListItem>
-                </Navlink>
-                ))}
-              </List>
-
-            </Toggler>
-          </ListItem>
+          <Navlink to="/categorie">
+            <ListItem onClick={() => handleClick('categorie')}>
+              <ListItemButton selected={selectedItem === 'categorie'}
+                role="menuitem" >
+                 <AssignmentRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Product</Typography>
+                </ListItemContent>
+              </ListItemButton>
+            </ListItem>
+          </Navlink>
 
           <Navlink to="/messages">
             <ListItem onClick={() => handleClick('messages')}>

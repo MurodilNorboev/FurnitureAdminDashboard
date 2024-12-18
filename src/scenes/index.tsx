@@ -1,6 +1,6 @@
 import Navbar from "./layout/navbar";
 import HomeComponent from "./Home/home";
-import CategorieComponent from "./Categories/categorie";
+import CategorieComponent from "./Products/categorie";
 import UserComponents from "./Users/user";
 import MessageComponent from "./Messages/message";
 import OrderTable from "./Orders/OrderTable";

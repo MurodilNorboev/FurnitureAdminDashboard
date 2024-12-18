@@ -13,7 +13,7 @@ interface LoginData {
 
 interface Type {
   success: boolean;
-  access_token: string; // access_token - backenddan qaytgan token
+  access_token: string; 
 }
 
 const Login: React.FC = () => {

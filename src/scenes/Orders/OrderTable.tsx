@@ -38,9 +38,9 @@ export default function OrderTable() {
   const [user, setUser] = useState<any>(null);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
+  const [selectID, setSelectID] = useState('');
   const [image, setImage] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [selectID, setSelectID] = useState('');
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState<string>('');
@@ -102,7 +102,7 @@ export default function OrderTable() {
     getProfile();
     getTodo();
   }, []);
-  const addTodo = async (e: React.FormEvent) => { // todo add qilish
+  const addTodo = async (e: React.FormEvent) => { // todo add va edit qilish
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');

@@ -25,20 +25,21 @@ import { toast } from 'react-toastify';
 import Add from '@mui/icons-material/Add';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { ErrorMessage } from '../components/styles/style';
-import { Todo } from '../components/types/type';
+import { ErrorMessage } from '../../components/styles/style';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import { baseAPI } from '../utils/constants';
+import { baseAPI } from '../../utils/constants';
 import Select, { selectClasses } from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { SelectChangeEvent } from '@mui/material/Select'; 
+import { Buttonn, Container, ContainerWrapper, ImgCon, ModalCon, ModalContent } from './style';
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 const TYPES = ["products", "textils", "tables"];
 
 export default function OrderTable() {
+  const [ loading, setLoadig ] = useState(false);
   const [type, setType] = useState<string>("products");
   const [formData, setFormData] = useState<any>({});
   const [fields, setFields] = useState<string[]>([]);
@@ -59,6 +60,13 @@ export default function OrderTable() {
   const [error, setError] = useState<string>('');
   const [selected, setSelected] = useState<string[]>([]);
 
+  useEffect(() => { // loading
+    setLoadig(true);
+    setTimeout(() => {
+      setLoadig(false)
+    }, 5000);
+  }, [])
+
   const handleView = (id: string) => {
    const selectedItem = data.find((item) => item._id === id);
    if (selectedItem) {
@@ -73,19 +81,23 @@ export default function OrderTable() {
     setFormData({});
     setSelectID(null); // Clear selectID when the type is changed
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
     setFormData((prev: any) => ({
       ...prev,
       [field]: e.target.value,
     }));
   };
+
   useEffect(() => {
     fetchData();
   }, [type, search]); 
+
   const openModal = (image: string) => { // image modal
     setIsModalOpen(true);
     setModalImage(image);
   };
+
   const closeModal = (e: React.MouseEvent) => { // image modal
     if (e.target === e.currentTarget) {
       setIsModalOpen(false);
@@ -93,6 +105,7 @@ export default function OrderTable() {
       setViewItem(null);
     }
   };
+
   const fetchData = async () => {
     try {
       const res = await axios.get<any>(`${baseAPI}/product/${type}/all`, {
@@ -110,9 +123,11 @@ export default function OrderTable() {
       console.error("Error fetching data", error);
     }
   };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
+
   useEffect(() => { // profile/ user login qilganini tekshirish 
     const getProfile = async () => {
       try {
@@ -128,6 +143,7 @@ export default function OrderTable() {
     getProfile();
     // getTodo();
   }, []);
+
   const handleSubmit = async () => { // add qilish
     const token = localStorage.getItem("token");
     console.log("Form ma'lumotlari yuborilmoqda:", formData);
@@ -170,6 +186,7 @@ export default function OrderTable() {
       toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
     }
   };
+
   const handleDelete = async (id: string) => {
     const token = localStorage.getItem("token");
     try {
@@ -189,6 +206,7 @@ export default function OrderTable() {
       toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
     }
   };
+
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     if (!e.target.files || e.target.files.length === 0) {
       console.log(`${fieldName} fayli tanlanmagan.`);
@@ -217,6 +235,7 @@ export default function OrderTable() {
       toast.error(error.response?.data?.error?.msg || "Fayl yuklashda xatolik yuz berdi.");
     }
   };
+
   const handlePagination = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
@@ -288,8 +307,15 @@ export default function OrderTable() {
   };
   
   return (
-    <React.Fragment>
+    <Container>
+      <React.Fragment>
+      {loading ? (
 
+        <div style={{width:"100vw",minHeight:"40rem", height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <ScaleLoader color={'#1976e8d7'} loading={loading} />
+        </div>
+      ) : (
+      <ContainerWrapper>
       <Box sx={{ display: 'flex', alignItems: 'center',position:"fixed", top: 30 }}>
         <Breadcrumbs
           size="sm"
@@ -306,7 +332,7 @@ export default function OrderTable() {
             <HomeRoundedIcon />
           </Link>
           <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            Dashboard
+            Product
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -331,64 +357,6 @@ export default function OrderTable() {
             alignItems: 'center',     
           }}
         >
-          {/* <form
-            onSubmit={addTodo}
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '8px',
-              width: '300px', 
-            }}
-          >
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-              type="text"
-              placeholder="title"
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                borderRadius: '4px',
-              }}
-            />
-            <input
-              onChange={(e) => setDesc(e.target.value)}
-              value={desc}
-              type="text"
-              placeholder="desc"
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                borderRadius: '4px',
-              }}
-            />
-            <input
-              type="file"
-              onChange={uploadFile}
-              style={{
-                width: '100%',
-                marginBottom: '10px',
-              }}
-            />
-            <div
-            >
-              <Button 
-                type="submit" 
-                variant="soft" 
-                disabled={!image} 
-                style={{
-                  width: "100%", 
-                  color: !image ? "#e4e4e4f8" : "white", 
-                  backgroundColor: !image ? "#4984e3f8" : "#0051d3e7"  
-                }}
-              >
-                {selectID ? "Edit" : "Add"}
-              </Button>
-            </div>
-
-          </form> */}
        <div>
          <h2>{selectID ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}` : `Add ${type.charAt(0).toUpperCase() + type.slice(1)}`}</h2>
          {fields.map((field) => (
@@ -503,6 +471,7 @@ export default function OrderTable() {
           overflow: 'auto',
           minHeight: 0,
           height:"100vw",
+          maxHeight:"490px"
         }}
       >
         <Table
@@ -633,7 +602,7 @@ export default function OrderTable() {
         </Table>
       </Sheet>
 
-        {isModalOpen && (
+      {isModalOpen && (
           <div
             id="myModal"
             onClick={closeModal}
@@ -678,24 +647,34 @@ export default function OrderTable() {
               }}
             />
           </div>
-        )}
+      )}
 
       {viewItem && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>{viewItem.title}</h2>
-            <p>{viewItem.desc}</p>
-            <img
-              src={viewItem.image?.replace("http://https://", "https://")}
-              alt={viewItem.title}
-              style={{ width: "200px", height: "auto" }}
-            />
-            <button onClick={closeModal}>Close</button>
-          </div>
-        </div>
+        <ModalContent>
+          <h2>{type.toUpperCase()}</h2>
+          <ImgCon>
+              <img
+                src={viewItem.image?.replace("http://https://", "https://")}
+                alt={viewItem.title}
+                style={{ width: "200px", height: "auto" }}
+              />
+               <img
+                src={viewItem.image1?.replace("http://https://", "https://")}
+                alt={viewItem.title}
+                style={{ width: "200px", height: "auto" }}
+              />
+          </ImgCon>
+
+          <ModalCon>
+            <div className='info'>Product Name:<h4>{viewItem.title}</h4></div>
+            <div className='info'>size:<h4>{viewItem.desc}</h4></div>
+          </ModalCon>
+
+          <Buttonn onClick={closeModal}>X</Buttonn>
+        </ModalContent>
       )} 
 
-         <Box
+      <Box
           className="Pagination-laptopUp"
           sx={{
             pt: 2,
@@ -744,7 +723,11 @@ export default function OrderTable() {
           >
             Next
           </Button>
-        </Box>
-    </React.Fragment>
+      </Box>
+      </ContainerWrapper>
+      )}
+  </React.Fragment>
+    </Container>
   )
 }
+
