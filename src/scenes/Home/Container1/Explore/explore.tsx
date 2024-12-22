@@ -1,11 +1,11 @@
-import '../../../index.css'
+import '../../../../index.css'
 
-import { Container, ExploreContainer } from '../event.sty'
+import { Container} from '../../all.Styles'
 
 const Explore = () => {
   return (
     <Container className='ContainerExplored'>
-      <ExploreContainer />
+      
     </Container>
   )
 }

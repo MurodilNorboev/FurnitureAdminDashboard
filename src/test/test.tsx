@@ -170,25 +170,6 @@ export default function OrderTable() {
       toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
     }
   };
-  const handleDelete = async (id: string) => {
-    const token = localStorage.getItem("token");
-    try {
-      const { data } = await axios.delete<any>(
-        `${baseAPI}/product/${type}/delete/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (data.success) {
-        fetchData();
-        toast.success("Item deleted successfully");
-        console.log("Element muvaffaqiyatli o'chirildi.");
-      }
-    } catch (error: any) {
-      console.error("Xatolik yuz berdi:", error);
-      toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
-    }
-  };
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     if (!e.target.files || e.target.files.length === 0) {
       console.log(`${fieldName} fayli tanlanmagan.`);
@@ -215,6 +196,25 @@ export default function OrderTable() {
     } catch (error: any) {
       console.error(`${fieldName} fayl yuklashda xatolik:`, error);
       toast.error(error.response?.data?.error?.msg || "Fayl yuklashda xatolik yuz berdi.");
+    }
+  };
+  const handleDelete = async (id: string) => {
+    const token = localStorage.getItem("token");
+    try {
+      const { data } = await axios.delete<any>(
+        `${baseAPI}/product/${type}/delete/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (data.success) {
+        fetchData();
+        toast.success("Item deleted successfully");
+        console.log("Element muvaffaqiyatli o'chirildi.");
+      }
+    } catch (error: any) {
+      console.error("Xatolik yuz berdi:", error);
+      toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
     }
   };
   const handlePagination = (page: number) => {
@@ -331,64 +331,6 @@ export default function OrderTable() {
             alignItems: 'center',     
           }}
         >
-          {/* <form
-            onSubmit={addTodo}
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '8px',
-              width: '300px', 
-            }}
-          >
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-              type="text"
-              placeholder="title"
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                borderRadius: '4px',
-              }}
-            />
-            <input
-              onChange={(e) => setDesc(e.target.value)}
-              value={desc}
-              type="text"
-              placeholder="desc"
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                borderRadius: '4px',
-              }}
-            />
-            <input
-              type="file"
-              onChange={uploadFile}
-              style={{
-                width: '100%',
-                marginBottom: '10px',
-              }}
-            />
-            <div
-            >
-              <Button 
-                type="submit" 
-                variant="soft" 
-                disabled={!image} 
-                style={{
-                  width: "100%", 
-                  color: !image ? "#e4e4e4f8" : "white", 
-                  backgroundColor: !image ? "#4984e3f8" : "#0051d3e7"  
-                }}
-              >
-                {selectID ? "Edit" : "Add"}
-              </Button>
-            </div>
-
-          </form> */}
        <div>
          <h2>{selectID ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}` : `Add ${type.charAt(0).toUpperCase() + type.slice(1)}`}</h2>
          {fields.map((field) => (

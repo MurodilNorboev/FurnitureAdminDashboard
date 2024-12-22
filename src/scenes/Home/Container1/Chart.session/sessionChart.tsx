@@ -12,13 +12,13 @@ import {
   ChartOptions,
   ChartData,
 } from "chart.js";
-import { baseAPI } from "../../../utils/constants";
+import { baseAPI } from "../../../../utils/constants";
 import moment from 'moment';
 import Chip from "@mui/joy/Chip";
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import Avatar from "@mui/joy/Avatar";
-import { Container, Content, LinePositio } from "../event.sty";
+import { Container, Content, LinePositio } from "../../all.Styles";
 
 chartjs.register(
   LineElement,
@@ -132,7 +132,7 @@ function LineChart() {
         fill: true,
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 1000);
+          const gradient = ctx.createLinearGradient(0, 0, 0, 60);
           gradient.addColorStop(0, isDarkMode ? "#c1fad4a4" : "#006400");
           gradient.addColorStop(1, "white");
           return gradient;
@@ -195,12 +195,14 @@ function LineChart() {
     <Container>
       <Content>
           <div className="users">
-          Users 
+            <h2>
+              Users 
+            </h2>
           <Chip
               variant="soft"
               size="sm"
               startDecorator={<Avatar />}
-              color="primary"
+              color="success"
             >
               {userCount}
             </Chip>
