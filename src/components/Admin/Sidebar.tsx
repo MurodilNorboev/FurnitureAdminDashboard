@@ -17,8 +17,6 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
-import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
 import ColorSchemeToggle from './ColorSchemeToggle';
@@ -98,7 +96,7 @@ export default function Sidebar() {
         <IconButton variant="soft" color="primary" size="sm">
           <BrightnessAutoRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">Acme Co.</Typography>
+        <Typography level="title-lg">Furniture</Typography>
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>
       <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" />
@@ -156,24 +154,6 @@ export default function Sidebar() {
             </ListItem>
           </Navlink>
 
-          <Navlink to="/messages">
-            <ListItem onClick={() => handleClick('messages')}>
-              <ListItemButton selected={selectedItem === 'messages'}
-                role="menuitem"
-                // component="a"
-                // href="/joy-ui/getting-started/templates/messages/"
-              >
-                <QuestionAnswerRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Messages</Typography>
-                </ListItemContent>
-                <Chip size="sm" color="primary" variant="solid">
-                  4
-                </Chip>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
-
           <Navlink to="/user">
             <ListItem onClick={() => handleClick('user')}>
               <ListItemButton selected={selectedItem === 'user'}>
@@ -197,20 +177,19 @@ export default function Sidebar() {
             mb: 2,
           }}
         >
-          <Navlink to="/support">
-            <ListItem onClick={() => handleClick('support')}>
-              <ListItemButton selected={selectedItem === 'support'}>
-                <SupportRoundedIcon />
-                Support
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
 
-          <Navlink to="/setting">
-            <ListItem onClick={() => handleClick('settings')}>
-              <ListItemButton selected={selectedItem === 'settings'}>
-                <SettingsRoundedIcon />
-                Settings
+          <Navlink to="/messages">
+            <ListItem onClick={() => handleClick('messages')}>
+              <ListItemButton selected={selectedItem === 'messages'}
+                role="menuitem"
+              >
+                <QuestionAnswerRoundedIcon />
+                <ListItemContent>
+                  <Typography level="title-sm">Messages</Typography>
+                </ListItemContent>
+                <Chip size="sm" color="primary" variant="solid">
+                  4
+                </Chip>
               </ListItemButton>
             </ListItem>
           </Navlink>
@@ -220,7 +199,8 @@ export default function Sidebar() {
 
       <Divider />
       
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+      <Navlink to={'/profile'}>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
         <Avatar
           variant="outlined"
           size="sm"
@@ -233,7 +213,8 @@ export default function Sidebar() {
         <IconButton size="sm" variant="plain" color="neutral" onClick={logaut}>
           <LogoutRoundedIcon />
         </IconButton>
-      </Box>
+        </Box>
+      </Navlink>
     </Sheet>
   );
 }

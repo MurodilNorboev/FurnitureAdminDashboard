@@ -32,16 +32,21 @@ const Download: React.FC = () => {
       chart: {
         height: 350,
         type: 'line',
+        foreColor:"black",
         toolbar: {
           show: false,
         },
       },
       stroke: {
         width: [0, 4],
+        colors: ['#356c9f'],
       },
       dataLabels: {
         enabled: true,
         enabledOnSeries: [1],
+        style: {
+          colors: ["#356c9f"]
+        }
       },
       labels: [
         'Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek',
@@ -55,6 +60,7 @@ const Download: React.FC = () => {
           rotate: 0,
           style: {
             fontSize: '12px',
+            colors: "black"
           },
         },
       },
@@ -98,7 +104,7 @@ const Download: React.FC = () => {
         </div>
       </Content>
       <div id="chart">
-        <ReactApexChart options={state.options} series={state.series} type="line" height={280} />
+        <ReactApexChart options={state.options} series={state.series} type="line" height={280} color={'yellow'} />
       </div>
     </Container2>
   );

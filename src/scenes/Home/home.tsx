@@ -50,7 +50,6 @@ const Container2 = styled.div`
 }
 @media screen and (max-width: 1000px) {
   grid-template-columns: repeat(1, 1fr);
-  /* width: 100%; */
 }
 `;
 const Container3 = styled.div`
@@ -104,7 +103,7 @@ useEffect(() => {
   setLoadig(true);
   setTimeout(() => {
     setLoadig(false)
-  }, 100);
+  }, 5000);
 }, [])
   return (
     <ContainerWrapper>
@@ -130,8 +129,8 @@ useEffect(() => {
       </Box>
       {loading ? 
       (
-        <div style={{width:"100vw",minHeight:"40rem", height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
-         <ScaleLoader color={'#303648'} loading={loading} />
+        <div style={{width:"100%", height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
+         <ScaleLoader color={'#1976e8d7'} loading={loading} />
         </div>
       )
         : 

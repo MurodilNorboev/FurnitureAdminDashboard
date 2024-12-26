@@ -87,7 +87,7 @@ const MyCalendar = () => {
             </div>
           </div>
         )}
-        <Avatars src={avatar} alt="imag🌌" onClick={() => navigate('/profile')} />
+        <Avatars src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286' alt="imag🌌" onClick={() => navigate('/profile')} />
       </Wrapper> 
       )
       }

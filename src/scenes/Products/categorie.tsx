@@ -33,8 +33,22 @@ import { baseAPI } from '../../utils/constants';
 import Select, { selectClasses } from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Buttonn, Container, ContainerWrapper, ImgCon, ModalCon, ModalContent } from './style';
+import { Buttonn, Container, ContainerWrapper, ImgCon, ModalCon, ModalConent, ModalContent, ModalWrap, OpenModalContainer } from './style';
 import ScaleLoader from "react-spinners/ScaleLoader";
+import SvgIcon from '@mui/joy/SvgIcon';
+import { styled } from '@mui/joy';
+
+const VisuallyHiddenInput = styled('input')`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  width: 1px;
+`;
 
 const categories = [
   { label: "Furniture", value: "furniture" },
@@ -46,6 +60,49 @@ const typecatalog = [
   { label: "Electronics", types: ["TV", "Fridge", "Washing Machine"] },
 ];
 
+const mockData: any = [
+  'Popular',
+  'Popular',
+  'Sale',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+];
+
+const datas1 = [
+    { label: "Product Name", field: "types" },
+    { label: "Cost", field: "cost" },
+    { label: "Description", field: "description" },
+    { label: "Weight", field: "Weight_KG" },
+    { label: "Material", field: "Material" },
+    { label: "Assembly", field: "Assembly" },
+    { label: "Seat Dimensions", field: "SeatDimensions_HWD" },
+    { label: "Width", field: "Width" },
+    { label: "Height", field: "Height" },
+    { label: "Color", field: "Color" },
+    { label: "Style", field: "Styles" },
+    { label: "Category", field: "categories" }
+]
+
 const TYPES = ["products", "textils", "tables"];
 
 export default function OrderTable() {
@@ -55,9 +112,9 @@ export default function OrderTable() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [fields, setFields] = useState<string[]>([]);
     const [data, setData] = useState<any[]>([]);
-    const [user, setUser] = useState<any>(null);
     const [selectID, setSelectID] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
     const [search, setSearch] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalImage, setModalImage] = useState<string>('');
@@ -99,7 +156,7 @@ export default function OrderTable() {
     setLoadig(true);
     setTimeout(() => {
       setLoadig(false)
-    }, 5000);
+    }, 100);
   }, [])
 
   const handleView = (id: string) => {
@@ -189,6 +246,7 @@ export default function OrderTable() {
           setFormData({});
           toast.success("Item added successfully");
           alert("Item added successfully")
+          setIsOpen(false)
         } 
       } else {
         const { data } = await axios.put<any>(
@@ -200,10 +258,11 @@ export default function OrderTable() {
         );
         if (data.success) {
           fetchData();
-          setFormData({});
+          setFormData([]);
           setSelectID(''); 
           toast.success("Item updated successfully");
-          alert("Item updated successfully")
+          alert("Item updated successfully");
+          setIsOpen(false)
         }
       }
     } catch (error: any) {
@@ -329,7 +388,7 @@ export default function OrderTable() {
   };
   
   const NUMBER_FIELDS = ["Hight", "Width", "Weight_KG", "LegHeight_CM"]; 
-  
+
   return (
     <Container>
       <React.Fragment>
@@ -362,107 +421,149 @@ export default function OrderTable() {
         </Breadcrumbs>
       </Box>
 
-      {isOpen && (
-        <div
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsOpen(false);
-            }
-          }}
-          style={{
-            position: "fixed",
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 99999,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ height: '500px', overflow: "scroll" }}>
-            <h2>
-              {selectID ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}` : `Add ${type.charAt(0).toUpperCase() + type.slice(1)}`}
-            </h2>
-
-            <div>
-              <div style={{ marginBottom: "1rem" }}>
-                <select
-                  value={formData.categories || ""}
-                  onChange={handleCategoryChange}
+              {isOpen && (
+                <OpenModalContainer
+                  onClick={(e: any) => {
+                    if (e.target === e.currentTarget) {
+                      setIsOpen(false);
+                    }
+                  }}
                 >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-        
-              {selectedCategory && (
-                <div style={{ marginBottom: "1rem" }}>
-                  <select
-                    value={formData.types || ""}
-                    onChange={(e) => handleTypeChange(e.target.value)}
-                  >
-                    <option value="">Select Type</option>
-                    {filteredTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </div>
-      
-            {fields.map((val, ind) => (
+                  <ModalWrap>
+                    <div style={{paddingLeft:"15px",display:"flex",width:"100%",justifyContent:"space-between"}}>
+                      <h2>
+                      {selectID ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}` : `Add:  ${type.charAt(0).toUpperCase() + type.slice(1)}`}
+                      </h2>
+                      <h2 onClick={() => setIsOpen(false)}>
+                        X
+                      </h2>
+                    </div>
+              
+                    <ModalConent>
 
-              (val !== "categories" && val !== "types") && ( 
-                <div key={ind} style={{ marginBottom: "1rem" }}>
-                  {(val === "image" || val.startsWith('image')) && (
-                    <>
-                      <input type="file" onChange={(e) => uploadFile(e, val)} />
-                      <p>{val}: {formData[val]}</p>
-                    </>
-                  )}
-      
-      
-                  {NUMBER_FIELDS.includes(val) && (
-                    <input
-                      type="number"
-                      placeholder={val.charAt(0).toUpperCase() + val.slice(1)}
-                      value={formData[val] || ""}
-                      onChange={(e) => handleChange(e, val)}
-                    />
-                  )}
-      
-      
-                  {!NUMBER_FIELDS.includes(val) && val !== "image" && !val.startsWith('image') && (
-                    <input
-                      type="text"
-                      placeholder={val.charAt(0).toUpperCase() + val.slice(1)}
-                      value={formData[val] || ""}
-                      onChange={(e) => {
-                        handleChange(e, val);
-                      }}
-                    />
-                  )}
-      
-                  <p>{val}: {formData[val]}</p>
-                </div>
-              )
-            ))}
-      
-            <button onClick={handleSubmit} style={{ marginTop: "1rem" }}>
-              {selectID ? "Update Item" : "Add Item"}
-            </button>
-          </div>
-        </div>
-      )}
+                        <div className="items ad">
+
+                          <div className='selectwrap'>
+                            <h4>Categories:</h4>
+                            <select
+                              className="Select"
+                              value={formData.categories || ""}
+                              onChange={handleCategoryChange}
+                            >
+                              <option value="">
+                                <em>Select Category</em>
+                              </option>
+                              {categories.map((cat) => (
+                                <option key={cat.value} value={cat.value}>
+                                  {cat.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className='selectwrap'>
+                            <h4>Type:</h4>
+                            <select 
+                            className="Select"
+                              value={formData.types || ""} 
+                              onChange={(e) => handleTypeChange(e.target.value)}
+                            >
+                              <option value="">Select Type</option>
+                              {filteredTypes.map((type) => (
+                                <option key={type} value={type}>
+                                  {type}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                        </div>
+
+                        <div className="items c">
+                          {fields.map((val, ind) => (
+                            (val !== "categories" && val !== "types" && val !== "image" && !val.startsWith('image')) && ( 
+                              <div key={ind}>
+                                <h4 style={{ marginBottom: "5px" }}>{mockData[ind]}</h4>
+                                {NUMBER_FIELDS.includes(val) ? (
+                                  <Input
+                                    type="number"
+                                    placeholder={val.charAt(0).toUpperCase() + val.slice(1)}
+                                    value={formData[val] || ""}
+                                    onChange={(e) => handleChange(e, val)}
+                                  />
+                                ) : (
+                                  <Input
+                                    type="text"
+                                    placeholder={val.charAt(0).toUpperCase() + val.slice(1)}
+                                    value={formData[val] || ""}
+                                    onChange={(e) => handleChange(e, val)}
+                                  />
+                                )}
+                              </div>
+                            )
+                          ))}
+                        </div>
+
+                        <div className="image-container">
+                        {fields
+                          .filter((val) => val === "image" || val.startsWith("image"))
+                          .slice(0, 8) 
+                          .map((val, ind) => (
+                            <div key={ind} className="item">
+                              <div className="data1 aaa">
+                                <Button
+                                  className="buttonimag"
+                                  component="label"
+                                  role={undefined}
+                                  tabIndex={-1}
+                                  variant="outlined"
+                                  color="neutral"
+                                  startDecorator={
+                                    <SvgIcon>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                                        />
+                                      </svg>
+                                    </SvgIcon>
+                                  }
+                                >
+                                  Upload a file
+                                  <VisuallyHiddenInput
+                                    type="file"
+                                    onChange={(e) => uploadFile(e, val)}
+                                  />
+                                </Button>
+                                {formData[val] ? (
+                                  <img className="images" src={formData[val]} alt="" />
+                                ) : (
+                                  <img
+                                    className="images"
+                                    src="https://us.123rf.com/450wm/avaicon/avaicon2202/avaicon220200138/181341773-ic%C3%B4ne-d-image-signe-et-symbole-de-la-galerie-de-photos-ic%C3%B4ne-d-image.jpg?ver=6"
+                                    alt="Placeholder"
+                                
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                      <Button onClick={handleSubmit} style={{ marginTop: "1rem" }}>
+                        {selectID ? "Update Item" : "Add Item"}
+                      </Button>
+              
+                    </ModalConent>
+                  </ModalWrap>
+                </OpenModalContainer>
+              )}
 
       <Box
         className="SearchAndFilters-tabletUp"
@@ -637,14 +738,18 @@ export default function OrderTable() {
                             <MoreHorizRoundedIcon />
                           </MenuButton>
                           <Menu size="sm" sx={{ minWidth: 140 }}>
+
                             <MenuItem
                               onClick={() => {
+                                const selectedItem = data.find((item) => item._id === row._id); 
                                 setSelectID(row._id);
+                                setFormData(selectedItem || {});  
                                 setIsOpen(true);
                               }}
                             >
                               Edit
                             </MenuItem>
+
                             <Divider />
                             <MenuItem color="danger" onClick={() => handleDelete(row._id)}>
                               Delete
@@ -729,54 +834,36 @@ export default function OrderTable() {
 
       {viewItem && (
         <ModalContent>
-          <h2>{viewItem.categories}</h2>
-          <ImgCon>
-              <img
-                src={viewItem.image?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-               <img
-                src={viewItem.image1?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-               <img
-                src={viewItem.image2?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-               <img
-                src={viewItem.image3?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-              <img
-                src={viewItem.image4?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-               <img
-                src={viewItem.image5?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-               <img
-                src={viewItem.image6?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-              <img
-                src={viewItem.image7?.replace("http://https://", "https://")}
-                alt={viewItem.title}
-                style={{ width: "160px", height: "auto" }}
-              />
-          </ImgCon>
+          <h2 style={{paddingLeft:"20px"}}>{viewItem.categories}</h2>
+            <ImgCon>
+              {[viewItem.image, viewItem.image1, viewItem.image2, viewItem.image3, 
+                viewItem.image4, viewItem.image5, viewItem.image6, viewItem.image7]
+                .slice(0, 9)
+                .filter(Boolean) // Faqat mavjud rasmlarni oladi
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    src={img.replace("http://https://", "https://")}
+                    alt={viewItem.title}
+                  />
+                ))
+              }
+            </ImgCon>
 
-          <ModalCon>
-            <div className='info'>Product Name:<h4>{viewItem.types}</h4></div>
-            <div className='info'>cost:<h4>{viewItem.cost}</h4></div>
-          </ModalCon>
+
+            <ModalCon>
+              <div className='Content'>
+                <div className='items'>
+                  {datas1.map((item, index) => (
+                    <div key={index} className='item'>
+                      <h3>{item.label}:</h3>
+                      <h4>{viewItem[item.field]}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ModalCon>
+
 
           <Buttonn onClick={closeModal}>X</Buttonn>
         </ModalContent>
@@ -838,6 +925,10 @@ export default function OrderTable() {
     </Container>
   )
 }
+
+
+
+
 
 
 // import * as React from 'react';

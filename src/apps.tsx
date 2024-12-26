@@ -1,7 +1,7 @@
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import ErrorComponent from './components/error/404';
 import Header from './components/Admin/Header';
 import Sidebar from './components/Admin/Sidebar';
@@ -10,10 +10,9 @@ import HomeComponent from './scenes/Home/home';
 import MessageComponent from './scenes/Messages/message';
 import UserComponents from './scenes/Users/user';
 import Settingcomponent from './scenes/Settings/setting';
-import SupportComponent from './scenes/Support/support';
 import CategorieComponent from './scenes/Products/categorie';
 import { Navbar } from './scenes';
-import Test from './test/test';
+import Test from './test/Tests';
 import Login from './components/Profile/profile';
 
 
@@ -51,7 +50,6 @@ export default function JoyOrderDashboardTemplates() {
              <Route path="/categorie" element={<CategorieComponent />} /> 
              <Route path="/messages" element={<MessageComponent />} /> 
              <Route path="/user" element={<UserComponents />} /> 
-             <Route path="/support" element={<SupportComponent />} /> 
              <Route path="/setting" element={<Settingcomponent />} /> 
              <Route path='profile' element={<Login />} />
              <Route path="*" element={<ErrorComponent />} /> 

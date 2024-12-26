@@ -125,7 +125,7 @@ function LineChart() {
         borderColor: isDarkMode ? "#3ec175" : "#006400", 
         borderWidth: 2,
         pointBorderColor: isDarkMode ? "#3ec175" : "#006400",
-        pointBorderWidth: 3,
+        pointBorderWidth: 5.5,
         pointBackgroundColor: isDarkMode ? "#3ec175" : "#006400",
         pointHitRadius: 10,
         tension: 0,
@@ -157,11 +157,11 @@ function LineChart() {
           callbacks: {
             title: (context: any) => {
               const monthNames = [
-                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
               ];
               return `${monthNames[currentMonth]} ${context[0].label}`;
             },
-            label: (context: any) => `Sales: ${context.raw}`,
+            label: (context: any) => ` ${context.raw}`,
           },
           boxWidth: 4,
           boxHeight: 4,
@@ -170,7 +170,7 @@ function LineChart() {
           bodyColor: "white",
           bodyFont: { size: 12 },
           titleFont: { size: 14 },
-          padding: 3,
+          padding: 5,
         },
       },
       responsive: true,

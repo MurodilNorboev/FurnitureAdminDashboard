@@ -23,7 +23,7 @@ const Login: React.FC = () => {
     password: ''
   });
 
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,13 +46,15 @@ const Login: React.FC = () => {
 
         navigate('/home'); 
       } else {
-        console.log('Token qaytarilmadi');
         setError('Token qaytarilmadi. Iltimos, qayta urinib ko\'ring.');
       }
-    } catch (err) {
-
-      console.error('Xatolik yuz berdi:', err);
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.error?.msg || 'Noma’lum xato yuz berdi';
+      alert(errorMessage)
       setError('Login yoki parol noto\'g\'ri.');
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
     } finally {
       setLoading(false);
     }

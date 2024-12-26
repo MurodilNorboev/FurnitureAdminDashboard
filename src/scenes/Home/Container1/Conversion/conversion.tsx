@@ -59,7 +59,7 @@ const chartOptions: any = {
       intersect: false,
       callbacks: {
         title: (context: { label: string }[]) => context[0].label,
-        label: (context: { raw: number }) => `🔴 ${context.raw}`,
+        label: (context: { raw: number }) => `${context.raw}`,
       },
       backgroundColor: 'rgba(0,0,0,0.7)',
       titleColor: 'white',
@@ -74,6 +74,12 @@ const chartOptions: any = {
   },
   hover: { mode: 'nearest' as const, intersect: false },
   elements: { line: { borderWidth: 2 } },
+  layout: {
+    padding: {
+      bottom: 0,
+      top: 20 
+},
+  }
 };
 const Conversion = () => {
   return (

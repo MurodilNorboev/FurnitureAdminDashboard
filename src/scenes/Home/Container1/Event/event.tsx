@@ -31,11 +31,7 @@ const chartData = {
       label: 'Revenue',
       data: dataPoints.map((d) => d.value),
       borderColor: '#d32f2f',
-      borderWidth: 2,
-      pointBorderColor: '#d32f2f',
       pointBackgroundColor: '#d32f2f',
-      pointBorderWidth: 3,
-      pointHoverRadius: 7,
       pointRadius: 0,
       fill: true,
       backgroundColor: (context: { chart: { ctx: CanvasRenderingContext2D } }) => {
@@ -59,7 +55,7 @@ const chartOptions: any = {
       intersect: false,
       callbacks: {
         title: (context: { label: string }[]) => context[0].label,
-        label: (context: { raw: number }) => `🔴 ${context.raw}`,
+        label: (context: { raw: number }) => ` ${context.raw}`,
       },
       backgroundColor: 'rgba(0,0,0,0.7)',
       titleColor: 'white',
@@ -74,6 +70,11 @@ const chartOptions: any = {
   },
   hover: { mode: 'nearest' as const, intersect: false },
   elements: { line: { borderWidth: 2 } },
+  layout: {
+    padding: {
+      bottom: 0,
+      top: 20 
+}, }
 };
 const CreateEvent = () => {
   return (

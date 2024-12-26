@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { baseAPI } from '../../utils/constants';
 import { toast, ToastContainer } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 import { LoginCon, LoginWrap, LoginWraps } from './loginSyle';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface SignupData {
   full_name: string;
@@ -19,7 +20,6 @@ interface Type {
 
 
 const Register: React.FC = () => {
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState<SignupData>({
     full_name: '',
@@ -27,8 +27,7 @@ const Register: React.FC = () => {
     email: '',
     password: ''
   });
-
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,15 +45,21 @@ const Register: React.FC = () => {
       const response = await axios.post<Type>(baseAPI + '/user/sign-up', formData);
       if (response.data.success) {
         navigate('/login');  
-      }
-    } catch (err) {
-      setError('Ro\'yxatdan o\'tishda xatolik yuz berdi.');
+      } 
+
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.error?.messages || 'Noma’lum xato yuz berdi';
+      
+      alert(`Royhatdan o'tishda muammo: ${errorMessage}`);
+      setError("telefon raqami yoki email manzilni notogri kirgazdingiz!");
+    
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
     } finally {
       setLoading(false);
     }
   };
-
-
 
   return (
         <LoginCon>
