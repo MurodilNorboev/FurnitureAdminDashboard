@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Link from '@mui/joy/Link';
@@ -11,39 +10,120 @@ import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import axios from 'axios';
-import { baseAPI } from '../../utils/constants';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Add from '@mui/icons-material/Add';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ErrorMessage } from '../../components/styles/style';
-import { Todo } from '../../components/types/type';
-import OrderList from './OrderList';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import { baseAPI } from '../../utils/constants';
+import { Buttonn, Container, ContainerWrapper, ImgCon, ModalCon, ModalConent, ModalContent, ModalWrap, OpenModalContainer } from './orderStyle';
+import ScaleLoader from "react-spinners/ScaleLoader";
+import SvgIcon from '@mui/joy/SvgIcon';
+import { styled } from '@mui/joy';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const VisuallyHiddenInput = styled('input')`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  width: 1px;
+`;
+
+const categories = [
+  { label: "Furniture", value: "furniture" },
+  { label: "Electronics", value: "electronics" },
+];
+
+const typecatalog = [
+  { label: "Furniture", types: ["Sofa", "Table", "Chair"] },
+  { label: "Electronics", types: ["TV", "Fridge", "Washing Machine"] },
+];
+
+const mockData: any = [
+  'Popular',
+  'Popular',
+  'Sale',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+  'sadfs',
+];
+
+const datas1 = [
+    { label: "Product Name", field: "types" },
+    { label: "Cost", field: "cost" },
+    { label: "Description", field: "description" },
+    { label: "Weight", field: "Weight_KG" },
+    { label: "Material", field: "Material" },
+    { label: "Assembly", field: "Assembly" },
+    { label: "Seat Dimensions", field: "SeatDimensions_HWD" },
+    { label: "Width", field: "Width" },
+    { label: "Height", field: "Height" },
+    { label: "Color", field: "Color" },
+    { label: "Style", field: "Styles" },
+    { label: "Category", field: "categories" }
+]
+
+const useDebouncedSearch = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 export default function OrderTable() {
-  const [data, setData] = useState<Todo[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-  const [selectID, setSelectID] = useState('');
-  const [image, setImage] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState<string>('');
+  const [data1, setData1] = useState<any[]>([])
+  const [filteredTypes, setFilteredTypes] = useState<string[]>([]); 
+    const [type, setType] = useState<string>('');
+    const [formData, setFormData] = useState<any>({});
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [fields, setFields] = useState<string[]>([]);
+    const [data, setData] = useState<any[]>([]);
+    const [selectID, setSelectID] = useState<string | null>(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const [search, setSearch] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalImage, setModalImage] = useState<string>('');
+    const [ loading, setLoadig ] = useState(false);
+  const [viewItem, setViewItem] = useState<any | null>(null);
   ///// pagenation
   const [todosPerPage] = useState(15);
   const totalPages = Math.ceil(data.length / todosPerPage);
@@ -52,141 +132,197 @@ export default function OrderTable() {
   /// PDF 
   const [error, setError] = useState<string>('');
   const [selected, setSelected] = useState<string[]>([]);
+  const debouncedSearch = useDebouncedSearch(search, 10); 
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCategory = e.target.value;
+    setSelectedCategory(selectedCategory);
+    setFormData({ ...formData, categories: selectedCategory, types: "" });
+    setType('');  
+  };
+
+  const handleTypeChange = (newType: string) => {
+    setType(newType);
+    setFormData({ ...formData, types: newType });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [debouncedSearch, type]); 
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value); 
+  };
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const category = typecatalog.find(cat => cat.label.toLowerCase() === selectedCategory.toLowerCase());
+      if (category) {
+        setFilteredTypes(category.types);
+      } else {
+        setFilteredTypes([]);
+      }
+    }
+  }, [selectedCategory]);
+
+  useEffect(() => { // loading
+    setLoadig(true);
+    setTimeout(() => {
+      setLoadig(false)
+    }, 100);
+  }, [])
+
+  const handleView = (id: string) => {
+   const selectedItem = data.find((item) => item._id === id);
+   if (selectedItem) {
+     setViewItem(selectedItem); 
+   }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    const value = e.target.value;
   
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: NUMBER_FIELDS.includes(field) ? (value === "" ? "" : parseFloat(value)) : value,
+    }));
+  };
+  
+  useEffect(() => {
+    fetchData();
+  }, [type, search]); 
 
   const openModal = (image: string) => { // image modal
     setIsModalOpen(true);
     setModalImage(image);
   };
+
   const closeModal = (e: React.MouseEvent) => { // image modal
     if (e.target === e.currentTarget) {
       setIsModalOpen(false);
       setModalImage('');
+      setViewItem(null);
     }
   };
-  const getTodo = async () => { // barcha todolar
-    try {
-      const response = await axios.get<{ data: Todo[] }>(`${baseAPI}/todo/get-all`);
-      setData(response.data.data);
-    } catch (error: any) {
-      toast.error(error.response?.data?.error?.msg || 'Ma\'lumotlarni olishda xatolik yuz berdi.');
-    }
-  };
-  const getSearch = async () => { // todo search
-    try {
-      const { data } = await axios.get<{ success: boolean; data: Todo[] }>(
-        `${baseAPI}/todo/get-all`,
-        { params: { search } }
-      );
-      if (data.success) {
-        setData(data.data); // Natijalarni holatda saqlaymiz
-      } else {
-        toast.error('Qidiruv bo‘yicha hech narsa topilmadi.');
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.error?.msg || 'Xatolik yuz berdi.');
-    }
-  };
-  useEffect(() => { // profile/ user login qilganini tekshirish 
-    const getProfile = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const { data } = await axios.get(`${baseAPI}/user/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(data);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-    getProfile();
-    getTodo();
-  }, []);
-  const addTodo = async (e: React.FormEvent) => { // todo add va edit qilish
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
 
-      const todoData = { title, desc, image };
+  useEffect(() => {
+    fetchData();
+  }, [type, search]);  
+  
+  const fetchData = async () => {
+    try {
+      const params = debouncedSearch ? { query: debouncedSearch } : {}; 
+      const {data} = await axios.get<any>(`${baseAPI}/product/cart-count`, { params });
 
+      const firstCart = data.cartsData && data.cartsData.length > 0 ? data.cartsData[0] : null;
+
+      const firstCartId = firstCart
+      
+
+      const firstCartFurniture = firstCart ? firstCart.furniture : [];
+      setData(firstCartFurniture);
+      setData1(firstCartId)
+
+      if (data && data.data && data.data.data && data.data.data.length > 0) {
+        const keys = Object.keys(firstCartFurniture[0]).filter(
+          (key) => key !== "_id" && key !== "sana" && key !== "yangilanish"
+        );
+        setFields(keys);
+      }
+
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+
+  const handleSubmit = async () => { // add qilish
+    const token = localStorage.getItem("token");
+
+    try {
       if (!selectID) {
         const { data } = await axios.post<any>(
-          `${baseAPI}/todo/add`,
-          todoData,
+          `${baseAPI}/product/add`,
+          formData,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         if (data.success) {
-          setIsOpen(false);
-          getTodo();
-          setTitle('');
-          setDesc('');
-          setImage('');
-        }
+          fetchData();
+          setFormData({});
+          toast.success("Item added successfully");
+          alert("Item added successfully")
+          setIsOpen(false)
+        } 
       } else {
         const { data } = await axios.put<any>(
-          `${baseAPI}/todo/edit/${selectID}`,
-          todoData,
+          `${baseAPI}/product/edit/${selectID}`,
+          formData,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         if (data.success) {
-          setIsOpen(false);
-          getTodo();
-          setTitle('');
-          setDesc('');
-          setSelectID('');
-          setImage('');
+          fetchData();
+          setFormData([]);
+          setSelectID(''); 
+          toast.success("Item updated successfully");
+          alert("Item updated successfully");
+          setIsOpen(false)
         }
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.error?.msg || 'Xatolik yuz berdi.');
+      toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
+      alert(error.response?.data?.error?.msg || "Xatolik yuz berdi.")
     }
   };
-  const DeleteTodo = async (id: string) => { // todo ni delet qilish
-    const token = localStorage.getItem('token');
+
+  const handleDelete = async (id: string, data1: string) => {
+    const token = localStorage.getItem("token");
     try {
-      const { data } = await axios.delete<any>(`${baseAPI}/todo/delete/` + id, {
+      const { data } = await axios.delete<any>(
+        `${baseAPI}/product/cart-delet/${data1}/furniture/${id}`, // data1 cartId, id furnitureId
+        {
         headers: { Authorization: `Bearer ${token}` },
-      });
+        }
+      );
       if (data.success) {
-        getTodo();
+        fetchData();
+        toast.success("Item deleted successfully");
+        console.log("Element muvaffaqiyatli o'chirildi.");
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.error?.msg || 'Xatolik yuz berdi.');
+      console.error("Xatolik yuz berdi:", error);
+      toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
     }
   };
-  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => { // imagni yuklash
-    if (!e.target.files) {
+
+  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+    if (!e.target.files || e.target.files.length === 0) {
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', e.target.files[0]);
+    formData.append(fieldName, e.target.files[0]);
+    const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem('token');
     try {
       const { data } = await axios.post<any>(`${baseAPI}/upload/`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (data.success) {
-        setImage(data.file_path);
+        setFormData((prev: any) => ({
+          ...prev,
+          [fieldName]: data.filePaths[0],
+        }));
+        toast.success(`${fieldName} uploaded successfully`);
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.error?.msg || 'Fayl yuklashda xatolik yuz berdi.');
+      toast.error(error.response?.data?.error?.msg || "Fayl yuklashda xatolik yuz berdi.");
     }
   };
-  useEffect(() => {
-    if (search.trim()) {
-      getSearch();
-    } else {
-      getTodo();
-    }
-  }, [search]);
 
-  ///// pagenation functon
   const handlePagination = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
@@ -240,6 +376,7 @@ export default function OrderTable() {
       doc.save('todos.pdf');
       setSelected([]);
   };
+
   // Checkbox
   const handleCheckboxChange = (_id: string) => {
     setSelected((prevSelected) =>
@@ -248,6 +385,7 @@ export default function OrderTable() {
         : [...prevSelected, _id]
     );
   };
+
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const allIds = data.map((todo) => todo._id);
@@ -257,111 +395,165 @@ export default function OrderTable() {
     }
   };
   
+  const NUMBER_FIELDS = ["Hight", "Width", "Weight_KG", "LegHeight_CM"]; 
+
   return (
-    <React.Fragment>
+    <Container>
+      <React.Fragment>
+      {loading ? (
 
-      <Box sx={{ display: 'flex', alignItems: 'center',position:"fixed", top: 30 }}>
-        <Breadcrumbs
-          size="sm"
-          aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon />}
-          sx={{ pl: 0 }}
-        >
-          <Link
-            underline="none"
-            color="neutral"
-            href="#some-link"
-            aria-label="Home"
-          >
-            <HomeRoundedIcon />
-          </Link>
-          <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            Dashboard
-          </Typography>
-        </Breadcrumbs>
-      </Box>
-
-      {isOpen && (
-        <div
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setIsOpen(false);
-            }
-          }}
-          style={{
-            position: "fixed",
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 99999,
-            display: 'flex',
-            justifyContent: 'center',  
-            alignItems: 'center',     
-          }}
-        >
-          <form
-            onSubmit={addTodo}
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '8px',
-              width: '300px', 
-            }}
-          >
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-              type="text"
-              placeholder="title"
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                borderRadius: '4px',
-              }}
-            />
-            <input
-              onChange={(e) => setDesc(e.target.value)}
-              value={desc}
-              type="text"
-              placeholder="desc"
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                borderRadius: '4px',
-              }}
-            />
-            <input
-              type="file"
-              onChange={uploadFile}
-              style={{
-                width: '100%',
-                marginBottom: '10px',
-              }}
-            />
-            <div
-            >
-              <Button 
-                type="submit" 
-                variant="soft" 
-                disabled={!image} 
-                style={{
-                  width: "100%", 
-                  color: !image ? "#e4e4e4f8" : "white", 
-                  backgroundColor: !image ? "#4984e3f8" : "#0051d3e7"  
-                }}
-              >
-                {selectID ? "Edit" : "Add"}
-              </Button>
-            </div>
-
-          </form>
+        <div style={{width:"100vw",minHeight:"40rem", height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <ScaleLoader color={'#1976e8d7'} loading={loading} />
         </div>
-      )}
-    
+      ) : (
+      <ContainerWrapper>
+
+
+
+              {isOpen && (
+                <OpenModalContainer
+                  onClick={(e: any) => {
+                    if (e.target === e.currentTarget) {
+                      setIsOpen(false);
+                    }
+                  }}
+                >
+                  <ModalWrap>
+                    <div style={{paddingLeft:"15px",display:"flex",width:"100%",justifyContent:"space-between"}}>
+                      <h2>
+                      {selectID ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}` : `Add:  ${type.charAt(0).toUpperCase() + type.slice(1)}`}
+                      </h2>
+                      <h2 onClick={() => setIsOpen(false)}>
+                        X
+                      </h2>
+                    </div>
+              
+                    <ModalConent>
+
+                        <div className="items ad">
+
+                          <div className='selectwrap'>
+                            <h4>Categories:</h4>
+                            <select
+                              className="Select"
+                              value={formData.categories || ""}
+                              onChange={handleCategoryChange}
+                            >
+                              <option value="">
+                                <em>Select Category</em>
+                              </option>
+                              {categories.map((cat) => (
+                                <option key={cat.value} value={cat.value}>
+                                  {cat.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className='selectwrap'>
+                            <h4>Type:</h4>
+                            <select 
+                            className="Select"
+                              value={formData.types || ""} 
+                              onChange={(e) => handleTypeChange(e.target.value)}
+                            >
+                              <option value="">Select Type</option>
+                              {filteredTypes.map((type) => (
+                                <option key={type} value={type}>
+                                  {type}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                        </div>
+
+                        <div className="items c">
+                          {fields.map((val, ind) => (
+                            (val !== "categories" && val !== "types" && val !== "image" && !val.startsWith('image')) && ( 
+                              <div key={ind}>
+                                <h4 style={{ marginBottom: "5px" }}>{mockData[ind]}</h4>
+                                {NUMBER_FIELDS.includes(val) ? (
+                                  <Input
+                                    type="number"
+                                    placeholder={val.charAt(0).toUpperCase() + val.slice(1)}
+                                    value={formData[val] || ""}
+                                    onChange={(e) => handleChange(e, val)}
+                                  />
+                                ) : (
+                                  <Input
+                                    type="text"
+                                    placeholder={val.charAt(0).toUpperCase() + val.slice(1)}
+                                    value={formData[val] || ""}
+                                    onChange={(e) => handleChange(e, val)}
+                                  />
+                                )}
+                              </div>
+                            )
+                          ))}
+                        </div>
+
+                        <div className="image-container">
+                        {fields
+                          .filter((val) => val === "image" || val.startsWith("image"))
+                          .slice(0, 8) 
+                          .map((val, ind) => (
+                            <div key={ind} className="item">
+                              <div className="data1 aaa">
+                                <Button
+                                  className="buttonimag"
+                                  component="label"
+                                  role={undefined}
+                                  tabIndex={-1}
+                                  variant="outlined"
+                                  color="neutral"
+                                  startDecorator={
+                                    <SvgIcon>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                                        />
+                                      </svg>
+                                    </SvgIcon>
+                                  }
+                                >
+                                  Upload a file
+                                  <VisuallyHiddenInput
+                                    type="file"
+                                    onChange={(e) => uploadFile(e, val)}
+                                  />
+                                </Button>
+                                {formData[val] ? (
+                                  <img className="images" src={formData[val]} alt="" />
+                                ) : (
+                                  <img
+                                    className="images"
+                                    src="https://us.123rf.com/450wm/avaicon/avaicon2202/avaicon220200138/181341773-ic%C3%B4ne-d-image-signe-et-symbole-de-la-galerie-de-photos-ic%C3%B4ne-d-image.jpg?ver=6"
+                                    alt="Placeholder"
+                                
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                      <Button onClick={handleSubmit} style={{ marginTop: "1rem" }}>
+                        {selectID ? "Update Item" : "Add Item"}
+                      </Button>
+              
+                    </ModalConent>
+                  </ModalWrap>
+                </OpenModalContainer>
+              )}
+
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
@@ -379,12 +571,15 @@ export default function OrderTable() {
           <FormLabel>Search for order</FormLabel>
           
           <div style={{display:"flex",width:"100%",justifyContent:"space-between",alignItems:"center"}}>
+          <div style={{display: "flex", gap: "20px"}}>
             <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />}  
             type="search"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearchChange}
             style={{width: '220px' }}
             />
+          </div>
+
             <div style={{display:"flex",alignItems:"center",gap:"20px"}}>
             <div style={{marginBottom:"-10px"}}>
                {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -399,17 +594,14 @@ export default function OrderTable() {
                onClick={() => {
                 setIsOpen(true);
                 setSelectID('');
-                setTitle('');
-                setDesc('');
-                setImage('');
               }}
               style={{ width: '150px' }}> 
               Add Cart
                 </Button>
             )}
             </div>
-
           </div>
+          
         </FormControl>
       </Box>
 
@@ -424,6 +616,7 @@ export default function OrderTable() {
           overflow: 'auto',
           minHeight: 0,
           height:"100vw",
+          maxHeight:"490px"
         }}
       >
         <Table
@@ -461,11 +654,12 @@ export default function OrderTable() {
                   id
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>title</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>desc</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>img</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>date</th>
-              <th style={{ width: 140, padding: '12px 6px' }}> </th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Categories</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Product Type</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Image</th>
+              <th style={{ width: 150, padding: '12px 6px' }}>date</th>
+              <th style={{ width: 80, padding: '12px 6px' }}></th>
+              <th style={{ width: 100, padding: '12px 6px' }}>info</th>
             </tr>
           </thead>
           <tbody>
@@ -483,9 +677,9 @@ export default function OrderTable() {
                       <Typography level="body-xs">{(currentPage - 1) * todosPerPage + ind + 1}</Typography>
                     </td>
                     <td>
-                      <Typography level="body-xs">{row.title}</Typography>
+                      <Typography level="body-xs">{row.categories}</Typography>
                     </td>
-                    <td>{row.desc}</td>
+                    <td>{row.types}</td>
                     <td>
                       <img
                         style={{
@@ -501,33 +695,30 @@ export default function OrderTable() {
                     </td>
                     <td>{row.sana}</td>
                     <td>
+                      {/* <button onClick={() => handleDelete(row.cartId, rurnitureId.id)}  style={{border:"none", background:"none"}}>
+                        <DeleteIcon
+                          style={{width:"40px", height:"25px", color:"gray"}}
+                        />
+                      </button> */}
+                      <button
+  onClick={() => {
+    const furnitureId = data1[0]._id
+    
+    handleDelete(row._id, furnitureId);  
+  }}
+  style={{ border: "none", background: "none" }}
+>
+  <DeleteIcon style={{ width: "40px", height: "25px", color: "gray" }} />
+</button>
+                    </td>
+                    <td>
                       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                        <Dropdown>
-                          <MenuButton
-                            slots={{ root: IconButton }}
-                            slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-                          >
-                            <MoreHorizRoundedIcon />
-                          </MenuButton>
-                          <Menu size="sm" sx={{ minWidth: 140 }}>
-                            <MenuItem
-                              onClick={() => {
-                                setSelectID(row._id);
-                                setIsOpen(true);
-                                setTitle(row.title);
-                                setDesc(row.desc);
-                                setImage(row.image);
-                              }}
-                            >
-                              Edit
-                            </MenuItem>
-                            <MenuItem>Move</MenuItem>
-                            <Divider />
-                            <MenuItem color="danger" onClick={() => DeleteTodo(row._id)}>
-                              Delete
-                            </MenuItem>
-                          </Menu>
-                        </Dropdown>
+                        <Link 
+                          onClick={() => handleView(row._id)}
+                          level="body-xs" 
+                          component="button">
+                          View
+                        </Link>
                       </Box>
                     </td>
                   </tr>
@@ -547,7 +738,7 @@ export default function OrderTable() {
         </Table>
       </Sheet>
 
-        {isModalOpen && (
+      {isModalOpen && (
           <div
             id="myModal"
             onClick={closeModal}
@@ -592,9 +783,46 @@ export default function OrderTable() {
               }}
             />
           </div>
-        )}
+      )}
 
-         <Box
+      {viewItem && (
+        <ModalContent>
+          <h2 style={{paddingLeft:"20px"}}>{viewItem.categories}</h2>
+            <ImgCon>
+              {[viewItem.image, viewItem.image1, viewItem.image2, viewItem.image3, 
+                viewItem.image4, viewItem.image5, viewItem.image6, viewItem.image7]
+                .slice(0, 9)
+                .filter(Boolean) // Faqat mavjud rasmlarni oladi
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    src={img.replace("http://https://", "https://")}
+                    alt={viewItem.title}
+                  />
+                ))
+              }
+            </ImgCon>
+
+
+            <ModalCon>
+              <div className='Content'>
+                <div className='items'>
+                  {datas1.map((item, index) => (
+                    <div key={index} className='item'>
+                      <h3>{item.label}:</h3>
+                      <h4>{viewItem[item.field]}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ModalCon>
+
+
+          <Buttonn onClick={closeModal}>X</Buttonn>
+        </ModalContent>
+      )} 
+
+      <Box
           className="Pagination-laptopUp"
           sx={{
             pt: 2,
@@ -643,9 +871,10 @@ export default function OrderTable() {
           >
             Next
           </Button>
-        </Box>
-        <OrderList />
-    </React.Fragment>
+      </Box>
+      </ContainerWrapper>
+      )}
+  </React.Fragment>
+    </Container>
   )
 }
-

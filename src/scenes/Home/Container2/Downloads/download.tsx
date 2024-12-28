@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Chip from "@mui/joy/Chip";
-import { Container2, Content, LinePositio } from '../../all.Styles';
+import { Content } from '../../all.Styles';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
+import Sheet from '@mui/joy/Sheet'
+import '../../styles.css'
+import '../../../../index.css'
 
 interface SeriesData {
   name: string;
@@ -81,14 +84,17 @@ const Download: React.FC = () => {
   });
 
   return (
-    <Container2>
-                  <Content>
-          <div className="users">
+    <Sheet className="Sheet2"  sx={{
+      border: '1.5px solid',
+      borderColor: 'divider',
+    }}>
+      <Content>
+          <div className="users" style={{display:"flex",flexDirection:"column",alignItems:"start"}}>
             <h4>
               Page views and downloads
             </h4>
             <div style={{display: "flex",gap: "20px",alignItems: "center"}}>
-            <h2>13,740</h2>
+            <h1>13,740</h1>
           <Chip
               variant="soft"
               size="sm"
@@ -106,7 +112,7 @@ const Download: React.FC = () => {
       <div id="chart">
         <ReactApexChart options={state.options} series={state.series} type="line" height={280} color={'yellow'} />
       </div>
-    </Container2>
+    </Sheet>
   );
 };
 

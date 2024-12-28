@@ -61,27 +61,6 @@ export const Wrapper = styled.div`
   align-items: center;
   gap: 20px;
 `;
-export const Button = styled.button`
-  width: 150px;
-  padding: 7px 5px;
-  height: 30px;
-  border: none;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 0px 1px, rgba(9, 30, 66, 0.13) 0px 0px 0px 1px;
-  background-color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-content: center;
-  justify-content: space-around;
-  font-size: 14px;
-  font-weight: 500;
-  * {
-    fill: black;
-  }
-  &:active {
-    background-color: #e8ecf1;
-  }
-`;
 export const Avatars = styled.img`
   width: 35px;
   height: 35px;

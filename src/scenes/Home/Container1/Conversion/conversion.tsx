@@ -8,12 +8,14 @@ import {
   Tooltip,
   Filler
 } from 'chart.js';
-import { Container, Content, LinePositio } from '../../all.Styles';
+import { Content, LinePositio } from '../../all.Styles';
 import Chip from "@mui/joy/Chip";
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import Avatar from "@mui/joy/Avatar";
 import { dataPoints } from '../../mockdata';
+import Sheet from '@mui/joy/Sheet';
+import '../../styles.css'
 
 ChartJS.register(
   LineElement,
@@ -83,46 +85,40 @@ const chartOptions: any = {
 };
 const Conversion = () => {
   return (
-    <Container>
+    <Sheet className="Sheet"  sx={{
+      border: '1.5px solid',
+      borderColor: 'divider',
+      gap:"0px"
+    }}>
       <Content>
-          <div className="users">
-            <h2>
-              Contversions
-            </h2>
+        <div className="userWraps">
+        <div className="users">
+          <h2>Conversions</h2>
+        </div>
+        <div className="users">
+          <h1 style={{marginBottom:"-10px"}}>
+            {/* {userCount} */}
+            34
+          </h1>
           <Chip
               variant="soft"
               size="sm"
-              startDecorator={<Avatar />}
-              color="primary"
-            >
-              {/* {userCount} */}count
-            </Chip>
-          </div>
-          <div className="flex justify-center gap-5 mt-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-            <Chip
-              variant="soft"
-              size="sm"
-              startDecorator={<AutorenewRoundedIcon />}
               color="neutral"
+              sx={{height:"22px",border:'1px solid #7f98b8',marginBottom:"-35px"}}
             >
-               Last Month: %
-            </Chip>
-            <Chip
-              variant="soft"
-              size="sm"
-              startDecorator={<CheckRoundedIcon />}
-              color="primary"
-            >
-              This Month: %
-            </Chip>
-          </div>
-      <LinePositio>
-      <Line data={chartData} options={chartOptions} style={{height:'auto',minWidth:"200px",minHeight:"30px",maxHeight:"50px"}} />
-      </LinePositio>
-        <div>
+              {/* {`+ ${monthlyGrowth % 1 === 0 ? monthlyGrowth : Math.round(monthlyGrowth)}%`}   */}
+              +33%
+          </Chip>
         </div>
+        <h5>Last 30 days</h5>
+        </div>
+        <LinePositio>
+          <Line data={chartData} options={chartOptions} 
+          style={{height:'auto',minWidth:"200px",minHeight:"30px",maxHeight:"50px",paddingBottom:"10px"}} />
+        </LinePositio>
+
       </Content>
-    </Container>
+    </Sheet>
   );
 };
 

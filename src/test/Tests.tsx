@@ -1,16 +1,67 @@
-import React from 'react';
-import Chat from './Chat';
+import React, { useEffect, useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import axios from 'axios';
+import { Button } from '@mui/material';
+import { baseAPI } from '../utils/constants';
 
-const Test: React.FC = () => {
-  return (
-    <div>
-      <Chat userType="admin" />  {/* Admin uchun chat */}
-      <Chat userType="user" />   {/* User uchun chat */}
-    </div>
-  );
+interface ChartData {
+    month: string;
+    count: number;
+}
+
+const UserChart = () => {
+    const [data, setData] = useState<ChartData[]>([]);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [currentMonthUsers, setCurrentMonthUsers] = useState(0);
+    const [previousMonthUsers, setPreviousMonthUsers] = useState(0);
+
+    useEffect(() => {
+        axios.get(`${baseAPI}/userFur/user-all`)
+            .then(response => {
+                const chartData: ChartData[] = (response.data as { data: ChartData[] }).data;
+                setData(chartData);
+                
+                const total = chartData.reduce((acc, item) => acc + item.count, 0);
+                setTotalUsers(total);
+
+                const currentMonth = new Date().toISOString().slice(0, 7);
+                const previousMonth = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 7);
+
+                const currentUsers = chartData.find(item => item.month === currentMonth)?.count ?? 0;
+                const previousUsers = chartData.find(item => item.month === previousMonth)?.count ?? 0;                
+
+                setCurrentMonthUsers(currentUsers);
+                setPreviousMonthUsers(previousUsers);
+            })
+            .catch(error => {
+              console.error('Error fetching user data:', error);
+              alert('Ma\'lumotlarni olishda xatolik yuz berdi.');
+          });
+          
+    }, []);
+
+    return (
+        <div>
+{data.length > 0 && (
+    <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={data}>
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="count" fill="#8884d8" />
+        </BarChart>
+    </ResponsiveContainer>
+)}
+
+        </div>
+    );
 };
 
-export default Test;
+export default UserChart;
+
+
+
+
 
 
 

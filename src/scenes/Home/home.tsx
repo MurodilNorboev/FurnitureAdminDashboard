@@ -15,6 +15,8 @@ import Session from './Container2/Sessions/session';
 import Download from './Container2/Downloads/download';
 import Country from './Container3/Country/country';
 import Table from './Container3/Table/table';
+import { ThemeProvider } from 'styled-components';
+
 
 const ContainerWrapper = styled.div`
   padding: 30px 1px;
@@ -107,7 +109,7 @@ useEffect(() => {
 }, [])
   return (
     <ContainerWrapper>
-      <Box sx={{ display: 'flex', alignItems: 'center',position:"fixed", top: 30 }}>
+      {/* <Box sx={{ display: 'flex', alignItems: 'center',position:"absolud", top: 0 }}>
         <Breadcrumbs
           size="sm"
           aria-label="breadcrumbs"
@@ -126,7 +128,7 @@ useEffect(() => {
             Home
           </Typography>
         </Breadcrumbs>
-      </Box>
+      </Box> */}
       {loading ? 
       (
         <div style={{width:"100%", height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>

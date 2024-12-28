@@ -19,9 +19,6 @@ import { toast } from 'react-toastify';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ErrorMessage } from '../../components/styles/style';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { baseAPI } from '../../utils/constants';
 import { Buttonn, Container, ContainerWrapper, ImgCon, ModalCon, ModalContent, UserContent } from './style';
 import ScaleLoader from "react-spinners/ScaleLoader";
@@ -261,27 +258,6 @@ export default function OrderTable() {
         </div>
       ) : (
       <ContainerWrapper>
-
-      <Box sx={{ display: 'flex', alignItems: 'center',position:"fixed", top: 30 }}>
-        <Breadcrumbs
-          size="sm"
-          aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon />}
-          sx={{ pl: 0 }}
-        >
-          <Link
-            underline="none"
-            color="neutral"
-            href="#some-link"
-            aria-label="Home"
-          >
-            <HomeRoundedIcon />
-          </Link>
-          <Typography color="primary" sx={{ fontWeight: 500, fontSize: 12 }}>
-            Users
-          </Typography>
-        </Breadcrumbs>
-      </Box>
 
       <Box
         className="SearchAndFilters-tabletUp"

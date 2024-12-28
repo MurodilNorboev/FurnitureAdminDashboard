@@ -5,6 +5,35 @@ display: flex;
 flex-direction: column;
 `;
 
+export const UserContent = styled.div`
+  padding: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border-radius: 15px;
+  min-height: 400px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 0px 1px, rgba(9, 30, 66, 0.13) 0px 0px 0px 1px;
+
+  @media only screen and (max-width: 900px) {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    .ImgCon {
+      width: 100%;
+    }
+    .ModalCon {
+      width: 100%;
+    .info {
+      h4 {
+        display: flex;
+        justify-content: end;
+      }
+    } 
+    }
+  }
+`;
+
 export const Container = styled.div`
   padding: 30px 0px;
   gap: 20px;
@@ -68,10 +97,9 @@ export const ModalCon = styled.div`
     .item {
       width: 100%;
       display: flex;
-      border-bottom: 0.1px solid rgba(9, 30, 66, 0.25);
       h4, h3 {
+        border-bottom: 0.1px solid rgba(9, 30, 66, 0.25);
         display: flex;
-        align-items: start;
         width: 100%;
       }
     }
@@ -91,7 +119,6 @@ font-size: 23px;
 
 export const OpenModalContainer = styled.div`
   position: fixed;
-  background-color: white;
   left: 0;
   top: 0;
   width: 100%;
@@ -201,5 +228,3 @@ export const ModalConent = styled.div`
     }
   }
 `;
-
-

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { Container2, Content } from '../../all.Styles';
+import { Content } from '../../all.Styles';
 import Chip from "@mui/joy/Chip";
+import Sheet from '@mui/joy/Sheet'
+import '../../styles.css'
 
 
 const ApexChart: React.FC = () => {
@@ -70,14 +72,17 @@ const ApexChart: React.FC = () => {
   });
 
   return (
-    <Container2>
-            <Content>
-          <div className="users">
+    <Sheet className="Sheet2"  sx={{
+      border: '1.5px solid',
+      borderColor: 'divider',
+    }}>
+      <Content>
+          <div className="users" style={{display:"flex",flexDirection:"column",alignItems:"start"}}>
             <h4>
               Contversions
             </h4>
             <div style={{display: "flex",gap: "20px",alignItems: "center"}}>
-            <h2>13,740</h2>
+            <h1>13,740</h1>
           <Chip
               variant="soft"
               size="sm"
@@ -95,7 +100,7 @@ const ApexChart: React.FC = () => {
       <div style={{height:"200px"}}>
         <ReactApexChart options={state.options} series={state.series} height={280} />
       </div>
-    </Container2>
+    </Sheet>
   );
 };
 

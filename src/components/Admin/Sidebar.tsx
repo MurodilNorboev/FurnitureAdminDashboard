@@ -2,7 +2,6 @@ import * as React from 'react';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
-import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
@@ -25,14 +24,47 @@ import { Navlink } from '../styles/link';
 import { useNavigate } from 'react-router-dom';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 
+export const ItemData = [
+  {
+    id: 1,
+    a: 'Dashboard',
+    icon: <DashboardRoundedIcon />,
+    to: '/home', 
+  },
+  {
+    id: 2,
+    a: 'Orders',
+    icon: <ShoppingCartRoundedIcon />,
+    to: '/orders',  
+  },
+  {
+    id: 3,
+    a: 'Product',
+    icon: <AssignmentRoundedIcon />,
+    to: '/categorie', 
+  },
+  {
+    id: 4,
+    a: 'Users',
+    icon: <GroupRoundedIcon />,
+    to: '/user', 
+  },
+  {
+    id: 5,
+    a: 'Messages',
+    icon: <QuestionAnswerRoundedIcon />,
+    to: '/messages', 
+  },
+];
+
 
 export default function Sidebar() {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleClick = (item: string) => {
-    setSelectedItem(item);
-  };
+const handleClick = (item: { a: string; to: string }) => {
+  navigate(item.to, { state: { title: item.a } });
+};
 
   const logaut = () => {
     localStorage.clear();
@@ -112,89 +144,27 @@ export default function Sidebar() {
           },
         }}
       >
-        <List
-          size="sm"
-          sx={{
-            gap: 1,
-            '--List-nestedInsetStart': '30px',
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-          }}
-        >
-          <Navlink to="/home">
-            <ListItem onClick={() => handleClick('home')}>
-              <ListItemButton selected={selectedItem === 'home'}>
-              <DashboardRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Dashboard</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
 
-          <Navlink to="/orders">
-            <ListItem onClick={() => handleClick('orders')}>
-              <ListItemButton selected={selectedItem === 'orders'}>
-                <ShoppingCartRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Orders</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
+      <List
+      size="sm"
+      sx={{
+        gap: 1,
+        '--List-nestedInsetStart': '30px',
+        '--ListItem-radius': (theme) => theme.vars.radius.sm,
+      }}
+    >
+      {ItemData.map((item, ind) => (
+        <ListItem key={ind} onClick={() => handleClick(item)}>
+          <ListItemButton selected={selectedItem === item.a}>
+          {item.icon}
+            <ListItemContent>
+              <Typography level="title-sm">{item.a}</Typography>
+            </ListItemContent>
+          </ListItemButton>
+        </ListItem>
+      ))}
+      </List>
 
-          <Navlink to="/categorie">
-            <ListItem onClick={() => handleClick('categorie')}>
-              <ListItemButton selected={selectedItem === 'categorie'}
-                role="menuitem" >
-                 <AssignmentRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Product</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
-
-          <Navlink to="/user">
-            <ListItem onClick={() => handleClick('user')}>
-              <ListItemButton selected={selectedItem === 'user'}>
-                <GroupRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Users</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
-
-        </List>
-
-        <List
-          size="sm"
-          sx={{
-            mt: 'auto',
-            flexGrow: 0,
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-            '--List-gap': '8px',
-            mb: 2,
-          }}
-        >
-
-          <Navlink to="/messages">
-            <ListItem onClick={() => handleClick('messages')}>
-              <ListItemButton selected={selectedItem === 'messages'}
-                role="menuitem"
-              >
-                <QuestionAnswerRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Messages</Typography>
-                </ListItemContent>
-                <Chip size="sm" color="primary" variant="solid">
-                  4
-                </Chip>
-              </ListItemButton>
-            </ListItem>
-          </Navlink>
-
-        </List>
       </Box>
 
       <Divider />
@@ -218,5 +188,4 @@ export default function Sidebar() {
     </Sheet>
   );
 }
-
 

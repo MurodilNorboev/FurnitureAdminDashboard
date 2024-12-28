@@ -56,28 +56,6 @@ export const AddButton = styled.div`
    margin-bottom: 30px;
 `;
 
-export const ProfileContainer = styled.div`
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  width: 100%;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 0px 1px, rgba(9, 30, 66, 0.13) 0px 0px 0px 1px;
-  border-radius: 10px;
-  padding: 20px;
-
-  @media only screen and (max-width: 1000px) {
-    .UserContent {
-      gap: 30px;
-      display: grid;
-      grid-template-areas: " a ";
-      .Container {
-        width: 100%;
-        display: flex;
-      }
-    }
-}
-`;
-
 export const UserContent = styled.div`
   width: 50%;
   border-radius: 10px;
@@ -114,12 +92,14 @@ export const Section = styled.div`
   gap: 20px;
 `;
 
-export const Card = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 0px 1px, rgba(9, 30, 66, 0.13) 0px 0px 0px 1px;
+export const Modal = styled.div`
+  background-color: rgba(0, 0, 0, 0.3);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: '100vw';
+  height: '100vh';
+  z-index: 99999;
 `;

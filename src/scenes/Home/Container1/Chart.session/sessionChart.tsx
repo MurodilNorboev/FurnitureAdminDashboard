@@ -1,46 +1,23 @@
 import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import {
-  Chart as chartjs,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Legend,
-  Tooltip,
-  Filler,
-  ChartOptions,
-  ChartData,
-} from "chart.js";
-import { baseAPI } from "../../../../utils/constants";
-import moment from 'moment';
+import moment from "moment";
 import Chip from "@mui/joy/Chip";
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import Avatar from "@mui/joy/Avatar";
-import { Container, Content, LinePositio } from "../../all.Styles";
+import {Content, LinePositio } from "../../all.Styles";
+import { baseAPI } from "../../../../utils/constants";
+import Sheet from '@mui/joy/Sheet';
+import '../../styles.css'
 
-chartjs.register(
-  LineElement,
-  CategoryScale,
-  PointElement,
-  Legend,
-  LinearScale,
-  Tooltip,
-  Filler
-);
-const getDaysInMonth = (month: number, year: number) => {
-  return new Date(year, month, 0).getDate();
-};
-const currentYear = new Date().getFullYear();
-const currentMonth = new Date().getMonth();
-const daysInMonth = getDaysInMonth(currentMonth + 1, currentYear);
+
+interface ChartContext {
+  chart: {
+    ctx: CanvasRenderingContext2D;
+  };
+}
 
 function LineChart() {
-  const [userCountByDate, setUserCountByDate] = useState<Record<string, number>>({});
   const [userCount, setUserCount] = useState<number>(0);
-  const [lastMonthUserCount, setLastMonthUserCount] = useState<number>(0);
-  const [thisMonthUserCount, setThisMonthUserCount] = useState<number>(0);
+  const [usersData, setUsersData] = useState<any[]>([]);
+  const [monthlyGrowth, setMonthlyGrowth] = useState<number>(0);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,50 +32,7 @@ function LineChart() {
 
         if (data.success) {
           setUserCount(data.UserCount || 0);
-
-          const token = localStorage.getItem("token");
-
-          if (token) {
-            const userResponse = await fetch(`${baseAPI}/userFur/all-users`, {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` },
-            });
-
-            const usersData = await userResponse.json();
-
-            if (usersData.success) {
-              const groupedUsers = usersData.users.reduce(
-                (acc: Record<string, number>, user: any) => {
-                  if (user.sana) {
-                    const joinDate = moment(user.sana).format("YYYY-MM-DD");
-                    acc[joinDate] = (acc[joinDate] || 0) + 1;
-                  }
-                  return acc;
-                },
-                {}
-              );
-
-              setUserCountByDate(groupedUsers);
-              let lastMonthCount = 0;
-              let thisMonthCount = 0;
-
-              usersData.users.forEach((user: any) => {
-                const joinMonth = moment(user.sana).month();
-                const joinYear = moment(user.sana).year();
-
-                if (joinYear === currentYear) {
-                  if (joinMonth === currentMonth) {
-                    thisMonthCount++;
-                  } else if (joinMonth === currentMonth - 1 || (currentMonth === 0 && joinMonth === 11)) {
-                    lastMonthCount++;
-                  }
-                }
-              });
-
-              setLastMonthUserCount(lastMonthCount);
-              setThisMonthUserCount(thisMonthCount);
-            }
-          }
+          setUsersData(data.usersData || []);
         }
       } catch (error) {
         console.error("API chaqirig'ida xato:", error);
@@ -108,131 +42,129 @@ function LineChart() {
     fetchUserData();
   }, []);
 
-  const userCountPerDay = Array.from({ length: daysInMonth }, (_, index) => {
-    const day = (index + 1).toString().padStart(2, "0"); 
-    const dateString = moment(`${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${day}`, "YYYY-MM-DD").format("YYYY-MM-DD");
-    const count = userCountByDate[dateString] || 0;
+  const calculateGrowth = (startDate: string) => {
+    const filteredUsers = usersData.filter(user => moment(user.sana).isSameOrAfter(startDate));
+    const totalUsers = filteredUsers.length;
 
-    return { day, userCount: count };
-  });
-  
-  const data: ChartData<"line"> = {
-    labels: userCountPerDay.map((data) => data.day),    
+    const firstDayUsers = usersData.filter(user => moment(user.sana).isSame(startDate)).length;
+
+    const growthPercent = firstDayUsers ? ((totalUsers - firstDayUsers) / firstDayUsers)  : totalUsers > 0 ? (totalUsers / 1)  : 0;
+    
+    setMonthlyGrowth(growthPercent);
+  };
+
+  useEffect(() => {
+    const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
+    calculateGrowth(startOfMonth);
+  }, [usersData]);
+
+  const getLast30DaysData = () => {
+    return Array.from({ length: 30 }, (_, index) => {
+      const date = moment().subtract(index, 'days').format('YYYY-MM-DD');
+      return {
+        date,
+        count: usersData.filter(user => moment(user.sana).isSame(date, 'day')).length
+      };
+    }).reverse();
+  };
+
+  const last30DaysData = getLast30DaysData();
+  const data = {
+    labels: last30DaysData.map((data) => moment(data.date).format('MM-DD')),
     datasets: [
       {
-        label: "Revenue",
-        data: userCountPerDay.map((data) => data.userCount),
-        borderColor: isDarkMode ? "#3ec175" : "#006400", 
+        label: "User Growth (Last 30 Days)",
+        data: last30DaysData.map((data) => data.count),
+        borderColor: isDarkMode ? "#3ec175" : "#006400",
         borderWidth: 2,
         pointBorderColor: isDarkMode ? "#3ec175" : "#006400",
-        pointBorderWidth: 5.5,
         pointBackgroundColor: isDarkMode ? "#3ec175" : "#006400",
-        pointHitRadius: 10,
-        tension: 0,
+        pointHoverRadius: 7,
+        pointRadius: 0,
+        hoverBorderWidth: 2,
         fill: true,
-        backgroundColor: (context: any) => {
+        backgroundColor: (context: ChartContext) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 60);
           gradient.addColorStop(0, isDarkMode ? "#c1fad4a4" : "#006400");
           gradient.addColorStop(1, "white");
           return gradient;
-        },
-        pointHoverRadius: 7,
-        pointRadius: 0,
-        hoverBorderColor: isDarkMode ? '#3ec175' : "#006400",
-        hoverBackgroundColor: isDarkMode ? '#3ec175' : '#006400',
-        pointHoverBackgroundColor: isDarkMode ? '#3ec175' : '#006400',
-        hoverBorderWidth: 2,
+        }
       },
     ],
   };
-  
-  const options: ChartOptions<"line"> = {
+
+  const options: any = {
+    responsive: true,
     plugins: {
-        legend: { display: false },
-        tooltip: {
-          enabled: true,
-          mode: "nearest", 
-          intersect: false,
-          callbacks: {
-            title: (context: any) => {
-              const monthNames = [
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-              ];
-              return `${monthNames[currentMonth]} ${context[0].label}`;
-            },
-            label: (context: any) => ` ${context.raw}`,
-          },
-          boxWidth: 4,
-          boxHeight: 4,
-          backgroundColor: "rgba(0,0,0,0.7)",
-          titleColor: "white",
-          bodyColor: "white",
-          bodyFont: { size: 12 },
-          titleFont: { size: 14 },
-          padding: 5,
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        mode: 'nearest',
+        intersect: false,
+        callbacks: {
+          title: (context: any) => `${moment(context[0].label).format('MMM D')}`,
+          label: (context: any) => ` ${context.raw}`,
         },
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        titleColor: 'white',
+        bodyColor: 'white',
+        bodyFont: { size: 12 },
+        titleFont: { size: 14 },
       },
-      responsive: true,
-      scales: {
-        y: { type: "linear", display: false, ticks: { display: false } },
-        x: { type: "category", display: false, ticks: { display: false } },
-      },
-      hover: { mode: "nearest", intersect: false },
-      elements: { line: { borderWidth: 2 } },
-      layout: {
-        padding: {
-          bottom: 0,
-          top: 20 
     },
+    scales: {
+      y: { display: false },
+      x: { display: false },
+    },
+    hover: { mode: 'nearest' as const, intersect: false },
+    elements: { line: { borderWidth: 2 } },
+    layout: {
+      padding: {
+        bottom: 0,
+        top: 20 
   },
+    }
   };
-
-  const lastMonthPercentage = userCount ? ((lastMonthUserCount / userCount) * 100).toFixed(2) : "0.00";
-  const thisMonthPercentage = userCount ? ((thisMonthUserCount / userCount) * 100).toFixed(2) : "0.00";
-
+  
   return (
-    <Container>
+    <Sheet className="Sheet"  sx={{
+      border: '1.5px solid',
+      borderColor: 'divider',
+    }}>
+
       <Content>
-          <div className="users">
-            <h2>
-              Users 
-            </h2>
+        <div className="userWraps">
+        <div className="users">
+          <h2>Users</h2>
+        </div>
+        <div className="users">
+          <h1 style={{marginBottom:"-10px"}}>
+            {userCount}
+          </h1>
           <Chip
               variant="soft"
               size="sm"
-              startDecorator={<Avatar />}
               color="success"
+              sx={{height:"22px",border:"1.5px solid #acf0ba",color:"#146725",marginBottom:"-35px"}}
             >
-              {userCount}
-            </Chip>
-          </div>
-          <div className="flex justify-center gap-5 mt-5" style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-            <Chip
-              variant="soft"
-              size="sm"
-              startDecorator={<AutorenewRoundedIcon />}
-              color="neutral"
-            >
-               Last Month: {lastMonthUserCount} ({lastMonthPercentage}%)
-            </Chip>
-            <Chip
-              variant="soft"
-              size="sm"
-              startDecorator={<CheckRoundedIcon />}
-              color="success"
-            >
-              This Month: {thisMonthUserCount} ({thisMonthPercentage}%)
-            </Chip>
-          </div>
-        <LinePositio>
-          <Line data={data} options={options} style={{height:'auto',minWidth:"200px",minHeight:"30px",maxHeight:"50px"}} />
-        </LinePositio>
-        <div>
+              {`+ ${monthlyGrowth % 1 === 0 ? monthlyGrowth : Math.round(monthlyGrowth)}%`}  
+          </Chip>
         </div>
+        <h5>Last 30 days</h5>
+        </div>
+        <LinePositio>
+          <Line data={data} options={options} style={{height:'auto',minWidth:"200px",minHeight:"30px",maxHeight:"50px",paddingBottom:"10px"}} />
+        </LinePositio>
+
       </Content>
-    </Container>
+
+    </Sheet>
   );
 }
 
 export default LineChart;
+
+
+
+

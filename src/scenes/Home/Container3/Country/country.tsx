@@ -1,9 +1,9 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { Container5 } from '../../all.Styles';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import Sheet from '@mui/joy/Sheet'
+import '../../styles.css'
 
-// Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
@@ -13,7 +13,7 @@ interface DoughnutChartProps {
 }
 
 const Country: React.FC<DoughnutChartProps> = ({ data, labels, flags }) => {
-  // Generate shades of blue-gray mix based on #3b3d62
+
   const getShadesOfBlueWithGray = (index: number, total: number) => {
     const baseColor = { r: 59, g: 61, b: 98 };  // RGB for #3b3d62
     const ratio = index / total;
@@ -25,7 +25,6 @@ const Country: React.FC<DoughnutChartProps> = ({ data, labels, flags }) => {
     return `rgb(${lighterColor.r}, ${lighterColor.g}, ${lighterColor.b})`;
   };
 
-  // Prepare data for the Doughnut chart
   const chartData = {
     labels: labels,
     datasets: [
@@ -38,7 +37,6 @@ const Country: React.FC<DoughnutChartProps> = ({ data, labels, flags }) => {
     ],
   };
 
-  // Custom tooltips to show country names with the data value
   const options = {
     plugins: {
       tooltip: {
@@ -54,7 +52,10 @@ const Country: React.FC<DoughnutChartProps> = ({ data, labels, flags }) => {
   };
 
   return (
-    <Container5>
+    <Sheet className="Sheet4"  sx={{
+      border: '1.5px solid',
+      borderColor: 'divider',
+    }}>
       <h2>Users By Country</h2>
       <div className='countryCon'>
 
@@ -85,7 +86,7 @@ const Country: React.FC<DoughnutChartProps> = ({ data, labels, flags }) => {
         </div>
 
       </div>
-    </Container5>
+    </Sheet>
   );
 };
 

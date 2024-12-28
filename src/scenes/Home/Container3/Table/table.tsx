@@ -12,8 +12,9 @@ import BlockIcon from '@mui/icons-material/Block';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { Container3 } from '../../all.Styles';
 import Tooltip from '@mui/joy/Tooltip';
+import Sheet from '@mui/joy/Sheet'
+import '../../styles.css'
 
 export const rows = [
   {
@@ -421,7 +422,7 @@ export default function OrderTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const rowsPerPage = 17;
+  const rowsPerPage = 15;
 
   const handleChangePage = (newPage: number) => {
     setCurrentPage(newPage);
@@ -433,8 +434,11 @@ export default function OrderTable() {
   );
 
   return (
-    <Container3>
-      <div style={{overflowY: "hidden",height:"100%"}}>
+    <Sheet className="Sheet3"  sx={{
+      border: '1.5px solid',
+      borderColor: 'divider',
+    }}>
+      <div style={{height:"100%",maxHeight:"550px",overflow:"scroll"}}>
         <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <Table
           aria-labelledby="tableTitle"
@@ -569,18 +573,15 @@ export default function OrderTable() {
       <Box
         className="Pagination-laptopUp"
         sx={{
+          padding:"0px 20px",
           position: "relative",
           justifyContent: "center",
-          bottom: 60,
+          bottom: 10,
           left: 0,
           right: 0,
           pt: 2,
           gap: 1,
           [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
-          display: {
-            xs: 'none',
-            md: 'flex',
-          },
         }}
       >
         <div style={{ display: "flex", alignContent: 'center', gap: "10px" }}>
@@ -621,6 +622,6 @@ export default function OrderTable() {
           </Button>
         </div>
       </Box>
-    </Container3>
+    </Sheet>
   );
 }
