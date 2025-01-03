@@ -1,63 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import axios from 'axios';
-import { Button } from '@mui/material';
-import { baseAPI } from '../utils/constants';
+import React from 'react';
+import FurnitureChat from './fur';
+import { SendBirdProvider } from '@sendbird/uikit-react'; 
 
-interface ChartData {
-    month: string;
-    count: number;
+const Tests = () => {
+  const userId = "Admin";
+  const accessToken = "accessTokenHere"; 
+  
+  return (
+    <SendBirdProvider
+      appId="894E1E6C-8871-47A1-935D-B9B0BDB46A25" 
+      userId={userId}
+      accessToken={accessToken || undefined}
+    >
+      <FurnitureChat />
+    </SendBirdProvider>
+  );
 }
 
-const UserChart = () => {
-    const [data, setData] = useState<ChartData[]>([]);
-    const [totalUsers, setTotalUsers] = useState(0);
-    const [currentMonthUsers, setCurrentMonthUsers] = useState(0);
-    const [previousMonthUsers, setPreviousMonthUsers] = useState(0);
+export default Tests;
 
-    useEffect(() => {
-        axios.get(`${baseAPI}/userFur/user-all`)
-            .then(response => {
-                const chartData: ChartData[] = (response.data as { data: ChartData[] }).data;
-                setData(chartData);
-                
-                const total = chartData.reduce((acc, item) => acc + item.count, 0);
-                setTotalUsers(total);
 
-                const currentMonth = new Date().toISOString().slice(0, 7);
-                const previousMonth = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 7);
 
-                const currentUsers = chartData.find(item => item.month === currentMonth)?.count ?? 0;
-                const previousUsers = chartData.find(item => item.month === previousMonth)?.count ?? 0;                
 
-                setCurrentMonthUsers(currentUsers);
-                setPreviousMonthUsers(previousUsers);
-            })
-            .catch(error => {
-              console.error('Error fetching user data:', error);
-              alert('Ma\'lumotlarni olishda xatolik yuz berdi.');
-          });
-          
-    }, []);
 
-    return (
-        <div>
-{data.length > 0 && (
-    <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data}>
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="count" fill="#8884d8" />
-        </BarChart>
-    </ResponsiveContainer>
-)}
 
-        </div>
-    );
-};
 
-export default UserChart;
+
+
+
 
 
 

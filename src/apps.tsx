@@ -14,9 +14,13 @@ import CategorieComponent from './scenes/Products/categorie';
 import { Navbar } from './scenes';
 import Test from './test/Tests';
 import Login from './components/Profile/profile';
+import { SendBirdProvider } from '@sendbird/uikit-react'; 
+import { useEffect, useState } from 'react';
 
 
 export default function JoyOrderDashboardTemplates() {
+  const userId = "Admin";
+  const accessToken = "accessTokenHere"; 
 
   return (
     <CssVarsProvider disableTransitionOnChange>
@@ -48,7 +52,14 @@ export default function JoyOrderDashboardTemplates() {
              <Route path="/home" element={<HomeComponent />} /> 
              <Route path="/orders" element={<OrderTable />} /> 
              <Route path="/categorie" element={<CategorieComponent />} /> 
-             <Route path="/messages" element={<MessageComponent />} /> 
+             <Route path="/messages" element={    
+                <SendBirdProvider
+                  appId="894E1E6C-8871-47A1-935D-B9B0BDB46A25" 
+                  userId={userId}
+                  accessToken={accessToken || undefined}
+                >
+                  <MessageComponent appId="894E1E6C-8871-47A1-935D-B9B0BDB46A25" adminId={userId} accessToken={accessToken} />
+                </SendBirdProvider>} /> 
              <Route path="/user" element={<UserComponents />} /> 
              <Route path="/setting" element={<Settingcomponent />} /> 
              <Route path='profile' element={<Login />} />
