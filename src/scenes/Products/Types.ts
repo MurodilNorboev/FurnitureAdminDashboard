@@ -47,13 +47,4 @@ export interface Todo {
     _id: string;
     sana: string;
   }
-
-// export interface Todo {
-//     title: string;
-//     desc: string;
-//     image: string;
-//     _id: string;
-//     sana: string;
-// }
-
   

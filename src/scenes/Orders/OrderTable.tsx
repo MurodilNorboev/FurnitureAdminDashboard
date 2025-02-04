@@ -129,7 +129,6 @@ export default function OrderTable() {
   const [selectID, setSelectID] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
-  // const [search, setSearch] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState<string>("");
   const [loading, setLoadig] = useState(false);
@@ -173,7 +172,6 @@ export default function OrderTable() {
   }, [selectedCategory]);
 
   useEffect(() => {
-    // loading
     setLoadig(true);
     setTimeout(() => {
       setLoadig(false);
@@ -204,13 +202,11 @@ export default function OrderTable() {
   };
 
   const openModal = (image: string) => {
-    // image modal
     setIsModalOpen(true);
     setModalImage(image);
   };
 
   const closeModal = (e: React.MouseEvent) => {
-    // image modal
     if (e.target === e.currentTarget) {
       setIsModalOpen(false);
       setModalImage("");
@@ -234,7 +230,6 @@ export default function OrderTable() {
   };
   useEffect(() => {
     fetchData();
-    // fetchCarts();
   }, [search]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -242,9 +237,7 @@ export default function OrderTable() {
   };
 
   const handleSubmit = async () => {
-    // add qilish
     const token = localStorage.getItem("token");
-
     try {
       if (!selectID) {
         const { data } = await axios.post<any>(

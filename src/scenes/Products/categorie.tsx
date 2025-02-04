@@ -21,7 +21,6 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import Add from "@mui/icons-material/Add";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -44,6 +43,7 @@ import {
 import ScaleLoader from "react-spinners/ScaleLoader";
 import SvgIcon from "@mui/joy/SvgIcon";
 import { styled } from "@mui/joy";
+import toast, { Toaster } from "react-hot-toast";
 
 const VisuallyHiddenInput = styled("input")`
   clip: rect(0 0 0 0);
@@ -59,40 +59,92 @@ const VisuallyHiddenInput = styled("input")`
 
 const categories = [
   { label: "Furniture", value: "furniture" },
-  { label: "Electronics", value: "electronics" },
+  { label: "Rooms", value: "rooms" },
 ];
 
 const typecatalog = [
-  { label: "Furniture", types: ["Sofa", "Table", "Chair"] },
-  { label: "Electronics", types: ["TV", "Fridge", "Washing Machine"] },
+  {
+    label: "Furniture",
+    types: [
+      "Sofa",
+      "Table",
+      "Chair",
+      "Beds",
+      "Storage",
+      "Lighting",
+      "Decor",
+      "Textiles",
+      "Mirrors",
+      "Wall Art",
+      "Clocks",
+      "Vases",
+      "Candles",
+      "Shelves",
+      "Plant Pots",
+      "Bathroom Accessories",
+    ],
+  },
+  {
+    label: "Rooms",
+    types: [
+      "Bathroom",
+      "Bedroom",
+      "Kitchen",
+      "Living Room",
+      "Dining Room",
+      "Playroom",
+    ],
+  },
 ];
 
+const mockDatas = {
+  colors: [
+    { label: "Orange", value: "orange" },
+    { label: "Blue", value: "blue" },
+    { label: "Dark Gray", value: "dark gray" },
+    { label: "Black", value: "black" },
+    { label: "White", value: "white" },
+    { label: "Light beige", value: "light beige" },
+  ],
+  styles: [
+    { label: "Minimalist", value: "minimalist" },
+    { label: "Eco Style", value: "eco style" },
+    { label: "Glam", value: "glam" },
+    { label: "Royal", value: "royal" },
+    { label: "Pink rose", value: "pink rose" },
+    { label: "Hi Tech", value: "hi tech" },
+  ],
+  materials: [
+    { label: "Metal", value: "metal" },
+    { label: "Plastic", value: "plastic" },
+    { label: "Leather", value: "leather" },
+    { label: "Marble", value: "marble" },
+    { label: "Glass", value: "glass" },
+    { label: "Rattan", value: "rattan" },
+  ],
+};
+
 const mockData: any = [
-  "Popular",
-  "Popular",
-  "Sale",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
-  "sadfs",
+  "Features:",
+  "Stock Number:",
+  "Desk1:",
+  "Desk2:",
+  "Desk3:",
+  "Desk4:",
+  "Video:",
+  "Description:",
+  "Height:",
+  "Width:",
+  "Arm Dimensions:",
+  "Seat Dimensions:",
+  "Leg Height:",
+  "Package Dimensions:",
+  "Weight:",
+  "Assembly:",
+  "Number of Seats:",
+  "Caring Instructions:",
+  "Cost:",
+  "Discount:",
 ];
 
 const datas1 = [
@@ -110,7 +162,25 @@ const datas1 = [
   { label: "Category", field: "categories" },
 ];
 
-const TYPES = ["products", "textils", "tables"];
+const TYPES = [
+  "Sofa",
+  "Table",
+  "Chair",
+  "Beds",
+  "Storage",
+  "Lighting",
+  "Decor",
+  "Textile",
+  "Mirrors",
+  "Wall Art",
+  "Clock",
+  "Vases",
+  "Candles",
+  "Shelves",
+  "Plant Pots",
+  "Bathroom Accessories",
+  "Kitchen",
+];
 
 export default function OrderTable() {
   const [filteredTypes, setFilteredTypes] = useState<string[]>([]);
@@ -149,6 +219,7 @@ export default function OrderTable() {
   const handleTypeChange = (newType: string) => {
     setType(newType);
     setFormData({ ...formData, types: newType });
+    fetchData();
   };
 
   useEffect(() => {
@@ -217,12 +288,16 @@ export default function OrderTable() {
   const fetchData = async () => {
     try {
       const res = await axios.get<any>(`${baseAPI}/product/all`, {
-        params: { search }, // search parametrini yuborish
+        params: { search },
       });
-      setData(res.data.data);
+      const filteredData = type
+        ? res.data.data.filter((item: any) => item.types === type)
+        : res.data.data;
 
-      if (res.data.data.length > 0) {
-        const keys = Object.keys(res.data.data[0]).filter(
+      setData(filteredData);
+
+      if (filteredData.length > 0) {
+        const keys = Object.keys(filteredData[0]).filter(
           (key) => key !== "_id" && key !== "sana" && key !== "yangilanish"
         );
         setFields(keys);
@@ -253,7 +328,6 @@ export default function OrderTable() {
   }, []);
 
   const handleSubmit = async () => {
-    // add qilish
     const token = localStorage.getItem("token");
 
     try {
@@ -268,8 +342,7 @@ export default function OrderTable() {
         if (data.success) {
           fetchData();
           setFormData({});
-          toast.success("Item added successfully");
-          alert("Item added successfully");
+          
           setIsOpen(false);
         }
       } else {
@@ -285,7 +358,6 @@ export default function OrderTable() {
           setFormData([]);
           setSelectID("");
           toast.success("Item updated successfully");
-          alert("Item updated successfully");
           setIsOpen(false);
         }
       }
@@ -422,10 +494,19 @@ export default function OrderTable() {
     }
   };
 
-  const NUMBER_FIELDS = ["Hight", "Width", "Weight_KG", "LegHeight_CM"];
+  const NUMBER_FIELDS = [
+    "Height",
+    "Width",
+    "Weight_KG",
+    "LegHeight_CM",
+    "discount",
+    "cost",
+    "StockNumber",
+  ];
 
   return (
     <Container>
+      <Toaster position="top-right" />
       <React.Fragment>
         {loading ? (
           <div
@@ -471,6 +552,7 @@ export default function OrderTable() {
 
                   <ModalConent>
                     <div className="items ad">
+                      {/* Categories Select */}
                       <div className="selectwrap">
                         <h4 style={{ color: "black" }}>Categories:</h4>
                         <select
@@ -489,6 +571,8 @@ export default function OrderTable() {
                           ))}
                         </select>
                       </div>
+
+                      {/* Types Select */}
                       <div className="selectwrap">
                         <h4 style={{ color: "black" }}>Type:</h4>
                         <select
@@ -505,51 +589,151 @@ export default function OrderTable() {
                           ))}
                         </select>
                       </div>
+
+                      {/* Special Offers Select */}
+                      <div className="selectwrap">
+                        <h4 style={{ color: "black" }}>Special Offers:</h4>
+                        <select
+                          style={{ background: "white" }}
+                          className="Select"
+                          value={formData.SpecialOffers || ""}
+                          onChange={(e: any) =>
+                            handleChange(e, "SpecialOffers")
+                          }
+                        >
+                          <option value="">
+                            <em>Select Offer</em>
+                          </option>
+                          <option value="Hot">Hot</option>
+                          <option value="Popular">Popular</option>
+                          <option value="New">New</option>
+                          <option value="All">All</option>
+                        </select>
+                      </div>
+
+                      {/* Color Select */}
+                      <div className="selectwrap">
+                        <h4 style={{ color: "black" }}>Color:</h4>
+                        <select
+                          style={{ background: "white" }}
+                          className="Select"
+                          value={formData.Color || ""}
+                          onChange={(e: any) => handleChange(e, "Color")}
+                        >
+                          <option value="">
+                            <em>Select Color</em>
+                          </option>
+                          {mockDatas.colors.map((color) => (
+                            <option key={color.value} value={color.value}>
+                              {color.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Styles Select */}
+                      <div className="selectwrap">
+                        <h4 style={{ color: "black" }}>Styles:</h4>
+                        <select
+                          style={{ background: "white" }}
+                          className="Select"
+                          value={formData.Styles || ""}
+                          onChange={(e: any) => handleChange(e, "Styles")}
+                        >
+                          <option value="">
+                            <em>Select Style</em>
+                          </option>
+                          {mockDatas.styles.map((style) => (
+                            <option key={style.value} value={style.value}>
+                              {style.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Material Select */}
+                      <div className="selectwrap">
+                        <h4 style={{ color: "black" }}>Material:</h4>
+                        <select
+                          style={{ background: "white" }}
+                          className="Select"
+                          value={formData.material || ""}
+                          onChange={(e: any) => handleChange(e, "material")}
+                        >
+                          <option value="">
+                            <em>Select Material</em>
+                          </option>
+                          {mockDatas.materials.map((material) => (
+                            <option key={material.value} value={material.value}>
+                              {material.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
                     <div className="items c">
-                      {fields.map(
-                        (val, ind) =>
-                          val !== "categories" &&
-                          val !== "types" &&
-                          val !== "image" &&
-                          !val.startsWith("image") && (
-                            <div key={ind}>
-                              <h4
-                                style={{ marginBottom: "5px", color: "black" }}
-                              >
-                                {mockData[ind]}
-                              </h4>
-                              {NUMBER_FIELDS.includes(val) ? (
-                                <Input
-                                  type="number"
-                                  style={{
-                                    background: "white",
-                                    color: "black",
-                                  }}
-                                  placeholder={
-                                    val.charAt(0).toUpperCase() + val.slice(1)
-                                  }
-                                  value={formData[val] || ""}
-                                  onChange={(e) => handleChange(e, val)}
-                                />
-                              ) : (
-                                <Input
-                                  type="text"
-                                  style={{
-                                    background: "white",
-                                    color: "black",
-                                  }}
-                                  placeholder={
-                                    val.charAt(0).toUpperCase() + val.slice(1)
-                                  }
-                                  value={formData[val] || ""}
-                                  onChange={(e) => handleChange(e, val)}
-                                />
-                              )}
-                            </div>
-                          )
-                      )}
+                      {fields
+                        .filter(
+                          (val) =>
+                            val !== "categories" &&
+                            val !== "types" &&
+                            val !== "SpecialOffers" &&
+                            val !== "Color" &&
+                            val !== "Styles" &&
+                            val !== "material" &&
+                            val !== "image" &&
+                            !val.startsWith("image") &&
+                            // val !== "count" &&
+                            Number(val) !== -1 && (
+                              <Input
+                                type="text"
+                                style={{
+                                  background: "white",
+                                  color: "black",
+                                }}
+                                placeholder={
+                                  val.charAt(0).toUpperCase() + val.slice(1)
+                                }
+                                value={formData[val] || ""}
+                                onChange={(e) => handleChange(e, val)}
+                              />
+                            )
+                        )
+                        .map((val, ind) => (
+                          <div key={ind}>
+                            <h4 style={{ marginBottom: "5px", color: "black" }}>
+                              {mockData[ind]}
+                            </h4>
+                            {NUMBER_FIELDS.includes(val) ? (
+                              <Input
+                                type="number"
+                                style={{
+                                  background: "white",
+                                  color: "black",
+                                }}
+                                placeholder={
+                                  val.charAt(0).toUpperCase() + val.slice(1)
+                                }
+                                value={formData[val] || ""}
+                                onChange={(e) => handleChange(e, val)}
+                              />
+                            ) : (
+                              <Input
+                                type="text"
+                                style={{
+                                  background: "white",
+                                  color: "black",
+                                }}
+                                placeholder={
+                                  val.charAt(0).toUpperCase() + val.slice(1)
+                                }
+                                value={formData[val] || ""}
+                                onChange={(e) => handleChange(e, val)}
+                              />
+                            )}
+                          </div>
+                        ))}
                     </div>
 
                     <div className="image-container">
@@ -656,10 +840,10 @@ export default function OrderTable() {
                       style={{ width: "220px" }}
                     />
                     <Select
-                      placeholder="Select a pet…"
+                      placeholder="Select a Type"
                       indicator={<KeyboardArrowDown />}
                       onChange={(event: any, value: string | null) => {
-                        handleTypeChange(value || "");
+                        handleTypeChange(value || ""); 
                       }}
                       value={type}
                       sx={{
@@ -672,6 +856,9 @@ export default function OrderTable() {
                         },
                       }}
                     >
+                      <Option key="all" value="">
+                        All Types
+                      </Option>
                       {TYPES.map((t) => (
                         <Option key={t} value={t}>
                           {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -753,7 +940,7 @@ export default function OrderTable() {
                         padding: "12px 6px",
                       }}
                     >
-                      <Checkbox
+                       <Checkbox
                         onChange={handleSelectAll}
                         size="sm"
                         color="primary"
@@ -766,7 +953,7 @@ export default function OrderTable() {
                           ) &&
                           !currentTodos.every((todo) =>
                             selected.includes(todo._id)
-                          )
+                          ) 
                         }
                       />
                     </th>
@@ -857,7 +1044,6 @@ export default function OrderTable() {
                                 >
                                   Edit
                                 </MenuItem>
-
                                 <Divider />
                                 <MenuItem
                                   color="danger"
@@ -972,7 +1158,7 @@ export default function OrderTable() {
                     viewItem.image7,
                   ]
                     .slice(0, 9)
-                    .filter(Boolean) // Faqat mavjud rasmlarni oladi
+                    .filter(Boolean)
                     .map((img, index) => (
                       <img
                         key={index}

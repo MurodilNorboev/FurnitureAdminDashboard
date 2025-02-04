@@ -14,7 +14,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Tooltip from '@mui/joy/Tooltip';
 import Sheet from '@mui/joy/Sheet'
-import '../../styles.css'
+import '../styles.css'
 
 export const rows = [
   {

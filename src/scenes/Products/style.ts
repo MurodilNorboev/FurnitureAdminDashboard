@@ -117,16 +117,16 @@ export const ModalConent = styled.div`
   overflow: scroll;
   
   .ad {
-    display: flex;
-    justify-content: space-between;
-    width: 50%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    width: 100%;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 0px 1px, rgba(9, 30, 66, 0.13) 0px 0px 0px 1px;
     border-radius: 10px;
     padding: 20px;
     .selectwrap {
       display: flex;
       flex-direction: column;
-      width: 47%;
       gap: 5px;
     }
     select {

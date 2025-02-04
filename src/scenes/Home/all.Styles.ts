@@ -79,6 +79,3 @@ export const Tooltip = styled.div`
   }
 `;
 //////////// sessions
-
-
-//////////// downloads
