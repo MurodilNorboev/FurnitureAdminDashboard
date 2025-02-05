@@ -158,12 +158,11 @@ h2 {
 // Register page 
 export const LoginWraps = styled.div`
 display: flex;
-padding: 0px 33px;
+padding: 10px 33px;
 flex-direction: column;
 align-items: flex-start;
 justify-content: center;
 max-width: 500px;
-max-height: 620px;
 border-radius: 20px;
 box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.40);
 
@@ -183,6 +182,13 @@ h2 {
     font-weight: 600;
     padding-bottom: 10px;
 } .loginis1 input {
+    border: none;
+    width: 59.5vmin;
+    max-width: 434px;
+    padding: 17px 20px;
+    border-radius: 10px;
+    background: rgba(55, 55, 55, 0.10);
+} .select {
     border: none;
     width: 59.5vmin;
     max-width: 434px;
@@ -257,7 +263,6 @@ h2 {
 
 }
 .loginis6 {
-
     width: 100%;
     display: flex;
     justify-content: center;

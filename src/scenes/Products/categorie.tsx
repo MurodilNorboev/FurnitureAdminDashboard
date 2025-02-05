@@ -42,150 +42,22 @@ import {
 } from "./style";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import SvgIcon from "@mui/joy/SvgIcon";
-import { styled } from "@mui/joy";
 import toast, { Toaster } from "react-hot-toast";
-
-const VisuallyHiddenInput = styled("input")`
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  white-space: nowrap;
-  width: 1px;
-`;
-
-const categories = [
-  { label: "Furniture", value: "furniture" },
-  { label: "Rooms", value: "rooms" },
-];
-
-const typecatalog = [
-  {
-    label: "Furniture",
-    types: [
-      "Sofa",
-      "Table",
-      "Chair",
-      "Beds",
-      "Storage",
-      "Lighting",
-      "Decor",
-      "Textiles",
-      "Mirrors",
-      "Wall Art",
-      "Clocks",
-      "Vases",
-      "Candles",
-      "Shelves",
-      "Plant Pots",
-      "Bathroom Accessories",
-    ],
-  },
-  {
-    label: "Rooms",
-    types: [
-      "Bathroom",
-      "Bedroom",
-      "Kitchen",
-      "Living Room",
-      "Dining Room",
-      "Playroom",
-    ],
-  },
-];
-
-const mockDatas = {
-  colors: [
-    { label: "Orange", value: "orange" },
-    { label: "Blue", value: "blue" },
-    { label: "Dark Gray", value: "dark gray" },
-    { label: "Black", value: "black" },
-    { label: "White", value: "white" },
-    { label: "Light beige", value: "light beige" },
-  ],
-  styles: [
-    { label: "Minimalist", value: "minimalist" },
-    { label: "Eco Style", value: "eco style" },
-    { label: "Glam", value: "glam" },
-    { label: "Royal", value: "royal" },
-    { label: "Pink rose", value: "pink rose" },
-    { label: "Hi Tech", value: "hi tech" },
-  ],
-  materials: [
-    { label: "Metal", value: "metal" },
-    { label: "Plastic", value: "plastic" },
-    { label: "Leather", value: "leather" },
-    { label: "Marble", value: "marble" },
-    { label: "Glass", value: "glass" },
-    { label: "Rattan", value: "rattan" },
-  ],
-};
-
-const mockData: any = [
-  "Features:",
-  "Stock Number:",
-  "Desk1:",
-  "Desk2:",
-  "Desk3:",
-  "Desk4:",
-  "Video:",
-  "Description:",
-  "Height:",
-  "Width:",
-  "Arm Dimensions:",
-  "Seat Dimensions:",
-  "Leg Height:",
-  "Package Dimensions:",
-  "Weight:",
-  "Assembly:",
-  "Number of Seats:",
-  "Caring Instructions:",
-  "Cost:",
-  "Discount:",
-];
-
-const datas1 = [
-  { label: "Product Name", field: "types" },
-  { label: "Cost", field: "cost" },
-  { label: "Description", field: "description" },
-  { label: "Weight", field: "Weight_KG" },
-  { label: "Material", field: "Material" },
-  { label: "Assembly", field: "Assembly" },
-  { label: "Seat Dimensions", field: "SeatDimensions_HWD" },
-  { label: "Width", field: "Width" },
-  { label: "Height", field: "Height" },
-  { label: "Color", field: "Color" },
-  { label: "Style", field: "Styles" },
-  { label: "Category", field: "categories" },
-];
-
-const TYPES = [
-  "Sofa",
-  "Table",
-  "Chair",
-  "Beds",
-  "Storage",
-  "Lighting",
-  "Decor",
-  "Textile",
-  "Mirrors",
-  "Wall Art",
-  "Clock",
-  "Vases",
-  "Candles",
-  "Shelves",
-  "Plant Pots",
-  "Bathroom Accessories",
-  "Kitchen",
-];
+import {
+  VisuallyHiddenInput,
+  categories,
+  typecatalog,
+  mockDatas,
+  mockData,
+  datas1,
+  TYPES,
+  NUMBER_FIELDS,
+} from "./mock";
 
 export default function OrderTable() {
   const [filteredTypes, setFilteredTypes] = useState<string[]>([]);
   const [type, setType] = useState<string>("");
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<any>({ ColorSet: [] });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [fields, setFields] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
@@ -208,14 +80,35 @@ export default function OrderTable() {
   /// PDF
   const [error, setError] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
+  /// selecte Color function
+  const dropdownRef = React.useRef<HTMLDivElement | null>(null);
+  
+  const handleSelect = (color: any) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      ColorSet: prev.ColorSet.includes(color)
+        ? prev.ColorSet.filter((c: any) => c !== color)
+        : [...prev.ColorSet, color],
+    }));
+  };
+  useEffect(() => {
+    const handleClickOutside = (e: any) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsSelectOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
+  /// select categories function
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategory = e.target.value;
     setSelectedCategory(selectedCategory);
     setFormData({ ...formData, categories: selectedCategory, types: "" });
     setType("");
   };
-
   const handleTypeChange = (newType: string) => {
     setType(newType);
     setFormData({ ...formData, types: newType });
@@ -342,7 +235,7 @@ export default function OrderTable() {
         if (data.success) {
           fetchData();
           setFormData({});
-          
+
           setIsOpen(false);
         }
       } else {
@@ -359,11 +252,10 @@ export default function OrderTable() {
           setSelectID("");
           toast.success("Item updated successfully");
           setIsOpen(false);
-        }
+        } 
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
-      alert(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
+      alert(error?.response?.data?.message)
     }
   };
 
@@ -493,16 +385,6 @@ export default function OrderTable() {
       setSelected([]);
     }
   };
-
-  const NUMBER_FIELDS = [
-    "Height",
-    "Width",
-    "Weight_KG",
-    "LegHeight_CM",
-    "discount",
-    "cost",
-    "StockNumber",
-  ];
 
   return (
     <Container>
@@ -670,6 +552,83 @@ export default function OrderTable() {
                           ))}
                         </select>
                       </div>
+
+                      {/* ColorSet Select */}
+                      <div
+                        className="selectwrap"
+                        ref={dropdownRef}
+                        style={{ position: "relative", width: "100%" }}
+                      >
+                        <h4 style={{ color: "black" }}>Color Set:</h4>
+                        <div
+                          onClick={() => setIsSelectOpen(!isSelectOpen)}
+                          style={{
+                            border: "1px solid #ccc",
+                            padding: "6px",
+                            width: "100%",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            background: "#fff",
+                          }}
+                        >
+                          {formData.ColorSet.length > 0
+                            ? formData.ColorSet.map((color: any) => (
+                                <span
+                                  key={color}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelect(color);
+                                  }}
+                                  style={{
+                                    display: "inline-block",
+                                    background: "#eee",
+                                    padding: "4px 10px",
+                                    margin: "2px",
+                                    borderRadius: "15px",
+                                    fontSize: "14px",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  {color} ✖
+                                </span>
+                              ))
+                            : "Select colors"}
+                        </div>
+
+                        {isSelectOpen && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: "100%",
+                              left: "0",
+                              width: "100%",
+                              background: "#fff",
+                              boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                              borderRadius: "5px",
+                              marginTop: "5px",
+                              zIndex: 10,
+                            }}
+                          >
+                            {mockDatas.colorSet.map((color) => (
+                              <div
+                                key={color.value}
+                                onClick={() => handleSelect(color.value)}
+                                style={{
+                                  padding: "10px",
+                                  cursor: "pointer",
+                                  background: formData.ColorSet.includes(
+                                    color.value
+                                  )
+                                    ? "#ddd"
+                                    : "#fff",
+                                }}
+                              >
+                                {color.label}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <div className="items c">
@@ -683,6 +642,7 @@ export default function OrderTable() {
                             val !== "Styles" &&
                             val !== "material" &&
                             val !== "image" &&
+                            val !== "ColorSet" &&
                             !val.startsWith("image") &&
                             // val !== "count" &&
                             Number(val) !== -1 && (
@@ -843,7 +803,7 @@ export default function OrderTable() {
                       placeholder="Select a Type"
                       indicator={<KeyboardArrowDown />}
                       onChange={(event: any, value: string | null) => {
-                        handleTypeChange(value || ""); 
+                        handleTypeChange(value || "");
                       }}
                       value={type}
                       sx={{
@@ -911,10 +871,9 @@ export default function OrderTable() {
                 width: "100%",
                 borderRadius: "sm",
                 flexShrink: 1,
-                overflow: "auto",
-                minHeight: 0,
-                height: "100vw",
-                maxHeight: "490px",
+                overflow: "scroll",
+                minHeight: "490px",
+                margin: "0 auto",
               }}
             >
               <Table
@@ -922,6 +881,8 @@ export default function OrderTable() {
                 stickyHeader
                 hoverRow
                 sx={{
+                  width: "100%",
+                  tableLayout: "fixed",
                   "--TableCell-headBackground":
                     "var(--joy-palette-background-level1)",
                   "--Table-headerUnderlineThickness": "1px",
@@ -940,7 +901,7 @@ export default function OrderTable() {
                         padding: "12px 6px",
                       }}
                     >
-                       <Checkbox
+                      <Checkbox
                         onChange={handleSelectAll}
                         size="sm"
                         color="primary"
@@ -953,7 +914,7 @@ export default function OrderTable() {
                           ) &&
                           !currentTodos.every((todo) =>
                             selected.includes(todo._id)
-                          ) 
+                          )
                         }
                       />
                     </th>

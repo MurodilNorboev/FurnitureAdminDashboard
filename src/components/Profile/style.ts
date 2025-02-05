@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 export const MainContent = styled.div`
   flex: 1;
   padding-top: 50px;
@@ -26,7 +25,7 @@ export const MainContent = styled.div`
   .buttons {
     transform: translate(3sm) outline;
     :hover {
-      background-color: #FFF;
+      background-color: #fff;
     }
     :active {
       transform: scale(0.98);
@@ -43,17 +42,16 @@ export const MainContent = styled.div`
     justify-content: center;
     button {
       width: 100px;
-
     }
   }
 `;
 
 export const AddButton = styled.div`
-   width: 100%;
-   display: flex;
-   align-items: center;
-   justify-content: end;
-   margin-bottom: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-bottom: 30px;
 `;
 
 export const UserContent = styled.div`
@@ -99,7 +97,7 @@ export const Modal = styled.div`
   justify-content: center;
   top: 0;
   left: 0;
-  width: '100vw';
-  height: '100vh';
+  width: "100vw";
+  height: "100vh";
   z-index: 99999;
 `;

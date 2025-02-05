@@ -15,6 +15,7 @@ import { Navbar } from "./scenes";
 import Test from "./test/Tests";
 import Login from "./components/Profile/profile";
 import { SendBirdProvider } from "@sendbird/uikit-react";
+import AdminSections from "./components/Profile/admin/admin.section";
 
 export default function JoyOrderDashboardTemplates() {
   const userId = "Admin";
@@ -69,6 +70,7 @@ export default function JoyOrderDashboardTemplates() {
             <Route path="/user" element={<UserComponents />} />
             <Route path="/setting" element={<Settingcomponent />} />
             <Route path="profile" element={<Login />} />
+            <Route path="/admininfo" element={<AdminSections />} />
             <Route path="*" element={<ErrorComponent />} />
             <Route path="test" element={<Test />} />
           </Routes>

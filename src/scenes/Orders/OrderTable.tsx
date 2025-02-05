@@ -35,7 +35,7 @@ import {
 import ScaleLoader from "react-spinners/ScaleLoader";
 import SvgIcon from "@mui/joy/SvgIcon";
 import { styled } from "@mui/joy";
-import DeleteIcon from "@mui/icons-material/Delete";
+import OrderList from "./OrderList";
 
 const VisuallyHiddenInput = styled("input")`
   clip: rect(0 0 0 0);
@@ -102,24 +102,7 @@ const datas1 = [
   { label: "Category", field: "categories" },
 ];
 
-const useDebouncedSearch = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
-
 export default function OrderTable() {
-  const [data1, setData1] = useState<any[]>([]);
   const [filteredTypes, setFilteredTypes] = useState<string[]>([]);
   const [type, setType] = useState<string>("");
   const [formData, setFormData] = useState<any>({});
@@ -175,7 +158,7 @@ export default function OrderTable() {
     setLoadig(true);
     setTimeout(() => {
       setLoadig(false);
-    }, 100);
+    }, 5000);
   }, []);
 
   const handleView = (id: string) => {
@@ -274,26 +257,6 @@ export default function OrderTable() {
     } catch (error: any) {
       toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
       alert(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
-    }
-  };
-
-  const handleDelete = async (id: string, data1: string) => {
-    const token = localStorage.getItem("token");
-    try {
-      const { data } = await axios.delete<any>(
-        `${baseAPI}/product/cart-delet/${data1}/furniture/${id}`, // data1 cartId, id furnitureId
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (data.success) {
-        fetchData();
-        toast.success("Item deleted successfully");
-        console.log("Element muvaffaqiyatli o'chirildi.");
-      }
-    } catch (error: any) {
-      console.error("Xatolik yuz berdi:", error);
-      toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
     }
   };
 
@@ -673,10 +636,9 @@ export default function OrderTable() {
                 width: "100%",
                 borderRadius: "sm",
                 flexShrink: 1,
-                overflow: "auto",
-                minHeight: 0,
-                height: "100vw",
-                maxHeight: "490px",
+                overflow: "scroll",
+                minHeight: "490px",
+                margin: "0 auto",
               }}
             >
               <Table
@@ -684,6 +646,8 @@ export default function OrderTable() {
                 stickyHeader
                 hoverRow
                 sx={{
+                  width: "100%",
+                  tableLayout: "fixed",
                   "--TableCell-headBackground":
                     "var(--joy-palette-background-level1)",
                   "--Table-headerUnderlineThickness": "1px",
@@ -733,7 +697,6 @@ export default function OrderTable() {
                     <th style={{ width: 140, padding: "12px 6px" }}>Image</th>
                     <th style={{ width: 150, padding: "12px 6px" }}>date</th>
                     <th style={{ width: 80, padding: "12px 6px" }}></th>
-                    {/* <th style={{ width: 100, padding: "12px 6px" }}>info</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -772,24 +735,6 @@ export default function OrderTable() {
                           />
                         </td>
                         <td>{row.sana}</td>
-                        {/* <td>
-                          <button
-                            onClick={() => {
-                              const furnitureId = data1[0]._id;
-
-                              handleDelete(row._id, furnitureId);
-                            }}
-                            style={{ border: "none", background: "none" }}
-                          >
-                            <DeleteIcon
-                              style={{
-                                width: "40px",
-                                height: "25px",
-                                color: "gray",
-                              }}
-                            />
-                          </button>
-                        </td> */}
                         <td>
                           <Box
                             sx={{

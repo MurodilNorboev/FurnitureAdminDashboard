@@ -68,3 +68,12 @@ export const Avatars = styled.img`
   border: none;
   box-shadow: rgba(9, 30, 66, 0.25) 0px 0px 1px, rgba(9, 30, 66, 0.13) 0px 0px 0px 1px;
 `;
+
+export const NewAdmin = styled.div`
+  position: absolute;
+  width: 100%;
+  left: 400px;
+`;
+export const Item = styled.div`
+  color: black;
+`;

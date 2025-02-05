@@ -49,18 +49,8 @@ const useDebouncedSearch = (value: string, delay: number) => {
 };
 
 export default function OrderTable() {
-  const [filteredTypes, setFilteredTypes] = useState<string[]>([]);
-  const [type, setType] = useState<string>("");
-  const [formData, setFormData] = useState<any>({});
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [fields, setFields] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [selectID, setSelectID] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalImage, setModalImage] = useState<string>("");
   const [loading, setLoadig] = useState(false);
   const [viewItem, setViewItem] = useState<any | null>(null);
   ///// pagenation
@@ -75,6 +65,23 @@ export default function OrderTable() {
   const [error, setError] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
   const debouncedSearch = useDebouncedSearch(search, 10);
+  const [user, setUser] = useState<any | null>(null);
+
+  // admin
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const { data }: any = await axios.get(`${baseAPI}/user/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(data.data);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    getProfile();
+  }, []);
 
   useEffect(() => {
     // loading
@@ -86,16 +93,21 @@ export default function OrderTable() {
 
   const handleView = (id: string) => {
     const selectedItem = data.find((item) => item._id === id);
-    if (selectedItem) {
-      setViewItem(selectedItem);
+  
+    // user ning role ni tekshirish
+    if (user && user[0] && (user[0].role === "super_admin" || user[0].role === "admin_plus")) {
+      if (selectedItem) {
+        setViewItem(selectedItem);
+      }
+    } else {
+      alert("Role is incorrect or user is empty")
     }
   };
+  
 
   const closeModal = (e: React.MouseEvent) => {
     // image modal
     if (e.target === e.currentTarget) {
-      setIsModalOpen(false);
-      setModalImage("");
       setViewItem(null);
     }
   };
@@ -110,13 +122,6 @@ export default function OrderTable() {
       const datas: any = res.data;
       const data2 = datas.usersData;
       setData(data2);
-
-      if (data2.length > 0) {
-        const keys = Object.keys(data2[0]).filter(
-          (key) => key !== "_id" && key !== "sana" && key !== "yangilanish"
-        );
-        setFields(keys);
-      }
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -124,26 +129,11 @@ export default function OrderTable() {
 
   useEffect(() => {
     fetchData();
-  }, [debouncedSearch, type]);
+  }, [debouncedSearch]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-
-  useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const { data } = await axios.get(`${baseAPI}/user/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(data);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-    getProfile();
-  }, []);
 
   const handleDelete = async (id: string) => {
     const token = localStorage.getItem("token");
@@ -162,37 +152,6 @@ export default function OrderTable() {
     } catch (error: any) {
       console.error("Xatolik yuz berdi:", error);
       toast.error(error.response?.data?.error?.msg || "Xatolik yuz berdi.");
-    }
-  };
-
-  const uploadFile = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fieldName: string
-  ) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append(fieldName, e.target.files[0]);
-    const token = localStorage.getItem("token");
-
-    try {
-      const { data } = await axios.post<any>(`${baseAPI}/upload/`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (data.success) {
-        setFormData((prev: any) => ({
-          ...prev,
-          [fieldName]: data.filePaths[0],
-        }));
-        toast.success(`${fieldName} uploaded successfully`);
-      }
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.error?.msg || "Fayl yuklashda xatolik yuz berdi."
-      );
     }
   };
 
@@ -277,6 +236,7 @@ export default function OrderTable() {
       setSelected([]);
     }
   };
+  console.log(user);
 
   return (
     <Container>

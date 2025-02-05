@@ -42,13 +42,6 @@ export const Container = styled.div`
   display: flex;
   min-width: 250px;
 
-@media screen and (max-width: 1400px) {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-@media screen and (max-width: 620px) {
-    grid-template-columns: 1fr;
-}
 `;
 export const ModalContent = styled.div`
   display: flex;
