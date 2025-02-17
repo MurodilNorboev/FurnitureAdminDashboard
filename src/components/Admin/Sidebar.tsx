@@ -49,12 +49,12 @@ export const ItemData = [
     icon: <GroupRoundedIcon />,
     to: '/user', 
   },
-  {
-    id: 5,
-    a: 'Messages',
-    icon: <QuestionAnswerRoundedIcon />,
-    to: '/messages', 
-  },
+  // {
+  //   id: 5,
+  //   a: 'Messages',
+  //   icon: <QuestionAnswerRoundedIcon />,
+  //   to: '/messages', 
+  // },
 ];
 
 

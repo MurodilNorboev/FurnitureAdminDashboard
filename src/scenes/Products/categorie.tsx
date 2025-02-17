@@ -149,7 +149,7 @@ export default function OrderTable() {
     setLoadig(true);
     setTimeout(() => {
       setLoadig(false);
-    }, 100);
+    }, 5000);
   }, []);
 
   const handleView = (id: string) => {
