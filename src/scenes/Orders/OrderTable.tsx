@@ -417,7 +417,9 @@ export default function OrderTable() {
                   </div>
 
                   <ModalConent>
+                    {/* // select inputs */}
                     <div className="items ad">
+
                       <div className="selectwrap">
                         <h4>Categories:</h4>
                         <select
@@ -435,6 +437,7 @@ export default function OrderTable() {
                           ))}
                         </select>
                       </div>
+
                       <div className="selectwrap">
                         <h4>Type:</h4>
                         <select
@@ -452,6 +455,7 @@ export default function OrderTable() {
                       </div>
                     </div>
 
+                    {/* // product inputs */}
                     <div className="items c">
                       {fields.map(
                         (val, ind) =>
@@ -487,6 +491,7 @@ export default function OrderTable() {
                       )}
                     </div>
 
+                    {/* // img inputs */}
                     <div className="image-container">
                       {fields
                         .filter(

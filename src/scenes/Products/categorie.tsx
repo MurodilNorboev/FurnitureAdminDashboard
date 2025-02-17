@@ -45,13 +45,13 @@ import SvgIcon from "@mui/joy/SvgIcon";
 import toast, { Toaster } from "react-hot-toast";
 import {
   VisuallyHiddenInput,
-  categories,
   typecatalog,
   mockDatas,
   mockData,
   datas1,
   TYPES,
   NUMBER_FIELDS,
+  Data2,
 } from "./mock";
 
 export default function OrderTable() {
@@ -69,6 +69,9 @@ export default function OrderTable() {
   const [modalImage, setModalImage] = useState<string>("");
   const [loading, setLoadig] = useState(false);
   const [viewItem, setViewItem] = useState<any | null>(null);
+  const [filteredSubCategories, setFilteredSubCategories] = useState<string[]>(
+    []
+  );
   ///// pagenation
   const [todosPerPage] = useState(15);
   const totalPages = Math.ceil(data.length / todosPerPage);
@@ -83,7 +86,7 @@ export default function OrderTable() {
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   /// selecte Color function
   const dropdownRef = React.useRef<HTMLDivElement | null>(null);
-  
+
   const handleSelect = (color: any) => {
     setFormData((prev: any) => ({
       ...prev,
@@ -102,19 +105,33 @@ export default function OrderTable() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /// select categories function
+  // select categories
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategory = e.target.value;
     setSelectedCategory(selectedCategory);
-    setFormData({ ...formData, categories: selectedCategory, types: "" });
-    setType("");
+    setFormData({
+      ...formData,
+      categories: selectedCategory,
+      types: "",
+      subCategories: "",
+    }); // `subCategories` ni bo'sh qilish
+    setFilteredSubCategories([]); // Subcategoriesni bo‘shatish
   };
   const handleTypeChange = (newType: string) => {
     setType(newType);
-    setFormData({ ...formData, types: newType });
+    setFormData({ ...formData, types: newType, subCategories: "" }); 
     fetchData();
+    const selectedTypeData = Data2.find((item) => item.label === newType);
+    if (selectedTypeData) {
+      setFilteredSubCategories([
+        selectedTypeData.value1,
+        selectedTypeData.value2,
+        selectedTypeData.value3,
+      ]);
+    } else {
+      setFilteredSubCategories([]); // Yoki bo'sh ro'yxatni qaytarish
+    }
   };
-
   useEffect(() => {
     if (selectedCategory) {
       const category = typecatalog.find(
@@ -127,13 +144,12 @@ export default function OrderTable() {
       }
     }
   }, [selectedCategory]);
-
+  
   useEffect(() => {
-    // loading
     setLoadig(true);
     setTimeout(() => {
       setLoadig(false);
-    }, 5000);
+    }, 100);
   }, []);
 
   const handleView = (id: string) => {
@@ -252,10 +268,10 @@ export default function OrderTable() {
           setSelectID("");
           toast.success("Item updated successfully");
           setIsOpen(false);
-        } 
+        }
       }
     } catch (error: any) {
-      alert(error?.response?.data?.message)
+      alert(error?.response?.data?.message);
     }
   };
 
@@ -446,8 +462,8 @@ export default function OrderTable() {
                           <option value="">
                             <em>Select Category</em>
                           </option>
-                          {categories.map((cat) => (
-                            <option key={cat.value} value={cat.value}>
+                          {typecatalog.map((cat) => (
+                            <option key={cat.label} value={cat.label}>
                               {cat.label}
                             </option>
                           ))}
@@ -467,6 +483,29 @@ export default function OrderTable() {
                           {filteredTypes.map((type) => (
                             <option key={type} value={type}>
                               {type}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Sub Categories Select */}
+                      <div className="selectwrap">
+                        <h4 style={{ color: "black" }}>Sub Categories:</h4>
+                        <select
+                          style={{ background: "white" }}
+                          className="Select"
+                          value={formData.SubCategories || ""}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              SubCategories: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Select Sub Category</option>
+                          {filteredSubCategories.map((SubCategory) => (
+                            <option key={SubCategory} value={SubCategory}>
+                              {SubCategory}
                             </option>
                           ))}
                         </select>
@@ -643,6 +682,7 @@ export default function OrderTable() {
                             val !== "material" &&
                             val !== "image" &&
                             val !== "ColorSet" &&
+                            val !== "SubCategories" &&
                             !val.startsWith("image") &&
                             // val !== "count" &&
                             Number(val) !== -1 && (
@@ -872,7 +912,7 @@ export default function OrderTable() {
                 borderRadius: "sm",
                 flexShrink: 1,
                 overflow: "scroll",
-                minHeight: "490px",
+                maxHeight: "490px",
                 margin: "0 auto",
               }}
             >
@@ -1204,3 +1244,4 @@ export default function OrderTable() {
     </Container>
   );
 }
+

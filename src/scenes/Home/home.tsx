@@ -7,12 +7,10 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import { useEffect, useState } from "react";
 import Session from "./Container2/Sessions/session";
 import Country from "./Container2/Country/country";
-import Table from "./Container3/table";
 
 const ContainerWrapper = styled.div`
   padding: 30px 1px;
   min-height: 680px;
-  overflow: scroll;
 `;
 const Container1 = styled.div`
   gap: 20px;
@@ -89,8 +87,6 @@ function HomeComponent() {
             <Session />
             <Country data={data} labels={labels} flags={flags} />
           </Container2>
-
-          <Table />
         </>
       )}
     </ContainerWrapper>
