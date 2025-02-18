@@ -1,36 +1,34 @@
-import React from 'react';
-import FurnitureChat from './fur';
-import { SendBirdProvider } from '@sendbird/uikit-react'; 
+import React, { useState } from "react";
+import FurnitureChat from "./fur";
+import { SendBirdProvider } from "@sendbird/uikit-react";
+import emailjs from "emailjs-com";
+import SignIn from "../components/Form/SignIn";
+
+// const Tests = () => {
+//   const userId = "Admin";
+//   const accessToken = "accessTokenHere";
+
+//   return (
+//     <SendBirdProvider
+//       appId="894E1E6C-8871-47A1-935D-B9B0BDB46A25"
+//       userId={userId}
+//       accessToken={accessToken || undefined}
+//     >
+//       <FurnitureChat />
+//     </SendBirdProvider>
+//   );
+// }
+
+// export default Tests;
 
 const Tests = () => {
-  const userId = "Admin";
-  const accessToken = "accessTokenHere"; 
-  
   return (
-    <SendBirdProvider
-      appId="894E1E6C-8871-47A1-935D-B9B0BDB46A25" 
-      userId={userId}
-      accessToken={accessToken || undefined}
-    >
-      <FurnitureChat />
-    </SendBirdProvider>
+    <div>
+    </div>
   );
-}
+};
 
 export default Tests;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -648,7 +646,7 @@ export default Tests;
 //     //     "var person = (Name: \"John\", Age: 30);",
 //     //     "Tuple turidan foydalanib, bir nechta qiymatni bitta o'zgaruvchida saqlash mumkin.",
 //     //     "var person = (Name: \"John\", Age: 30);"
-//     //   ], 
+//     //   ],
 //     // ];
 
 //     // const data = [
@@ -705,7 +703,7 @@ export default Tests;
 //       ["call", "Funksiyani chaqirish", "greet.call(this);", "call metodi yordamida funktsiyalarni chaqirish mumkin."],
 //       ["apply", "Funksiyani parametrlar bilan chaqirish", "greet.apply(this, [a, b]);", "apply metodi yordamida funktsiyani parametrlar bilan chaqirish mumkin."],
 //       ["bind", "Funksiyaga kontekstni belgilash", "const boundFunc = greet.bind(obj);", "bind metodi yordamida funksiya kontekstini o'rnatish mumkin."],
-      
+
 //       // Obyektlar va massivlar bilan ishlash
 //       ["new", "Yangi obyekt yaratish", "const obj = new Object();", "new operatori yordamida yangi obyekt yaratish mumkin."],
 //       ["Object", "Obyekt yaratish", "const obj = { key: 'value' };", "Object yordamida yangi obyekt yaratish mumkin."],
@@ -730,27 +728,27 @@ export default Tests;
 //       ["splice", "Massivni o'zgartirish", "arr.splice(2, 1, 5);", "splice metodi massivda elementlarni o'zgartiradi yoki olib tashlaydi."],
 //       ["includes", "Massivda element mavjudligini tekshirish", "const result = arr.includes(5);", "includes metodi massivda element mavjudligini tekshiradi."],
 //       ["indexOf", "Massivda elementning indeksini topish", "const index = arr.indexOf(5);", "indexOf metodi massivda elementning indeksini topadi."],
-    
+
 //       // Boshqa yordamchi metodlar
 //       ["JSON.stringify", "JSON formatida stringga aylantirish", "JSON.stringify(obj);", "JSON.stringify yordamida obyektni JSON formatiga aylantirish mumkin."],
 //       ["JSON.parse", "JSON stringini obyektga aylantirish", "JSON.parse('{'key': 'value}');", "JSON.parse yordamida JSON formatidagi stringni obyektga aylantirishingiz mumkin."],
 //       ["setTimeout", "Vaqt o‘tganidan keyin amal bajarish", "setTimeout(() => { console.log('Hello'); }, 1000);", "setTimeout yordamida ma'lum vaqt o‘tganidan keyin amal bajariladi."],
 //       ["setInterval", "Vaqti-vaqti bilan amal bajarish", "setInterval(() => { console.log('Hello'); }, 1000);", "setInterval yordamida ma'lum vaqt oralig'ida amal bajariladi."],
-      
+
 //       // Asenkron dasturlash
 //       ["async", "Asenkron funktsiya e'lon qilish", "async function fetchData() { const response = await fetch(url); }", "async yordamida asenkron funktsiya yaratish mumkin."],
 //       ["await", "Asenkron operatsiyani kutish", "const data = await fetch(url);", "await yordamida asenkron operatsiyaning yakunlanishini kutish mumkin."],
 //       ["Promise", "Asenkron operatsiyalarni boshqarish", "const promise = new Promise((resolve, reject) => { resolve('Success'); });", "Promise yordamida asenkron operatsiyalarni boshqarish mumkin."],
 //       ["then", "Promise'dan qiymat olish", "promise.then(result => console.log(result));", "then yordamida Promise'dan qiymat olish mumkin."],
 //       ["catch", "Promise'da xatoliklarni ushlash", "promise.catch(error => console.log(error));", "catch yordamida Promise'dagi xatoliklarni ushlash mumkin."],
-    
+
 //       // Yangi qo'shilgan mavzular
 //       ["DOM manipulation", "DOM bilan ishlash", "document.getElementById('myElement').innerText = 'Hello';", "DOM manipulyatsiyasi yordamida sahifadagi elementlarni o'zgartirish mumkin."],
 //       ["Event Handling", "Voqealarni boshqarish", "document.getElementById('myButton').addEventListener('click', function() { console.log('Button clicked'); });", "Event Handling yordamida foydalanuvchi bilan interaktivlik yaratish mumkin."],
 //       ["ES6+", "ES6+ xususiyatlari", "const obj = { name: 'John', greet() { console.log('Hello'); } };", "ES6+ yordamida yangi sintaksis va imkoniyatlardan foydalanish mumkin."],
 //       ["Modules", "Modullar va import/export", "import { myFunction } from './myModule';", "Modul yordamida kodni ajratish va import/export orqali ishlatish mumkin."]
 //     ];
-    
+
 //     // const data = [
 //     //   [
 //     //     "cin",
@@ -980,19 +978,19 @@ export default Tests;
 //       body: data.slice(1), // Jadval ma'lumotlari
 //       theme: 'striped', // Jadvalning tasvirini belgilash
 //       bodyStyles: {
-//         lineWidth: 0.1, 
-//         lineColor: [0, 0, 0], 
-//         textColor: [0, 0, 0], 
+//         lineWidth: 0.1,
+//         lineColor: [0, 0, 0],
+//         textColor: [0, 0, 0],
 //         fillColor: '#FFF',
 //       },
 //       headStyles: {
-//         fillColor: '#395cf8', 
+//         fillColor: '#395cf8',
 //         textColor: [255, 255, 255],
-//         fontSize: 12, 
+//         fontSize: 12,
 //         halign: 'center',
 //       },
 //       tableId: '#FFF',
-//       tableLineColor: [0, 0, 0], 
+//       tableLineColor: [0, 0, 0],
 //       tableLineWidth: 0.1,
 //     });
 

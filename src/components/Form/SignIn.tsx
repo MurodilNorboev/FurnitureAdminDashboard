@@ -1,3 +1,4 @@
+import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -16,13 +17,8 @@ import ForgotPassword from "./comp/ForgotPassword";
 import AppTheme from "./theme/AppTheme";
 import ColorModeSelect from "./theme/ ColorModeSelect";
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from "./comp/CustomIcons";
-
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { baseAPI } from "../../utils/constants";
-import "react-toastify/dist/ReactToastify.css";
-import { LoginCon, LoginWrap } from "./loginSyle";
 import toast, { Toaster } from "react-hot-toast";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -77,14 +73,154 @@ interface Type {
   access_token: string;
 }
 
-const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
+// export default function SignIn(props: { disableCustomTheme?: boolean }) {
+//   const navigate = useNavigate();
+//   const [formData, setFormData] = React.useState<LoginData>({
+//     email: "",
+//     password: "",
+//   });
+//   const [error, setError] = React.useState<string | null>(null);
+//   const [loading, setLoading] = React.useState<boolean>(false);
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setFormData({
+//       ...formData,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setLoading(true);
+
+//     try {
+//       const token = localStorage.getItem("token");
+//       const response = await axios.post<Type>(
+//         baseAPI + "/user/login",
+//         formData,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       console.log(token, response.data.access_token);
+
+//       if (response.data.access_token) {
+//         toast.success("Successfully logged in!");
+//         setTimeout(() => {
+//           navigate("/home");
+//         }, 2000);
+//         localStorage.setItem("token", response.data.access_token);
+//       } else {
+//         setError("Token was not returned. Please try again.");
+//         console.log("Token was not returned. Please try again.");
+        
+//       }
+//     }  catch (err: any) {
+//       console.log(err.response.data.error.msg);
+      
+//       setError("Incorrect login or password.");
+//       setTimeout(() => {
+//         setError(null);
+//       }, 3000);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <AppTheme {...props}>
+//       <CssBaseline enableColorScheme />
+//       <SignInContainer direction="column" justifyContent="space-between">
+//         <ColorModeSelect
+//           sx={{ position: "fixed", top: "1rem", right: "1rem" }}
+//         />
+
+//         <Card variant="outlined">
+//           <SitemarkIcon />
+//           <Typography
+//             component="h1"
+//             variant="h4"
+//             sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+//           >
+//             Sign in
+//           </Typography>
+
+//           <Box
+//             component="form"
+//             noValidate
+//             onSubmit={handleSubmit}
+//             sx={{
+//               display: "flex",
+//               flexDirection: "column",
+//               width: "100%",
+//               gap: 2,
+//             }}
+//           >
+//             <FormControl>
+//               <FormLabel htmlFor="email">Email</FormLabel>
+//               <TextField
+//                 error={error !== null}
+//                 helperText={error}
+//                 type="email"
+//                 name="email"
+//                 placeholder="Email"
+//                 value={formData.email}
+//                 onChange={handleChange}
+//                 required
+//                 id="email"
+//                 autoComplete="email"
+//                 autoFocus
+//                 fullWidth
+//                 variant="outlined"
+//                 color={error ? "error" : "primary"}
+//               />
+//             </FormControl>
+//             <FormControl>
+//               <FormLabel htmlFor="password">Password</FormLabel>
+//               <TextField
+//                 error={error !== null}
+//                 helperText={error}
+//                 type="password"
+//                 name="password"
+//                 placeholder="Password"
+//                 value={formData.password}
+//                 onChange={handleChange}
+//                 required
+//                 id="password"
+//                 autoComplete="current-password"
+//                 autoFocus
+//                 fullWidth
+//                 variant="outlined"
+//                 color={error ? "error" : "primary"}
+//               />
+//             </FormControl>
+//             <Button
+//               onSubmit={handleSubmit}
+//               type="submit"
+//               disabled={loading}
+//               fullWidth
+//               variant="contained"
+//             >
+//               {loading ? "Sending..." : "Sign in"}
+//             </Button>
+//           </Box>
+//           <Divider>or</Divider>
+//         </Card>
+//       </SignInContainer>
+//     </AppTheme>
+//   );
+// }
+
+export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<LoginData>({
+  const [formData, setFormData] = React.useState<LoginData>({
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -133,11 +269,14 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
 
   return (
     <AppTheme {...props}>
+       <Toaster position="top-right" reverseOrder={false} />
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} />
       <SignInContainer direction="column" justifyContent="space-between">
+        <ColorModeSelect
+          sx={{ position: "fixed", top: "1rem", right: "1rem" }}
+        />
+
         <Card variant="outlined">
-          <Toaster position="top-right" reverseOrder={false} />
           <SitemarkIcon />
           <Typography
             component="h1"
@@ -146,6 +285,7 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
           >
             Sign in
           </Typography>
+
           <Box
             component="form"
             noValidate
@@ -195,10 +335,8 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
                 color={error ? "error" : "primary"}
               />
             </FormControl>
-
-            <Divider>or</Divider>
+            <input type="submit" value="Sign in" />
             <Button
-              onSubmit={handleSubmit}
               type="submit"
               disabled={loading}
               fullWidth
@@ -206,11 +344,10 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
             >
               {loading ? "Sending..." : "Sign in"}
             </Button>
-          </Box>
+          </Box> 
+          <Divider>or</Divider>
         </Card>
       </SignInContainer>
     </AppTheme>
   );
-};
-
-export default Login;
+}
