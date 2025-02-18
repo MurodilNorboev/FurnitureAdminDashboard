@@ -1,75 +1,96 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import { Content } from "../../all.Styles";
 import Chip from "@mui/joy/Chip";
 import Sheet from "@mui/joy/Sheet";
 import "../../styles.css";
-import '../../../../index.css'
+import "../../../../index.css";
+import { baseAPI } from "../../../../utils/constants";
 
 const ApexChart: React.FC = () => {
+  const [totalOrderItems, setTotalOrderItems] = useState<number>(0);
+  const [totalOrderItemsMonth, setTotalOrderItemsMonth] = useState<number>(0);
   const [state, setState] = useState<any>({
-    series: [
-      {
-        data: [
-          [new Date("2024-01-01").getTime(), 30.95],
-          [new Date("2024-01-15").getTime(), 31.34],
-          [new Date("2024-02-01").getTime(), 31.18],
-          [new Date("2024-02-15").getTime(), 31.85],
-          [new Date("2024-03-01").getTime(), 31.86],
-          [new Date("2024-03-15").getTime(), 32.28],
-          [new Date("2024-04-01").getTime(), 32.1],
-          [new Date("2024-04-15").getTime(), 33.27],
-          [new Date("2024-05-01").getTime(), 33.73],
-          [new Date("2024-05-15").getTime(), 33.22],
-          [new Date("2024-06-01").getTime(), 31.99],
-          [new Date("2024-06-15").getTime(), 32.41],
-          [new Date("2024-07-01").getTime(), 34.17],
-          [new Date("2024-07-15").getTime(), 33.82],
-          [new Date("2024-08-01").getTime(), 34.51],
-          [new Date("2024-08-15").getTime(), 33.16],
-          [new Date("2024-09-01").getTime(), 34.46],
-          [new Date("2024-09-15").getTime(), 34.48],
-          [new Date("2024-10-01").getTime(), 34.31],
-          [new Date("2024-10-15").getTime(), 34.7],
-          [new Date("2024-11-01").getTime(), 34.31],
-          [new Date("2024-11-15").getTime(), 33.46],
-          [new Date("2024-12-01").getTime(), 35.13],
-          [new Date("2024-12-15").getTime(), 34.9],
-        ],
-      },
-    ],
+    series: [],
     options: {
       chart: {
         height: 350,
         type: "line",
-        zoom: {
-          enabled: true,
-          type: "xy",
-        },
+        zoom: { enabled: true, type: "xy" },
       },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "smooth",
-        width: 3,
-      },
-      title: {
-        text: "All Data",
-        align: "left",
-      },
+      dataLabels: { enabled: false },
+      stroke: { curve: "smooth", width: 3 },
+      title: { text: "All Data", align: "left" },
       grid: {
-        row: {
-          colors: ["#f3f3f3", "transparent"],
-          opacity: 0.5,
-        },
+        row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 },
       },
       xaxis: {
         type: "datetime",
+        title: {
+          text: "Days",
+        },
+        labels: {
+          datetimeUTC: false,
+          format: "dd MMM", // Sanani o'zgartirilgan formatda ko'rsatish
+        },
       },
     },
     zoomLevel: 1,
   });
+  useEffect(() => {
+    fetch(`${baseAPI}/payment/getOrderList`)
+      .then((response) => response.json())
+      .then((data) => {
+        const totalItems = data.data[0].totalOrderItems;
+        const totalItemsMonth = data.data[0].totalOrderItemsMonth;
+        setTotalOrderItems(totalItems);
+        setTotalOrderItemsMonth(totalItemsMonth);
+
+        // Sanalarni olish
+        const sortedData = data.data[0].days.sort(
+          (a: any, b: any) => a.day - b.day
+        );
+
+        // Hozirgi kundan 1 oylik vaqt oralig'ini olish
+        const today = new Date();
+        const todayTimestamp = today.getTime(); // Hozirgi kunning timestampi
+        const last30Days = Array.from({ length: 30 }, (_, index) => {
+          const date = new Date(today);
+          date.setDate(today.getDate() - index);
+          return date;
+        });
+
+        // Grafik uchun ma'lumot tayyorlash
+        const chartData = last30Days.map((date) => {
+          const dayData = sortedData.find((day: any) => {
+            const dayDate = new Date(
+              today.getFullYear(),
+              today.getMonth(),
+              day.day
+            ); // 2025 yilni olib tashlash
+            // Taqqoslashda faqat yil, oy, kunni solishtirish
+            return (
+              dayDate.getFullYear() === date.getFullYear() &&
+              dayDate.getMonth() === date.getMonth() &&
+              dayDate.getDate() === date.getDate()
+            );
+          });
+
+          return [date.getTime(), dayData ? dayData.totalOrderItemsDay : 0];
+        });
+
+        setState((prevState: any) => ({
+          ...prevState,
+          series: [{ data: chartData }],
+        }));
+      })
+      .catch((error) => console.error("Error fetching order data: ", error));
+  }, []);
+
+  const percentageChange = (
+    (totalOrderItemsMonth / totalOrderItems) *
+    100
+  ).toFixed(2);
 
   return (
     <Sheet
@@ -89,9 +110,10 @@ const ApexChart: React.FC = () => {
               alignItems: "start",
             }}
           >
-            <h4>Contversions</h4>
+            <h4>Conversions</h4>
             <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-              <h1>13,740</h1>
+              <h1>{totalOrderItems.toLocaleString()}</h1>{" "}
+              {/* Showing total orders */}
               <Chip
                 variant="soft"
                 size="sm"
@@ -102,12 +124,11 @@ const ApexChart: React.FC = () => {
                   color: "#146725",
                 }}
               >
-                +25%
-              </Chip>
+                +{percentageChange}%
+              </Chip>{" "}
             </div>
             <h5>Sessions per day for the last 30 days</h5>
           </div>
-          <div></div>
         </Content>
         <div style={{ height: "200px" }}>
           <ReactApexChart
