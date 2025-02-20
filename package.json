@@ -27,6 +27,7 @@
     "console-browserify": "^1.2.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
     "emailjs-com": "^3.2.0",
     "framer-motion": "^12.1.0",
     "http-status-codes": "^2.3.0",
