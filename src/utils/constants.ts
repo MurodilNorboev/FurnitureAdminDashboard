@@ -1,5 +1,5 @@
 // utils/constants.ts
-export const baseAPI = process.env.REACT_APP_API_URL;
+export const baseAPI = 'https://www.murodil.shop';
 
 console.log(process.env.REACT_APP_API_URL);
 // export const baseAPI = 'http://109.71.242.131:8082'
