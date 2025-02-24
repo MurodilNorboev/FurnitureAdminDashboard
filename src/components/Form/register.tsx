@@ -21,7 +21,7 @@ interface Type {
   data: string;
   success: string;
 }
-const mockRoles = ["super_admin", "admin_plus", "admin", "basic_admin"];
+const mockRoles = ["admin_plus", "admin", "basic_admin"];
 
 const Register: React.FC = () => {
   const navigate = useNavigate();

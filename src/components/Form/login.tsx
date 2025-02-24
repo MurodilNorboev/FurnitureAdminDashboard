@@ -92,7 +92,6 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    console.log('bu api: ',baseAPI);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post<Type>(
