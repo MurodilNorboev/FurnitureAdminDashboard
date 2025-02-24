@@ -119,7 +119,7 @@ export default function OrderTable() {
   };
   const handleTypeChange = (newType: string) => {
     setType(newType);
-    setFormData({ ...formData, types: newType, subCategories: "" }); 
+    setFormData({ ...formData, types: newType, subCategories: "" });
     fetchData();
     const selectedTypeData = Data2.find((item) => item.label === newType);
     if (selectedTypeData) {
@@ -144,7 +144,7 @@ export default function OrderTable() {
       }
     }
   }, [selectedCategory]);
-  
+
   useEffect(() => {
     setLoadig(true);
     setTimeout(() => {
@@ -236,6 +236,7 @@ export default function OrderTable() {
     getProfile();
   }, []);
 
+  // jonatishda yangilanish
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
 
@@ -250,7 +251,10 @@ export default function OrderTable() {
         );
         if (data.success) {
           fetchData();
-          setFormData({});
+          // setFormData({});
+          setFormData({ ColorSet: [], categories: "", types: "", subCategories: "", });
+          setSelectID("");
+          setIsOpen(true);
 
           setIsOpen(false);
         }
@@ -295,6 +299,7 @@ export default function OrderTable() {
     }
   };
 
+  // uploadda yangilanish
   const uploadFile = async (
     e: React.ChangeEvent<HTMLInputElement>,
     fieldName: string
@@ -312,12 +317,18 @@ export default function OrderTable() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      // if (data.success) {
+      //   setFormData((prev: any) => ({
+      //     ...prev,
+      //     [fieldName]: data.filePaths[0],
+      //   }));
+      //   toast.success(`${fieldName} uploaded successfully`);
+      // }
       if (data.success) {
         setFormData((prev: any) => ({
           ...prev,
-          [fieldName]: data.filePaths[0],
+          [fieldName]: data.filePaths[0], // Image linkni yangilash
         }));
-        toast.success(`${fieldName} uploaded successfully`);
       }
     } catch (error: any) {
       toast.error(
@@ -1034,13 +1045,21 @@ export default function OrderTable() {
                               </MenuButton>
                               <Menu size="sm" sx={{ minWidth: 140 }}>
                                 <MenuItem
+                                  // onClick={() => {
+                                  //   const selectedItem = data.find(
+                                  //     (item) => item._id === row._id
+                                  //   );
+                                  //   setSelectID(row._id);
+                                  //   setFormData(selectedItem || {});
+                                  //   setIsOpen(true);
+                                  // }}
                                   onClick={() => {
-                                    const selectedItem = data.find(
-                                      (item) => item._id === row._id
-                                    );
-                                    setSelectID(row._id);
-                                    setFormData(selectedItem || {});
-                                    setIsOpen(true);
+                                    const selectedItem = data.find((item) => item._id === row._id);
+                                    if (selectedItem) {
+                                      setSelectID(row._id);
+                                      setFormData({ ...selectedItem }); // To'g'ri ma'lumot yuklash
+                                      setIsOpen(true);
+                                    }
                                   }}
                                 >
                                   Edit
@@ -1244,4 +1263,3 @@ export default function OrderTable() {
     </Container>
   );
 }
-
