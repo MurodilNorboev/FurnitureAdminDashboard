@@ -159,7 +159,9 @@ export const Data2 = [
     value3: "Toilet Brushes",
   },
 ];
+// set
 export const mockDatas = {
+  /// set
   colors: [
     { label: "Orange", value: "orange" },
     { label: "Blue", value: "blue" },
@@ -168,6 +170,7 @@ export const mockDatas = {
     { label: "White", value: "white" },
     { label: "Light beige", value: "light beige" },
   ],
+  // styles
   styles: [
     { label: "Minimalist", value: "minimalist" },
     { label: "Eco Style", value: "eco style" },
@@ -176,6 +179,7 @@ export const mockDatas = {
     { label: "Pink rose", value: "pink rose" },
     { label: "Hi Tech", value: "hi tech" },
   ],
+  // materila set
   materials: [
     { label: "Metal", value: "metal" },
     { label: "Plastic", value: "plastic" },
@@ -184,6 +188,7 @@ export const mockDatas = {
     { label: "Glass", value: "glass" },
     { label: "Rattan", value: "rattan" },
   ],
+  // color
   colorSet: [
     { label: "Orange", value: "orange" },
     { label: "Blue", value: "blue" },
@@ -193,6 +198,7 @@ export const mockDatas = {
     { label: "Light beige", value: "light beige" },
   ],
 };
+// name is label
 export const mockData: any = [
   "Features:",
   "Stock Number:",
@@ -249,6 +255,7 @@ export const TYPES = [
   "Bathroom Accessories",
   "Kitchen",
 ];
+// number type
 export const NUMBER_FIELDS = [
   "Height",
   "Width",
@@ -257,4 +264,8 @@ export const NUMBER_FIELDS = [
   "discount",
   "cost",
   "StockNumber",
+  "minWidth",
+  "maxWidth",
+  "minHeight",
+  "maxHeight"
 ];
