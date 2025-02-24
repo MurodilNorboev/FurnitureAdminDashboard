@@ -164,6 +164,7 @@ export const mockDatas = {
   /// set
   colors: [
     { label: "Orange", value: "orange" },
+    { label: "Green", value: "green" },
     { label: "Blue", value: "blue" },
     { label: "Dark Gray", value: "dark gray" },
     { label: "Black", value: "black" },
@@ -195,6 +196,7 @@ export const mockDatas = {
     { label: "Dark Gray", value: "dark gray" },
     { label: "Black", value: "black" },
     { label: "White", value: "white" },
+    { label: "Green", value: "green" },
     { label: "Light beige", value: "light beige" },
   ],
 };
