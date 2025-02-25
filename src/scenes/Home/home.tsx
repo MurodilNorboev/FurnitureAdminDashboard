@@ -89,7 +89,7 @@ function HomeComponent() {
   const getCountryFlagUrl = (countryName: string) => {
     const countryFlags: { [key: string]: string } = {
       Uzbekiston:
-        "https://upload.wikimedia.org/wikipedia/commons/4/42/O%E2%80%98zbekiston_bayrog%E2%80%98i_-_National_flag_of_Uzbekistan.png",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_Uzbekistan.svg/1200px-Flag_of_Uzbekistan.svg.png",
       "South Korea":
         "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/1920px-Flag_of_South_Korea.svg.png",
       "United States":
