@@ -13,8 +13,8 @@ export const VisuallyHiddenInput = styled("input")`
 `;
 export const categories = [
   { label: "Furniture", value: "furniture" },
-  { label: "Rooms", value: "rooms" },
 ];
+// categories select
 export const typecatalog = [
   {
     label: "Furniture",
@@ -37,18 +37,8 @@ export const typecatalog = [
       "Bathroom Accessories",
     ],
   },
-  {
-    label: "Rooms",
-    types: [
-      "Bathroom",
-      "Bedroom",
-      "Kitchen",
-      "Living Room",
-      "Dining Room",
-      "Playroom",
-    ],
-  },
 ];
+// types select
 export const Data2 = [
   {
     label: "Sofa",

@@ -252,7 +252,12 @@ export default function OrderTable() {
         if (data.success) {
           fetchData();
           // setFormData({});
-          setFormData({ ColorSet: [], categories: "", types: "", subCategories: "", });
+          setFormData({
+            ColorSet: [],
+            categories: "",
+            types: "",
+            subCategories: "",
+          });
           setSelectID("");
           setIsOpen(true);
 
@@ -342,76 +347,10 @@ export default function OrderTable() {
     setCurrentPage(page);
   };
   /// PDF
-  const handleDownloadPDF = () => {
-    if (selected.length === 0) {
-      setError("No selected!");
-      setTimeout(() => {
-        setError("");
-      }, 2000);
-      return;
-    }
-
-    const doc = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
-
-    doc.setFontSize(30);
-    doc.text("Furniture", 140, 20, { align: "center" });
-
-    const headers = ["Title", "Description", "Image URL", "Date", "ID"];
-
-    const rows = selected
-      .map((id, ind) => {
-        const todo = data.find((item) => item._id === id);
-        return todo
-          ? [todo.title, todo.desc, todo.image, todo.sana, todo._id]
-          : [];
-      })
-      .filter((row) => row.length > 0);
-
-    autoTable(doc, {
-      head: [headers],
-      body: rows,
-      startY: 30,
-      bodyStyles: {
-        lineWidth: 0.1,
-        lineColor: [0, 0, 0],
-        textColor: [0, 0, 0],
-        fillColor: "#FFF",
-      },
-      headStyles: {
-        fillColor: "#395cf8",
-        textColor: [255, 255, 255],
-        fontSize: 12,
-        halign: "center",
-      },
-      tableId: "#FFF",
-      tableLineColor: [0, 0, 0],
-      tableLineWidth: 0.1,
-    });
-
-    doc.save("table.pdf");
-    doc.save("todos.pdf");
-    setSelected([]);
-  };
+  const handleDownloadPDF = () => {};
   // Checkbox
-  const handleCheckboxChange = (_id: string) => {
-    setSelected((prevSelected) =>
-      prevSelected.includes(_id)
-        ? prevSelected.filter((selectedId) => selectedId !== _id)
-        : [...prevSelected, _id]
-    );
-  };
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const allIds = data.map((todo) => todo._id);
-      setSelected(allIds);
-    } else {
-      setSelected([]);
-    }
-  };
+  const handleCheckboxChange = (_id: string) => {};
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {};
 
   return (
     <Container>
@@ -456,7 +395,14 @@ export default function OrderTable() {
                             type.charAt(0).toUpperCase() + type.slice(1)
                           }`}
                     </h2>
-                    <h2 onClick={() => setIsOpen(false)}>X</h2>
+                    <h2
+                      onClick={() => {
+                        setFormData({});
+                        setIsOpen(false);
+                      }}
+                    >
+                      X
+                    </h2>
                   </div>
 
                   <ModalConent>
@@ -1054,7 +1000,9 @@ export default function OrderTable() {
                                   //   setIsOpen(true);
                                   // }}
                                   onClick={() => {
-                                    const selectedItem = data.find((item) => item._id === row._id);
+                                    const selectedItem = data.find(
+                                      (item) => item._id === row._id
+                                    );
                                     if (selectedItem) {
                                       setSelectID(row._id);
                                       setFormData({ ...selectedItem }); // To'g'ri ma'lumot yuklash
