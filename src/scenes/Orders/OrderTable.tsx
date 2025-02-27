@@ -676,103 +676,99 @@ export default function OrderTable() {
                 <th style={{ width: 80, padding: "12px 6px" }}></th>
               </tr>
             </thead>
-            {loading ? (
-              <tr style={{ position: "relative", height: "30vw" }}>
-                <td
-                  colSpan={7}
-                  style={{
-                    textAlign: "center",
-                    width: "100%",
-                    height: "100hv",
-                    position: "absolute",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    left: 0,
-                    bottom: "45%",
-                  }}
-                >
-                  <ScaleLoader color={"#1976e8d7"} loading={loading} />
-                </td>
-              </tr>
-            ) : (
-              <tbody>
-                {currentTodos.length > 0 ? (
-                  currentTodos.map((row, ind) => (
-                    <tr key={ind}>
-                      <td style={{ textAlign: "center" }}>
-                        <Checkbox
-                          size="sm"
-                          onChange={() => handleCheckboxChange(row._id)}
-                          checked={selected.includes(row._id)}
-                        />
-                      </td>
-                      <td style={{ overflow: "scroll" }}>
-                        <Typography level="body-xs">
-                          {(currentPage - 1) * todosPerPage + ind + 1}
-                        </Typography>
-                      </td>
-                      <td>
-                        <Typography level="body-xs">
-                          {row.categories}
-                        </Typography>
-                      </td>
-                      <td>{row.types}</td>
-                      <td>
-                        <img
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "5px",
-                            marginBottom: "-5px",
-                          }}
-                          onClick={() => openModal(row.image)}
-                          src={row.image}
-                          alt="image"
-                        />
-                      </td>
-                      <td>{row.sana}</td>
-                      <td>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: 2,
-                            alignItems: "center",
-                          }}
+            <tbody>
+              {loading ? (
+                <tr style={{ position: "relative", height: "30vw" }}>
+                  <td
+                    colSpan={7}
+                    style={{
+                      textAlign: "center",
+                      width: "100%",
+                      height: "100hv",
+                      position: "absolute",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      left: 0,
+                      bottom: "45%",
+                    }}
+                  >
+                    <ScaleLoader color={"#1976e8d7"} loading={loading} />
+                  </td>
+                </tr>
+              ) : currentTodos.length > 0 ? (
+                currentTodos.map((row, ind) => (
+                  <tr key={ind}>
+                    <td style={{ textAlign: "center" }}>
+                      <Checkbox
+                        size="sm"
+                        onChange={() => handleCheckboxChange(row._id)}
+                        checked={selected.includes(row._id)}
+                      />
+                    </td>
+                    <td style={{ overflow: "scroll" }}>
+                      <Typography level="body-xs">
+                        {(currentPage - 1) * todosPerPage + ind + 1}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">{row.categories}</Typography>
+                    </td>
+                    <td>{row.types}</td>
+                    <td>
+                      <img
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "5px",
+                          marginBottom: "-5px",
+                        }}
+                        onClick={() => openModal(row.image)}
+                        src={row.image}
+                        alt="image"
+                      />
+                    </td>
+                    <td>{row.sana}</td>
+                    <td>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 2,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Link
+                          onClick={() => handleView(row._id)}
+                          level="body-xs"
+                          component="button"
                         >
-                          <Link
-                            onClick={() => handleView(row._id)}
-                            level="body-xs"
-                            component="button"
-                          >
-                            View
-                          </Link>
-                        </Box>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr style={{ position: "relative", height: "30vw" }}>
-                    <td
-                      colSpan={7}
-                      style={{
-                        textAlign: "center",
-                        width: "100%",
-                        height: "100hv",
-                        position: "absolute",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        left: 0,
-                        bottom: "45%",
-                      }}
-                    >
-                      {loading === false
-                        ? "No search results found"
-                        : "Loading..."}
+                          View
+                        </Link>
+                      </Box>
                     </td>
                   </tr>
-                )}
-              </tbody>
-            )}
+                ))
+              ) : (
+                <tr style={{ position: "relative", height: "30vw" }}>
+                  <td
+                    colSpan={7}
+                    style={{
+                      textAlign: "center",
+                      width: "100%",
+                      height: "100hv",
+                      position: "absolute",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      left: 0,
+                      bottom: "45%",
+                    }}
+                  >
+                    {loading === false
+                      ? "No search results found"
+                      : "Loading..."}
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </Table>
         </Sheet>
 

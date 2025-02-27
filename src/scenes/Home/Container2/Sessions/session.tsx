@@ -135,6 +135,7 @@ const ApexChart: React.FC = () => {
             options={state.options}
             series={state.series}
             height={280}
+            type="line"
           />
         </div>
       </div>

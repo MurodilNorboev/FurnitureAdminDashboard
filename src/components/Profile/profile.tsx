@@ -173,6 +173,8 @@ const Profile = () => {
                     profile?.role === "super_admin" &&
                     val.item === "Total Admin"
                   ) {
+                    console.log(profile?.role);
+                    
                     navigate("/admininfo");
                   } else if (
                     profile?.role === "admin_plus" &&
@@ -184,7 +186,7 @@ const Profile = () => {
                   }
                 }}
               >
-                <h2>{val.item}</h2>
+                <h2>{val.item}</h2>dashboardadmin11n@gmail.com
                 <h5>{val.num}</h5>
               </Sheet>
             ))}
