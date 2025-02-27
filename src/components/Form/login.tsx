@@ -103,8 +103,6 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
           },
         }
       );
-      
-      console.log(token, response.data.access_token);
 
       if (response.data.access_token) {
         toast.success("Successfully logged in!");

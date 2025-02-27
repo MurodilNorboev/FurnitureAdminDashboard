@@ -76,8 +76,6 @@ export default function OrderTable() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(data.user);
-        console.log(data);
-        
       } catch (error) {
         console.error("Error fetching profile:", error);
       }
@@ -148,7 +146,6 @@ export default function OrderTable() {
       if (data.success) {
         fetchData();
         toast.success("Item deleted successfully");
-        console.log("Element muvaffaqiyatli o'chirildi.");
       }
     } catch (error: any) {
       console.error("Xatolik yuz berdi:", error);
@@ -237,7 +234,6 @@ export default function OrderTable() {
       setSelected([]);
     }
   };
-  console.log(user);
 
   return (
     <Container>

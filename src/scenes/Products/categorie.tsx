@@ -296,7 +296,6 @@ export default function OrderTable() {
       if (data.success) {
         fetchData();
         toast.success("Item deleted successfully");
-        console.log("Element muvaffaqiyatli o'chirildi.");
       }
     } catch (error: any) {
       console.error("Xatolik yuz berdi:", error);

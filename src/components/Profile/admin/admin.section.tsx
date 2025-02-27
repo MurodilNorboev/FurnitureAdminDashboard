@@ -26,7 +26,7 @@ export default function AdminSections() {
         setTimeout(() => setLoadig(false), 500);
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Error occurred while connecting to the server");
     }
   };
 

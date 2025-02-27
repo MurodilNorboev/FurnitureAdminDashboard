@@ -49,8 +49,6 @@ function HomeComponent() {
         if (result.locations) {
           const newLabels = result.locations.map((item: any) => item._id);
           const newData = result.locations.map((item: any) => item.count);
-          console.log(newData, newLabels);
-
           const newFlags = newLabels.map((country: any) =>
             getCountryFlagUrl(country)
           );
