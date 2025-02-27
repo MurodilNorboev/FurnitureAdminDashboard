@@ -120,6 +120,7 @@ export default function OrderTable() {
     setLoadig(true);
   };
   const handleTypeChange = (newType: string) => {
+    setCurrentPage(1);
     setType(newType);
     setFormData({ ...formData, types: newType, subCategories: "" });
     setLoadig(true);
@@ -218,6 +219,7 @@ export default function OrderTable() {
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentPage(1);
     setSearch(e.target.value);
   };
 
