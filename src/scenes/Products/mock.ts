@@ -11,9 +11,7 @@ export const VisuallyHiddenInput = styled("input")`
   white-space: nowrap;
   width: 1px;
 `;
-export const categories = [
-  { label: "Furniture", value: "furniture" },
-];
+export const categories = [{ label: "Furniture", value: "furniture" }];
 // categories select
 export const typecatalog = [
   {
@@ -236,7 +234,7 @@ export const TYPES = [
   "Storage",
   "Lighting",
   "Decor",
-  "Textile",
+  "Textiles",
   "Mirrors",
   "Wall Art",
   "Clock",
@@ -259,5 +257,5 @@ export const NUMBER_FIELDS = [
   "minWidth",
   "maxWidth",
   "minHeight",
-  "maxHeight"
+  "maxHeight",
 ];
