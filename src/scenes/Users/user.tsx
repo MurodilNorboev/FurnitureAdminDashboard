@@ -75,7 +75,9 @@ export default function OrderTable() {
         const { data }: any = await axios.get(`${baseAPI}/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUser(data.data);
+        setUser(data.user);
+        console.log(data);
+        
       } catch (error) {
         console.error("Error fetching profile:", error);
       }
