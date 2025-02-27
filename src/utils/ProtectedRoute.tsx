@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import { baseAPI } from "./constants";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 interface VerifyTokenResponse {
   success: boolean;
@@ -33,7 +34,19 @@ const ProtectedRoute = () => {
     verifyToken();
   }, [token]);
 
-  if (isValid === null) return <div>Loading...</div>;
+  if (isValid === null) return (
+    <div
+    style={{
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <ScaleLoader color={"#1976e8d7"} />
+  </div>
+  )
 
   return isValid ? <Outlet /> : <Navigate to="/login" replace />;
 };

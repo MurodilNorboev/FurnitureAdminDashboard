@@ -5,7 +5,6 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import { useEffect, useState } from "react";
 import Session from "./Container2/Sessions/session";
 import Country from "./Container2/Country/country";
-import axios from "axios";
 import { baseAPI } from "../../utils/constants";
 
 const ContainerWrapper = styled.div`

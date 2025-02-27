@@ -305,7 +305,7 @@ export default function OrderTable() {
   };
 
   // uploadda yangilanish
-  const uploadFile = async (
+  const uploadFile1 = async (
     e: React.ChangeEvent<HTMLInputElement>,
     fieldName: string
   ) => {
@@ -339,6 +339,45 @@ export default function OrderTable() {
       toast.error(
         error.response?.data?.error?.msg || "Fayl yuklashda xatolik yuz berdi."
       );
+    }
+  };
+
+  const uploadFile = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: string
+  ) => {
+    if (!e.target.files?.length) {
+      alert("No file selected.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append(fieldName, e.target.files[0]);
+
+    try {
+      const { data }: any = await axios.post(`${baseAPI}/upload`, formData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      if (data.success) {
+        if (
+          fieldName === "image" ||
+          fieldName === "image1" ||
+          fieldName === "image2" ||
+          fieldName === "image3" ||
+          fieldName === "image4"
+        ) {
+          setFormData((prev: any) => ({
+            ...prev,
+            [fieldName]: data.filePaths[0],
+          }));
+        }
+        toast.success(`${fieldName} uploaded successfully!`);
+      } else {
+        toast.error("File upload failed.");
+      }
+    } catch (error) {
+      console.error("File upload error:", error);
+      alert("File upload failed. Please try again.");
     }
   };
 
