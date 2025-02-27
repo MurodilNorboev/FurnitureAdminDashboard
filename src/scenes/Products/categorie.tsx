@@ -325,7 +325,8 @@ export default function OrderTable() {
           fieldName === "image1" ||
           fieldName === "image2" ||
           fieldName === "image3" ||
-          fieldName === "image4"
+          fieldName === "image4" ||
+          fieldName === "videos1"
         ) {
           setFormData((prev: any) => ({
             ...prev,
@@ -677,7 +678,12 @@ export default function OrderTable() {
 
                 <div className="image-container">
                   {fields
-                    .filter((val) => val === "image" || val.startsWith("image"))
+                    .filter(
+                      (val) =>
+                        val === "image" ||
+                        val.startsWith("image") ||
+                        val === "videos1"
+                    )
                     .slice(0, 8)
                     .map((val, ind) => (
                       <div key={ind} className="item">
@@ -707,23 +713,35 @@ export default function OrderTable() {
                               </SvgIcon>
                             }
                           >
-                            Upload a file
+                            {val.startsWith("image")
+                              ? "Upload a image"
+                              : "Upload a video"}
                             <VisuallyHiddenInput
                               type="file"
                               onChange={(e) => uploadFile(e, val)}
                             />
                           </Button>
                           {formData[val] ? (
-                            <img
-                              className="images"
-                              src={formData[val]}
-                              alt=""
-                            />
+                            formData[val].endsWith(".mp4") ||
+                            formData[val].includes("videos1") ? (
+                              <video
+                                className="images"
+                                style={{ border: "1px solid red" }}
+                                src={formData[val]}
+                                controls
+                              />
+                            ) : (
+                              <img
+                                className="images"
+                                src={formData[val]}
+                                alt="Uploaded content"
+                              />
+                            )
                           ) : (
                             <img
                               className="images"
                               src="https://us.123rf.com/450wm/avaicon/avaicon2202/avaicon220200138/181341773-ic%C3%B4ne-d-image-signe-et-symbole-de-la-galerie-de-photos-ic%C3%B4ne-d-image.jpg?ver=6"
-                              alt="Placeholder"
+                              alt="Default placeholder"
                             />
                           )}
                         </div>
@@ -752,7 +770,7 @@ export default function OrderTable() {
             },
           }}
         >
-          <Box sx={{ flex: 1 }} >
+          <Box sx={{ flex: 1 }}>
             <FormLabel>Search for order</FormLabel>
 
             <div
