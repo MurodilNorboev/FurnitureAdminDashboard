@@ -52,7 +52,7 @@ export default function OrderTable() {
   const [data, setData] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const [loading, setLoadig] = useState(false);
-  const [viewItem, setViewItem] = useState<any | null>(null);
+  const [viewItem, setViewItem] = useState<any>(null);
   ///// pagenation
   const [todosPerPage] = useState(15);
   const totalPages = Math.ceil(data.length / todosPerPage);
@@ -65,7 +65,7 @@ export default function OrderTable() {
   const [error, setError] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
   const debouncedSearch = useDebouncedSearch(search, 10);
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   // admin
   useEffect(() => {
@@ -93,17 +93,16 @@ export default function OrderTable() {
 
   const handleView = (id: string) => {
     const selectedItem = data.find((item) => item._id === id);
-  
+
     // user ning role ni tekshirish
     if (user && user[0] && (user[0].role === "super_admin" || user[0].role === "admin_plus")) {
       if (selectedItem) {
         setViewItem(selectedItem);
       }
     } else {
-      alert("Role is incorrect or user is empty")
+      alert("Role is incorrect or user is empty");
     }
   };
-  
 
   const closeModal = (e: React.MouseEvent) => {
     // image modal
@@ -240,264 +239,261 @@ export default function OrderTable() {
 
   return (
     <Container>
-      <React.Fragment>
-        {loading ? (
-          <div
-            style={{
-              width: "100vw",
-              minHeight: "40rem",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <ScaleLoader color={"#1976e8d7"} loading={loading} />
-          </div>
-        ) : (
-          <ContainerWrapper>
-            <Box
-              className="SearchAndFilters-tabletUp"
-              sx={{
-                borderRadius: "sm",
-                py: 2,
-                display: { xs: "none", sm: "flex" },
-                flexWrap: "wrap",
-                gap: 1.5,
-                "& > *": {
-                  minWidth: { xs: "120px", md: "160px" },
-                },
-              }}
-            >
-              <FormControl sx={{ flex: 1 }} size="sm">
-                <FormLabel>Search for order</FormLabel>
+      <ContainerWrapper>
+        <Box
+          className="SearchAndFilters-tabletUp"
+          sx={{
+            borderRadius: "sm",
+            py: 2,
+            display: { xs: "none", sm: "flex" },
+            flexWrap: "wrap",
+            gap: 1.5,
+            "& > *": {
+              minWidth: { xs: "120px", md: "160px" },
+            },
+          }}
+        >
+          <FormControl sx={{ flex: 1 }} size="sm">
+            <FormLabel>Search for order</FormLabel>
 
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Input
-                    size="sm"
-                    placeholder="Search"
-                    startDecorator={<SearchIcon />}
-                    type="search"
-                    value={search}
-                    onChange={handleSearchChange}
-                    style={{ width: "220px" }}
-                  />
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "20px",
-                    }}
-                  >
-                    <div style={{ marginBottom: "-10px" }}>
-                      {error && <ErrorMessage>{error}</ErrorMessage>}
-                    </div>
-                    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                      <Button
-                        onClick={handleDownloadPDF}
-                        sx={{ width: "150px" }}
-                      >
-                        Download PDF
-                      </Button>
-                    </Box>
-                  </div>
-                </div>
-              </FormControl>
-            </Box>
-
-            <Sheet
-              className="OrderTableContainer"
-              variant="outlined"
-              sx={{
-                display: { xs: "none", sm: "initial" },
+            <div
+              style={{
+                display: "flex",
                 width: "100%",
-                borderRadius: "sm",
-                flexShrink: 1,
-                overflow: "auto",
-                minHeight: 0,
-                height: "100vw",
-                maxHeight: "490px",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Table
-                aria-labelledby="tableTitle"
-                stickyHeader
-                hoverRow
-                sx={{
-                  "--TableCell-headBackground":
-                    "var(--joy-palette-background-level1)",
-                  "--Table-headerUnderlineThickness": "1px",
-                  "--TableRow-hoverBackground":
-                    "var(--joy-palette-background-level1)",
-                  "--TableCell-paddingY": "4px",
-                  "--TableCell-paddingX": "8px",
+              <Input
+                size="sm"
+                placeholder="Search"
+                startDecorator={<SearchIcon />}
+                type="search"
+                value={search}
+                onChange={handleSearchChange}
+                style={{ width: "220px" }}
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
                 }}
               >
-                <thead>
-                  <tr>
-                    <th
-                      style={{
-                        width: 48,
-                        textAlign: "center",
-                        padding: "12px 6px",
-                      }}
-                    >
-                      <Checkbox
-                        onChange={handleSelectAll}
-                        size="sm"
-                        color="primary"
-                        checked={currentTodos.every((todo) =>
-                          selected.includes(todo._id)
-                        )}
-                        indeterminate={
-                          currentTodos.some((todo) =>
-                            selected.includes(todo._id)
-                          ) &&
-                          !currentTodos.every((todo) =>
-                            selected.includes(todo._id)
-                          )
-                        }
-                      />
-                    </th>
-                    <th style={{ width: 40, padding: "12px 6px" }}>
-                      <Link underline="none" color="primary" component="button">
-                        id
-                      </Link>
-                    </th>
-                    <th
-                      style={{
-                        width: "100vw",
-                        maxWidth: 100,
-                        padding: "12px 6px",
-                      }}
-                    >
-                      Name
-                    </th>
-                    <th
-                      style={{
-                        width: "100vw",
-                        maxWidth: 100,
-                        padding: "12px 6px",
-                      }}
-                    >
-                      LastName
-                    </th>
-                    <th
-                      style={{
-                        width: "100vw",
-                        maxWidth: 200,
-                        padding: "12px 6px",
-                      }}
-                    >
-                      email
-                    </th>
-                    <th
-                      style={{
-                        width: "100vw",
-                        maxWidth: 160,
-                        padding: "12px 6px",
-                      }}
-                    >
-                      Date
-                    </th>
-                    <th
-                      style={{
-                        width: "100vw",
-                        maxWidth: 70,
-                        padding: "12px 6px",
-                      }}
-                    ></th>
-                    <th
-                      style={{
-                        width: "100vw",
-                        maxWidth: 70,
-                        padding: "12px 6px",
-                      }}
-                    >
-                      info
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentTodos.length > 0 ? (
-                    currentTodos.map((row, ind) => (
-                      <tr key={ind}>
-                        <td style={{ textAlign: "center" }}>
-                          <Checkbox
-                            size="sm"
-                            onChange={() => handleCheckboxChange(row._id)}
-                            checked={selected.includes(row._id)}
-                          />
-                        </td>
-                        <td style={{ overflow: "scroll" }}>
-                          <Typography level="body-xs">
-                            {(currentPage - 1) * todosPerPage + ind + 1}
-                          </Typography>
-                        </td>
-                        <td>
-                          {" "}
-                          <Typography level="body-xs">
-                            {row.full_name}
-                          </Typography>
-                        </td>
-                        <td>
-                          <Typography level="body-xs">
-                            {row.lastName}
-                          </Typography>
-                        </td>
-                        <td>
-                          <Typography level="body-xs">{row.email}</Typography>
-                        </td>
-                        <td>
-                          <Typography level="body-xs">{row.sana}</Typography>
-                        </td>
-                        <td>
-                          <button
-                            onClick={() => handleDelete(row._id)}
-                            style={{ border: "none", background: "none" }}
-                          >
-                            <DeleteIcon
-                              style={{
-                                width: "40px",
-                                height: "25px",
-                                color: "gray",
-                              }}
-                            />
-                          </button>
-                        </td>
-                        <td>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              gap: 2,
-                              alignItems: "center",
+                <div style={{ marginBottom: "-10px" }}>
+                  {error && <ErrorMessage>{error}</ErrorMessage>}
+                </div>
+                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                  <Button onClick={handleDownloadPDF} sx={{ width: "150px" }}>
+                    Download PDF
+                  </Button>
+                </Box>
+              </div>
+            </div>
+          </FormControl>
+        </Box>
+
+        <Sheet
+          className="OrderTableContainer"
+          variant="outlined"
+          sx={{
+            display: { xs: "none", sm: "initial" },
+            width: "100%",
+            borderRadius: "sm",
+            flexShrink: 1,
+            overflow: "auto",
+            minHeight: 0,
+            height: "100vw",
+            maxHeight: "490px",
+          }}
+        >
+          <Table
+            aria-labelledby="tableTitle"
+            stickyHeader
+            hoverRow
+            sx={{
+              "--TableCell-headBackground":
+                "var(--joy-palette-background-level1)",
+              "--Table-headerUnderlineThickness": "1px",
+              "--TableRow-hoverBackground":
+                "var(--joy-palette-background-level1)",
+              "--TableCell-paddingY": "4px",
+              "--TableCell-paddingX": "8px",
+            }}
+          >
+            <thead>
+              <tr>
+                <th
+                  style={{
+                    width: 48,
+                    textAlign: "center",
+                    padding: "12px 6px",
+                  }}
+                >
+                  <Checkbox
+                    onChange={handleSelectAll}
+                    size="sm"
+                    color="primary"
+                    checked={currentTodos.every((todo) =>
+                      selected.includes(todo._id)
+                    )}
+                    indeterminate={
+                      currentTodos.some((todo) =>
+                        selected.includes(todo._id)
+                      ) &&
+                      !currentTodos.every((todo) => selected.includes(todo._id))
+                    }
+                  />
+                </th>
+                <th style={{ width: 40, padding: "12px 6px" }}>
+                  <Link underline="none" color="primary" component="button">
+                    id
+                  </Link>
+                </th>
+                <th
+                  style={{
+                    width: "100vw",
+                    maxWidth: 100,
+                    padding: "12px 6px",
+                  }}
+                >
+                  Name
+                </th>
+                <th
+                  style={{
+                    width: "100vw",
+                    maxWidth: 100,
+                    padding: "12px 6px",
+                  }}
+                >
+                  LastName
+                </th>
+                <th
+                  style={{
+                    width: "100vw",
+                    maxWidth: 200,
+                    padding: "12px 6px",
+                  }}
+                >
+                  email
+                </th>
+                <th
+                  style={{
+                    width: "100vw",
+                    maxWidth: 160,
+                    padding: "12px 6px",
+                  }}
+                >
+                  Date
+                </th>
+                <th
+                  style={{
+                    width: "100vw",
+                    maxWidth: 70,
+                    padding: "12px 6px",
+                  }}
+                ></th>
+                <th
+                  style={{
+                    width: "100vw",
+                    maxWidth: 70,
+                    padding: "12px 6px",
+                  }}
+                >
+                  info
+                </th>
+              </tr>
+            </thead>
+            {loading ? (
+              <tr style={{ position: "relative", height: "30vw" }}>
+                <td
+                  colSpan={7}
+                  style={{
+                    textAlign: "center",
+                    width: "100%",
+                    height: "100hv",
+                    position: "absolute",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    left: 0,
+                    bottom: "45%",
+                  }}
+                >
+                  <ScaleLoader color={"#1976e8d7"} loading={loading} />
+                </td>
+              </tr>
+            ) : (
+              <tbody>
+                {currentTodos.length > 0 ? (
+                  currentTodos.map((row, ind: number) => (
+                    <tr key={ind}>
+                      <td style={{ textAlign: "center" }}>
+                        <Checkbox
+                          size="sm"
+                          onChange={() => handleCheckboxChange(row._id)}
+                          checked={selected.includes(row._id)}
+                        />
+                      </td>
+                      <td style={{ overflow: "scroll" }}>
+                        <Typography level="body-xs">
+                          {(currentPage - 1) * todosPerPage + ind + 1}
+                        </Typography>
+                      </td>
+                      <td>
+                        {" "}
+                        <Typography level="body-xs">{row.full_name}</Typography>
+                      </td>
+                      <td>
+                        <Typography level="body-xs">{row.lastName}</Typography>
+                      </td>
+                      <td>
+                        <Typography level="body-xs">{row.email}</Typography>
+                      </td>
+                      <td>
+                        <Typography level="body-xs">{row.sana}</Typography>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => handleDelete(row._id)}
+                          style={{ border: "none", background: "none" }}
+                        >
+                          <DeleteIcon
+                            style={{
+                              width: "40px",
+                              height: "25px",
+                              color: "gray",
                             }}
+                          />
+                        </button>
+                      </td>
+                      <td>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 2,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Link
+                            onClick={() => handleView(row._id)}
+                            level="body-xs"
+                            component="button"
                           >
-                            <Link
-                              onClick={() => handleView(row._id)}
-                              level="body-xs"
-                              component="button"
-                            >
-                              View
-                            </Link>
-                          </Box>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
+                            View
+                          </Link>
+                        </Box>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr style={{ position: "relative", height: "30vw" }}>
                     <td
                       colSpan={7}
                       style={{
                         textAlign: "center",
                         width: "100%",
+                        height: "100hv",
                         position: "absolute",
                         justifyContent: "center",
                         alignItems: "center",
@@ -505,117 +501,119 @@ export default function OrderTable() {
                         bottom: "45%",
                       }}
                     >
-                      No search results found
+                      {loading === false
+                        ? "No search results found"
+                        : "Loading..."}
                     </td>
-                  )}
-                </tbody>
-              </Table>
-            </Sheet>
-
-            {viewItem && (
-              <ModalContent>
-                <UserContent>
-                  <ImgCon className="ImgCon">
-                    <img
-                      src="https://t3.ftcdn.net/jpg/10/58/16/08/240_F_1058160846_MxdSa2GeeVAF5A7Zt9X7Bp0dq0mlzeDe.jpg"
-                      alt=""
-                    />
-                    <h2>
-                      {viewItem.full_name} {viewItem.lastName}
-                    </h2>
-                  </ImgCon>
-
-                  <ModalCon className="ModalCon">
-                    <div className="info">
-                      <h3>Country:</h3>
-                      <h4>{viewItem.address.country}</h4>
-                    </div>
-                    <div className="info">
-                      <h3>Phone:</h3>
-                      <h4>{viewItem.phone_number}</h4>
-                    </div>
-                    <div className="info">
-                      <h3>City:</h3>
-                      <h4>{viewItem.address.city}</h4>
-                    </div>
-                    <div className="info">
-                      <h3>Street:</h3>
-                      <h4>{viewItem.address.street}</h4>
-                    </div>
-                    <div className="info">
-                      <h3>Apartmant:</h3>
-                      <h4>{viewItem.address.apartmant}</h4>
-                    </div>
-                    <div className="info">
-                      <h3>Zip_code:</h3>
-                      <h4>{viewItem.address.zip_code}</h4>
-                    </div>
-                    <div className="info">
-                      <h3>Comment:</h3>
-                      <h4>{viewItem.comment}</h4>
-                    </div>
-                  </ModalCon>
-                </UserContent>
-
-                <Buttonn onClick={closeModal}>X</Buttonn>
-              </ModalContent>
+                  </tr>
+                )}
+              </tbody>
             )}
+          </Table>
+        </Sheet>
 
-            <Box
-              className="Pagination-laptopUp"
-              sx={{
-                pt: 2,
-                gap: 1,
-                [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
-                display: { xs: "none", sm: "flex" },
-              }}
-            >
-              <Button
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                startDecorator={<KeyboardArrowLeftIcon />}
-                onClick={() => handlePagination(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Button>
+        {viewItem && (
+          <ModalContent>
+            <UserContent>
+              <ImgCon className="ImgCon">
+                <img
+                  src="https://t3.ftcdn.net/jpg/10/58/16/08/240_F_1058160846_MxdSa2GeeVAF5A7Zt9X7Bp0dq0mlzeDe.jpg"
+                  alt=""
+                />
+                <h2>
+                  {viewItem.full_name} {viewItem.lastName}
+                </h2>
+              </ImgCon>
 
-              <Box sx={{ flex: 1 }} />
-              {["1"].map((page, ind) => (
-                <React.Fragment key={ind}>
-                  <IconButton
-                    size="sm"
-                    variant={Number(page) ? "outlined" : "plain"}
-                    color="neutral"
-                  >
-                    {currentPage}
-                  </IconButton>
-                  <IconButton
-                    size="sm"
-                    variant={Number(page) ? "outlined" : "plain"}
-                    color="neutral"
-                  >
-                    {totalPages}
-                  </IconButton>
-                </React.Fragment>
-              ))}
-              <Box sx={{ flex: 1 }} />
+              <ModalCon className="ModalCon">
+                <div className="info">
+                  <h3>Country:</h3>
+                  <h4>{viewItem.address.country}</h4>
+                </div>
+                <div className="info">
+                  <h3>Phone:</h3>
+                  <h4>{viewItem.phone_number}</h4>
+                </div>
+                <div className="info">
+                  <h3>City:</h3>
+                  <h4>{viewItem.address.city}</h4>
+                </div>
+                <div className="info">
+                  <h3>Street:</h3>
+                  <h4>{viewItem.address.street}</h4>
+                </div>
+                <div className="info">
+                  <h3>Apartmant:</h3>
+                  <h4>{viewItem.address.apartmant}</h4>
+                </div>
+                <div className="info">
+                  <h3>Zip_code:</h3>
+                  <h4>{viewItem.address.zip_code}</h4>
+                </div>
+                <div className="info">
+                  <h3>Comment:</h3>
+                  <h4>{viewItem.comment}</h4>
+                </div>
+              </ModalCon>
+            </UserContent>
 
-              <Button
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                endDecorator={<KeyboardArrowRightIcon />}
-                onClick={() => handlePagination(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </Button>
-            </Box>
-          </ContainerWrapper>
+            <Buttonn onClick={closeModal}>X</Buttonn>
+          </ModalContent>
         )}
-      </React.Fragment>
+
+        <Box
+          className="Pagination-laptopUp"
+          sx={{
+            pt: 2,
+            gap: 1,
+            [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
+            display: { xs: "none", sm: "flex" },
+          }}
+        >
+          <Button
+            size="sm"
+            variant="outlined"
+            color="neutral"
+            startDecorator={<KeyboardArrowLeftIcon />}
+            onClick={() => handlePagination(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+
+          <Box sx={{ flex: 1 }} />
+          {["1"].map((page, ind: number) => (
+            <React.Fragment key={ind}>
+              <IconButton
+                size="sm"
+                variant={Number(page) ? "outlined" : "plain"}
+                color="neutral"
+              >
+                {currentPage}
+              </IconButton>
+              <IconButton
+                size="sm"
+                variant={Number(page) ? "outlined" : "plain"}
+                color="neutral"
+              >
+                {totalPages}
+              </IconButton>
+            </React.Fragment>
+          ))}
+          <Box sx={{ flex: 1 }} />
+
+          <Button
+            size="sm"
+            variant="outlined"
+            color="neutral"
+            endDecorator={<KeyboardArrowRightIcon />}
+            onClick={() => handlePagination(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </Box>
+      </ContainerWrapper>
     </Container>
   );
 }

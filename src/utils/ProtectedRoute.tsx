@@ -21,11 +21,14 @@ const ProtectedRoute = () => {
       }
 
       try {
-        const { data } = await axios.get<VerifyTokenResponse>(`${baseAPI}/user/verify-token`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await axios.get<VerifyTokenResponse>(
+          `${baseAPI}/user/verify-token`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        setIsValid(data.valid); 
+        setIsValid(data.valid);
       } catch (error) {
         setIsValid(false);
       }
@@ -34,19 +37,20 @@ const ProtectedRoute = () => {
     verifyToken();
   }, [token]);
 
-  if (isValid === null) return (
-    <div
-    style={{
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    }}
-  >
-    <ScaleLoader color={"#1976e8d7"} />
-  </div>
-  )
+  if (isValid === null)
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ScaleLoader color={"#1976e8d7"} />
+      </div>
+    );
 
   return isValid ? <Outlet /> : <Navigate to="/login" replace />;
 };

@@ -7,18 +7,24 @@ import Sheet from "@mui/joy/Sheet";
 import "../../../scenes/Home/styles.css";
 import Button from "@mui/joy/Button";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminSections() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<any[]>([]);
-  const [loading, setLoadig] = useState(false);
+  const [loading, setLoadig] = useState<any>(false);
 
   const fetchUser = async () => {
+    setLoadig(true);
     try {
       const token = localStorage.getItem("token");
       const { data }: any = await axios.get(`${baseAPI}/user/user-Statistics`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUser(data.data.allAdmins);
+      if (data.success) {
+        setUser(data.data.allAdmins);
+        setTimeout(() => setLoadig(false), 500);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -50,10 +56,6 @@ export default function AdminSections() {
 
   useEffect(() => {
     fetchUser();
-    setLoadig(true);
-    setTimeout(() => {
-      setLoadig(false);
-    }, 5000);
   }, []);
 
   if (user && user.length > 0 && user[0].role === "super_admin") {
@@ -73,9 +75,10 @@ export default function AdminSections() {
           </div>
         ) : (
           <MainContent style={{ overflow: "scroll" }}>
+            <Button onClick={() => navigate("/profile")} style={{position: "relative", marginTop: "20px"}}>Admin Panel</Button>
             <Toaster position="top-right" />
             {user.length > 0 ? (
-              user.map((val, ind) => (
+              user.map((val, ind: number) => (
                 <Section key={ind}>
                   <Sheet
                     className="Sheet6"
@@ -119,8 +122,21 @@ export default function AdminSections() {
         )}
       </>
     );
+  } else {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "80vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Access Denied
+      </div>
+    );
   }
 
   // Agar foydalanuvchi super_admin bo‘lmasa yoki user yo‘q bo‘lsa, bu qaytariladi
-  return <div>Access Denied</div>;
 }

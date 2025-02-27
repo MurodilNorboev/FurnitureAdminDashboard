@@ -31,6 +31,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchAdmin = async () => {
+      setLoading(true)
       try {
         const token = localStorage.getItem("token");
         if (!token) return navigate("/login");
@@ -42,7 +43,7 @@ const Profile = () => {
         );
         if (data?.success && data?.data) {
           setUserCount(data.data.adminCount);
-          toast.success("User found successfully.");
+          setTimeout(() => setLoading(false), 500);
         } else {
           toast.error("No data found.");
         }
@@ -82,9 +83,6 @@ const Profile = () => {
     fetchAdmin();
     fetchProfile();
     fetchUsersData();
-
-    setLoading(true);
-    setTimeout(() => setLoading(false), 5000);
   }, []);
 
   const logout = () => {
@@ -176,11 +174,13 @@ const Profile = () => {
                     val.item === "Total Admin"
                   ) {
                     navigate("/admininfo");
-                  } else if (profile?.role === "admin_plus" &&
-                    val.item === "Total Admin") {
+                  } else if (
+                    profile?.role === "admin_plus" &&
+                    val.item === "Total Admin"
+                  ) {
                     navigate("/admininfo");
                   } else {
-                    navigate('/user')
+                    navigate("/user");
                   }
                 }}
               >
@@ -193,7 +193,17 @@ const Profile = () => {
       )}
     </div>
   ) : (
-    <p>Ma'lumotlarni yuklayapmiz...</p>
+    <div
+      style={{
+        width: "100%",
+        height: "80vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <ScaleLoader color={"#1976e8d7"} loading={loading} />
+    </div>
   );
 };
 

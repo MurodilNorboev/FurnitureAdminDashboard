@@ -70,8 +70,9 @@ export const Avatars = styled.img`
 `;
 
 export const NewAdmin = styled.div`
-  position: absolute;
-  width: 100%;
+  width: auto;
+  flex: 1;
+  min-width: 150px;
   left: 400px;
 `;
 export const Item = styled.div`

@@ -9,9 +9,8 @@ import {
   StyledCalendar,
   Wrapper,
 } from "./navbar_sty";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Skeleton from "@mui/joy/Skeleton";
-import { useLocation } from "react-router-dom";
 import Box from "@mui/joy/Box";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Link from "@mui/joy/Link";
@@ -23,7 +22,6 @@ import "../../scenes/Home/styles.css";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { baseAPI } from "../../utils/constants";
-import styled from "styled-components";
 
 const MyCalendar = () => {
   const [loading, setLoading] = useState(false);

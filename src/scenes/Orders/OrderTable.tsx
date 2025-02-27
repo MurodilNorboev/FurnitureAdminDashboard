@@ -373,398 +373,391 @@ export default function OrderTable() {
 
   return (
     <Container>
-      <React.Fragment>
-        {loading ? (
-          <div
-            style={{
-              width: "100vw",
-              minHeight: "40rem",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+      <ContainerWrapper>
+        {isOpen && (
+          <OpenModalContainer
+            onClick={(e: any) => {
+              if (e.target === e.currentTarget) {
+                setIsOpen(false);
+              }
             }}
           >
-            <ScaleLoader color={"#1976e8d7"} loading={loading} />
-          </div>
-        ) : (
-          <ContainerWrapper>
-            {isOpen && (
-              <OpenModalContainer
-                onClick={(e: any) => {
-                  if (e.target === e.currentTarget) {
-                    setIsOpen(false);
-                  }
+            <ModalWrap>
+              <div
+                style={{
+                  paddingLeft: "15px",
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
                 }}
               >
-                <ModalWrap>
-                  <div
-                    style={{
-                      paddingLeft: "15px",
-                      display: "flex",
-                      width: "100%",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <h2>
-                      {selectID
-                        ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}`
-                        : `Add:  ${
-                            type.charAt(0).toUpperCase() + type.slice(1)
-                          }`}
-                    </h2>
-                    <h2 onClick={() => setIsOpen(false)}>X</h2>
-                  </div>
+                <h2>
+                  {selectID
+                    ? `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}`
+                    : `Add:  ${type.charAt(0).toUpperCase() + type.slice(1)}`}
+                </h2>
+                <h2 onClick={() => setIsOpen(false)}>X</h2>
+              </div>
 
-                  <ModalConent>
-                    {/* // select inputs */}
-                    <div className="items ad">
-
-                      <div className="selectwrap">
-                        <h4>Categories:</h4>
-                        <select
-                          className="Select"
-                          value={formData.categories || ""}
-                          onChange={handleCategoryChange}
-                        >
-                          <option value="">
-                            <em>Select Category</em>
-                          </option>
-                          {categories.map((cat) => (
-                            <option key={cat.value} value={cat.value}>
-                              {cat.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="selectwrap">
-                        <h4>Type:</h4>
-                        <select
-                          className="Select"
-                          value={formData.types || ""}
-                          onChange={(e) => handleTypeChange(e.target.value)}
-                        >
-                          <option value="">Select Type</option>
-                          {filteredTypes.map((type) => (
-                            <option key={type} value={type}>
-                              {type}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* // product inputs */}
-                    <div className="items c">
-                      {fields.map(
-                        (val, ind) =>
-                          val !== "categories" &&
-                          val !== "types" &&
-                          val !== "image" &&
-                          !val.startsWith("image") && (
-                            <div key={ind}>
-                              <h4 style={{ marginBottom: "5px" }}>
-                                {mockData[ind]}
-                              </h4>
-                              {NUMBER_FIELDS.includes(val) ? (
-                                <Input
-                                  type="number"
-                                  placeholder={
-                                    val.charAt(0).toUpperCase() + val.slice(1)
-                                  }
-                                  value={formData[val] || ""}
-                                  onChange={(e) => handleChange(e, val)}
-                                />
-                              ) : (
-                                <Input
-                                  type="text"
-                                  placeholder={
-                                    val.charAt(0).toUpperCase() + val.slice(1)
-                                  }
-                                  value={formData[val] || ""}
-                                  onChange={(e) => handleChange(e, val)}
-                                />
-                              )}
-                            </div>
-                          )
-                      )}
-                    </div>
-
-                    {/* // img inputs */}
-                    <div className="image-container">
-                      {fields
-                        .filter(
-                          (val) => val === "image" || val.startsWith("image")
-                        )
-                        .slice(0, 8)
-                        .map((val, ind) => (
-                          <div key={ind} className="item">
-                            <div className="data1 aaa">
-                              <Button
-                                className="buttonimag"
-                                component="label"
-                                role={undefined}
-                                tabIndex={-1}
-                                variant="outlined"
-                                color="neutral"
-                                startDecorator={
-                                  <SvgIcon>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={1.5}
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                                      />
-                                    </svg>
-                                  </SvgIcon>
-                                }
-                              >
-                                Upload a file
-                                <VisuallyHiddenInput
-                                  type="file"
-                                  onChange={(e) => uploadFile(e, val)}
-                                />
-                              </Button>
-                              {formData[val] ? (
-                                <img
-                                  className="images"
-                                  src={formData[val]}
-                                  alt=""
-                                />
-                              ) : (
-                                <img
-                                  className="images"
-                                  src="https://us.123rf.com/450wm/avaicon/avaicon2202/avaicon220200138/181341773-ic%C3%B4ne-d-image-signe-et-symbole-de-la-galerie-de-photos-ic%C3%B4ne-d-image.jpg?ver=6"
-                                  alt="Placeholder"
-                                />
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-
-                    <Button
-                      onClick={handleSubmit}
-                      style={{ marginTop: "1rem" }}
+              <ModalConent>
+                {/* // select inputs */}
+                <div className="items ad">
+                  <div className="selectwrap">
+                    <h4>Categories:</h4>
+                    <select
+                      className="Select"
+                      value={formData.categories || ""}
+                      onChange={handleCategoryChange}
                     >
-                      {selectID ? "Update Item" : "Add Item"}
-                    </Button>
-                  </ModalConent>
-                </ModalWrap>
-              </OpenModalContainer>
-            )}
-
-            <Box
-              className="SearchAndFilters-tabletUp"
-              sx={{
-                borderRadius: "sm",
-                py: 2,
-                display: { xs: "none", sm: "flex" },
-                flexWrap: "wrap",
-                gap: 1.5,
-                "& > *": {
-                  minWidth: { xs: "120px", md: "160px" },
-                },
-              }}
-            >
-              <FormControl sx={{ flex: 1 }} size="sm">
-                <FormLabel>Search for order</FormLabel>
-
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ display: "flex", gap: "20px" }}>
-                    <Input
-                      size="sm"
-                      placeholder="Search"
-                      startDecorator={<SearchIcon />}
-                      type="search"
-                      value={search}
-                      onChange={handleSearchChange}
-                      style={{ width: "220px" }}
-                    />
+                      <option value="">
+                        <em>Select Category</em>
+                      </option>
+                      {categories.map((cat) => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "20px",
-                    }}
-                  >
-                    <div style={{ marginBottom: "-10px" }}>
-                      {error && <ErrorMessage>{error}</ErrorMessage>}
-                    </div>
-                    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                      <Button
-                        onClick={handleDownloadPDF}
-                        sx={{ width: "150px" }}
-                      >
-                        Download PDF
-                      </Button>
-                    </Box>
-                    {user && (
-                      <Button
-                        variant="outlined"
-                        startDecorator={<Add />}
-                        onClick={() => {
-                          setIsOpen(true);
-                          setSelectID("");
-                        }}
-                        style={{ width: "150px" }}
-                      >
-                        Add Cart
-                      </Button>
-                    )}
+                  <div className="selectwrap">
+                    <h4>Type:</h4>
+                    <select
+                      className="Select"
+                      value={formData.types || ""}
+                      onChange={(e) => handleTypeChange(e.target.value)}
+                    >
+                      <option value="">Select Type</option>
+                      {filteredTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-              </FormControl>
-            </Box>
 
-            <Sheet
-              className="OrderTableContainer"
-              variant="outlined"
-              sx={{
-                display: { xs: "none", sm: "initial" },
+                {/* // product inputs */}
+                <div className="items c">
+                  {fields.map(
+                    (val, ind) =>
+                      val !== "categories" &&
+                      val !== "types" &&
+                      val !== "image" &&
+                      !val.startsWith("image") && (
+                        <div key={ind}>
+                          <h4 style={{ marginBottom: "5px" }}>
+                            {mockData[ind]}
+                          </h4>
+                          {NUMBER_FIELDS.includes(val) ? (
+                            <Input
+                              type="number"
+                              placeholder={
+                                val.charAt(0).toUpperCase() + val.slice(1)
+                              }
+                              value={formData[val] || ""}
+                              onChange={(e) => handleChange(e, val)}
+                            />
+                          ) : (
+                            <Input
+                              type="text"
+                              placeholder={
+                                val.charAt(0).toUpperCase() + val.slice(1)
+                              }
+                              value={formData[val] || ""}
+                              onChange={(e) => handleChange(e, val)}
+                            />
+                          )}
+                        </div>
+                      )
+                  )}
+                </div>
+
+                {/* // img inputs */}
+                <div className="image-container">
+                  {fields
+                    .filter((val) => val === "image" || val.startsWith("image"))
+                    .slice(0, 8)
+                    .map((val, ind) => (
+                      <div key={ind} className="item">
+                        <div className="data1 aaa">
+                          <Button
+                            className="buttonimag"
+                            component="label"
+                            role={undefined}
+                            tabIndex={-1}
+                            variant="outlined"
+                            color="neutral"
+                            startDecorator={
+                              <SvgIcon>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={1.5}
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                                  />
+                                </svg>
+                              </SvgIcon>
+                            }
+                          >
+                            Upload a file
+                            <VisuallyHiddenInput
+                              type="file"
+                              onChange={(e) => uploadFile(e, val)}
+                            />
+                          </Button>
+                          {formData[val] ? (
+                            <img
+                              className="images"
+                              src={formData[val]}
+                              alt=""
+                            />
+                          ) : (
+                            <img
+                              className="images"
+                              src="https://us.123rf.com/450wm/avaicon/avaicon2202/avaicon220200138/181341773-ic%C3%B4ne-d-image-signe-et-symbole-de-la-galerie-de-photos-ic%C3%B4ne-d-image.jpg?ver=6"
+                              alt="Placeholder"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+
+                <Button onClick={handleSubmit} style={{ marginTop: "1rem" }}>
+                  {selectID ? "Update Item" : "Add Item"}
+                </Button>
+              </ModalConent>
+            </ModalWrap>
+          </OpenModalContainer>
+        )}
+
+        <Box
+          className="SearchAndFilters-tabletUp"
+          sx={{
+            borderRadius: "sm",
+            py: 2,
+            display: { xs: "none", sm: "flex" },
+            flexWrap: "wrap",
+            gap: 1.5,
+            "& > *": {
+              minWidth: { xs: "120px", md: "160px" },
+            },
+          }}
+        >
+          <FormControl sx={{ flex: 1 }} size="sm">
+            <FormLabel>Search for order</FormLabel>
+
+            <div
+              style={{
+                display: "flex",
                 width: "100%",
-                borderRadius: "sm",
-                flexShrink: 1,
-                overflow: "scroll",
-                minHeight: "490px",
-                margin: "0 auto",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Table
-                aria-labelledby="tableTitle"
-                stickyHeader
-                hoverRow
-                sx={{
-                  width: "100%",
-                  tableLayout: "fixed",
-                  "--TableCell-headBackground":
-                    "var(--joy-palette-background-level1)",
-                  "--Table-headerUnderlineThickness": "1px",
-                  "--TableRow-hoverBackground":
-                    "var(--joy-palette-background-level1)",
-                  "--TableCell-paddingY": "4px",
-                  "--TableCell-paddingX": "8px",
+              <div style={{ display: "flex", gap: "20px" }}>
+                <Input
+                  size="sm"
+                  placeholder="Search"
+                  startDecorator={<SearchIcon />}
+                  type="search"
+                  value={search}
+                  onChange={handleSearchChange}
+                  style={{ width: "220px" }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
                 }}
               >
-                <thead>
-                  <tr>
-                    <th
-                      style={{
-                        width: 48,
-                        textAlign: "center",
-                        padding: "12px 6px",
-                      }}
-                    >
-                      <Checkbox
-                        onChange={handleSelectAll}
-                        size="sm"
-                        color="primary"
-                        checked={currentTodos.every((todo) =>
-                          selected.includes(todo._id)
-                        )}
-                        indeterminate={
-                          currentTodos.some((todo) =>
-                            selected.includes(todo._id)
-                          ) &&
-                          !currentTodos.every((todo) =>
-                            selected.includes(todo._id)
-                          )
-                        }
-                      />
-                    </th>
-                    <th style={{ width: 120, padding: "12px 6px" }}>
-                      <Link underline="none" color="primary" component="button">
-                        id
-                      </Link>
-                    </th>
-                    <th style={{ width: 140, padding: "12px 6px" }}>
-                      Categories
-                    </th>
-                    <th style={{ width: 140, padding: "12px 6px" }}>
-                      Product Type
-                    </th>
-                    <th style={{ width: 140, padding: "12px 6px" }}>Image</th>
-                    <th style={{ width: 150, padding: "12px 6px" }}>date</th>
-                    <th style={{ width: 80, padding: "12px 6px" }}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentTodos.length > 0 ? (
-                    currentTodos.map((row, ind) => (
-                      <tr key={ind}>
-                        <td style={{ textAlign: "center" }}>
-                          <Checkbox
-                            size="sm"
-                            onChange={() => handleCheckboxChange(row._id)}
-                            checked={selected.includes(row._id)}
-                          />
-                        </td>
-                        <td style={{ overflow: "scroll" }}>
-                          <Typography level="body-xs">
-                            {(currentPage - 1) * todosPerPage + ind + 1}
-                          </Typography>
-                        </td>
-                        <td>
-                          <Typography level="body-xs">
-                            {row.categories}
-                          </Typography>
-                        </td>
-                        <td>{row.types}</td>
-                        <td>
-                          <img
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              borderRadius: "5px",
-                              marginBottom: "-5px",
-                            }}
-                            onClick={() => openModal(row.image)}
-                            src={row.image}
-                            alt="image"
-                          />
-                        </td>
-                        <td>{row.sana}</td>
-                        <td>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              gap: 2,
-                              alignItems: "center",
-                            }}
+                <div style={{ marginBottom: "-10px" }}>
+                  {error && <ErrorMessage>{error}</ErrorMessage>}
+                </div>
+                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                  <Button onClick={handleDownloadPDF} sx={{ width: "150px" }}>
+                    Download PDF
+                  </Button>
+                </Box>
+                {user && (
+                  <Button
+                    variant="outlined"
+                    startDecorator={<Add />}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setSelectID("");
+                    }}
+                    style={{ width: "150px" }}
+                  >
+                    Add Cart
+                  </Button>
+                )}
+              </div>
+            </div>
+          </FormControl>
+        </Box>
+
+        <Sheet
+          className="OrderTableContainer"
+          variant="outlined"
+          sx={{
+            display: { xs: "none", sm: "initial" },
+            width: "100%",
+            borderRadius: "sm",
+            flexShrink: 1,
+            overflow: "scroll",
+            maxHeight: "490px",
+            margin: "0 auto",
+          }}
+        >
+          <Table
+            // aria-labelledby="tableTitle"
+            stickyHeader
+            hoverRow
+            sx={{
+              width: "100%",
+              tableLayout: "fixed",
+              maxHeight: "49px",
+              overflow: "scroll",
+              "--TableCell-headBackground":
+                "var(--joy-palette-background-level1)",
+              "--Table-headerUnderlineThickness": "1px",
+              "--TableRow-hoverBackground":
+                "var(--joy-palette-background-level1)",
+              "--TableCell-paddingY": "4px",
+              "--TableCell-paddingX": "8px",
+            }}
+          >
+            <thead>
+              <tr>
+                <th
+                  style={{
+                    width: 48,
+                    textAlign: "center",
+                    padding: "12px 6px",
+                  }}
+                >
+                  <Checkbox
+                    onChange={handleSelectAll}
+                    size="sm"
+                    color="primary"
+                    checked={currentTodos.every((todo) =>
+                      selected.includes(todo._id)
+                    )}
+                    indeterminate={
+                      currentTodos.some((todo) =>
+                        selected.includes(todo._id)
+                      ) &&
+                      !currentTodos.every((todo) => selected.includes(todo._id))
+                    }
+                  />
+                </th>
+                <th style={{ width: 120, padding: "12px 6px" }}>
+                  <Link underline="none" color="primary" component="button">
+                    id
+                  </Link>
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>Categories</th>
+                <th style={{ width: 140, padding: "12px 6px" }}>
+                  Product Type
+                </th>
+                <th style={{ width: 140, padding: "12px 6px" }}>Image</th>
+                <th style={{ width: 150, padding: "12px 6px" }}>date</th>
+                <th style={{ width: 80, padding: "12px 6px" }}></th>
+              </tr>
+            </thead>
+            {loading ? (
+              <tr style={{ position: "relative", height: "30vw" }}>
+                <td
+                  colSpan={7}
+                  style={{
+                    textAlign: "center",
+                    width: "100%",
+                    height: "100hv",
+                    position: "absolute",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    left: 0,
+                    bottom: "45%",
+                  }}
+                >
+                  <ScaleLoader color={"#1976e8d7"} loading={loading} />
+                </td>
+              </tr>
+            ) : (
+              <tbody>
+                {currentTodos.length > 0 ? (
+                  currentTodos.map((row, ind) => (
+                    <tr key={ind}>
+                      <td style={{ textAlign: "center" }}>
+                        <Checkbox
+                          size="sm"
+                          onChange={() => handleCheckboxChange(row._id)}
+                          checked={selected.includes(row._id)}
+                        />
+                      </td>
+                      <td style={{ overflow: "scroll" }}>
+                        <Typography level="body-xs">
+                          {(currentPage - 1) * todosPerPage + ind + 1}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography level="body-xs">
+                          {row.categories}
+                        </Typography>
+                      </td>
+                      <td>{row.types}</td>
+                      <td>
+                        <img
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "5px",
+                            marginBottom: "-5px",
+                          }}
+                          onClick={() => openModal(row.image)}
+                          src={row.image}
+                          alt="image"
+                        />
+                      </td>
+                      <td>{row.sana}</td>
+                      <td>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 2,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Link
+                            onClick={() => handleView(row._id)}
+                            level="body-xs"
+                            component="button"
                           >
-                            <Link
-                              onClick={() => handleView(row._id)}
-                              level="body-xs"
-                              component="button"
-                            >
-                              View
-                            </Link>
-                          </Box>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
+                            View
+                          </Link>
+                        </Box>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr style={{ position: "relative", height: "30vw" }}>
                     <td
                       colSpan={7}
                       style={{
                         textAlign: "center",
                         width: "100%",
+                        height: "100hv",
                         position: "absolute",
                         justifyContent: "center",
                         alignItems: "center",
@@ -772,157 +765,159 @@ export default function OrderTable() {
                         bottom: "45%",
                       }}
                     >
-                      No search results found
+                      {loading === false
+                        ? "No search results found"
+                        : "Loading..."}
                     </td>
-                  )}
-                </tbody>
-              </Table>
-            </Sheet>
-
-            {isModalOpen && (
-              <div
-                id="myModal"
-                onClick={closeModal}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "fixed",
-                  zIndex: 99999,
-                  left: 0,
-                  top: 0,
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "15px",
-                    right: "35px",
-                    color: "#f1f1f1",
-                    fontSize: "40px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                  }}
-                  onClick={closeModal}
-                >
-                  &times;
-                </span>
-                <img
-                  src={modalImage}
-                  alt="Modal Tasvir"
-                  style={{
-                    borderRadius: "20px",
-                    margin: "30px 20px",
-                    width: "100%",
-                    height: "100%",
-                    display: "block",
-                    maxWidth: "800px",
-                    maxHeight: "600px",
-                  }}
-                />
-              </div>
+                  </tr>
+                )}
+              </tbody>
             )}
+          </Table>
+        </Sheet>
 
-            {viewItem && (
-              <ModalContent>
-                <h2 style={{ paddingLeft: "20px" }}>{viewItem.categories}</h2>
-                <ImgCon>
-                  {[
-                    viewItem.image,
-                    viewItem.image1,
-                    viewItem.image2,
-                    viewItem.image3,
-                    viewItem.image4,
-                    viewItem.image5,
-                    viewItem.image6,
-                    viewItem.image7,
-                  ]
-                    .slice(0, 9)
-                    .filter(Boolean) // Faqat mavjud rasmlarni oladi
-                    .map((img, index) => (
-                      <img
-                        key={index}
-                        src={img.replace("http://https://", "https://")}
-                        alt={viewItem.title}
-                      />
-                    ))}
-                </ImgCon>
-
-                <ModalCon>
-                  <div className="Content">
-                    <div className="items">
-                      {datas1.map((item, index) => (
-                        <div key={index} className="item">
-                          <h3>{item.label}:</h3>
-                          <h4>{viewItem[item.field]}</h4>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </ModalCon>
-
-                <Buttonn onClick={closeModal}>X</Buttonn>
-              </ModalContent>
-            )}
-
-            <Box
-              className="Pagination-laptopUp"
-              sx={{
-                pt: 2,
-                gap: 1,
-                [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
-                display: { xs: "none", sm: "flex" },
+        {isModalOpen && (
+          <div
+            id="myModal"
+            onClick={closeModal}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "fixed",
+              zIndex: 99999,
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "35px",
+                color: "#f1f1f1",
+                fontSize: "40px",
+                fontWeight: "bold",
+                cursor: "pointer",
               }}
+              onClick={closeModal}
             >
-              <Button
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                startDecorator={<KeyboardArrowLeftIcon />}
-                onClick={() => handlePagination(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Button>
-
-              <Box sx={{ flex: 1 }} />
-              {["1"].map((page, ind) => (
-                <React.Fragment key={ind}>
-                  <IconButton
-                    size="sm"
-                    variant={Number(page) ? "outlined" : "plain"}
-                    color="neutral"
-                  >
-                    {currentPage}
-                  </IconButton>
-                  <IconButton
-                    size="sm"
-                    variant={Number(page) ? "outlined" : "plain"}
-                    color="neutral"
-                  >
-                    {totalPages}
-                  </IconButton>
-                </React.Fragment>
-              ))}
-              <Box sx={{ flex: 1 }} />
-
-              <Button
-                size="sm"
-                variant="outlined"
-                color="neutral"
-                endDecorator={<KeyboardArrowRightIcon />}
-                onClick={() => handlePagination(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </Button>
-            </Box>
-          </ContainerWrapper>
+              &times;
+            </span>
+            <img
+              src={modalImage}
+              alt="Modal Tasvir"
+              style={{
+                borderRadius: "20px",
+                margin: "30px 20px",
+                width: "100%",
+                height: "100%",
+                display: "block",
+                maxWidth: "800px",
+                maxHeight: "600px",
+              }}
+            />
+          </div>
         )}
-      </React.Fragment>
+
+        {viewItem && (
+          <ModalContent>
+            <h2 style={{ paddingLeft: "20px" }}>{viewItem.categories}</h2>
+            <ImgCon>
+              {[
+                viewItem.image,
+                viewItem.image1,
+                viewItem.image2,
+                viewItem.image3,
+                viewItem.image4,
+                viewItem.image5,
+                viewItem.image6,
+                viewItem.image7,
+              ]
+                .slice(0, 9)
+                .filter(Boolean) // Faqat mavjud rasmlarni oladi
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    src={img.replace("http://https://", "https://")}
+                    alt={viewItem.title}
+                  />
+                ))}
+            </ImgCon>
+
+            <ModalCon>
+              <div className="Content">
+                <div className="items">
+                  {datas1.map((item, index) => (
+                    <div key={index} className="item">
+                      <h3>{item.label}:</h3>
+                      <h4>{viewItem[item.field]}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ModalCon>
+
+            <Buttonn onClick={closeModal}>X</Buttonn>
+          </ModalContent>
+        )}
+
+        <Box
+          className="Pagination-laptopUp"
+          sx={{
+            pt: 2,
+            gap: 1,
+            [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
+            display: { xs: "none", sm: "flex" },
+          }}
+        >
+          <Button
+            size="sm"
+            variant="outlined"
+            color="neutral"
+            startDecorator={<KeyboardArrowLeftIcon />}
+            onClick={() => handlePagination(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+
+          <Box sx={{ flex: 1 }} />
+          {["1"].map((page, ind) => (
+            <React.Fragment key={ind}>
+              <IconButton
+                size="sm"
+                variant={Number(page) ? "outlined" : "plain"}
+                color="neutral"
+              >
+                {currentPage}
+              </IconButton>
+              <IconButton
+                size="sm"
+                variant={Number(page) ? "outlined" : "plain"}
+                color="neutral"
+              >
+                {totalPages}
+              </IconButton>
+            </React.Fragment>
+          ))}
+          <Box sx={{ flex: 1 }} />
+
+          <Button
+            size="sm"
+            variant="outlined"
+            color="neutral"
+            endDecorator={<KeyboardArrowRightIcon />}
+            onClick={() => handlePagination(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </Box>
+      </ContainerWrapper>
     </Container>
   );
 }
