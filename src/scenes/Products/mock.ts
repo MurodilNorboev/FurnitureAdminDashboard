@@ -193,7 +193,6 @@ export const mockData: any = [
   "Features:",
   "Stock Number:",
   "Desk1:",
-  "Video:",
   "Description:",
   "Min Width",
   "Max Width:",
