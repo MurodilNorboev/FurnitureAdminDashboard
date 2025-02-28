@@ -623,10 +623,10 @@ export default function OrderTable() {
                         val !== "Styles" &&
                         val !== "material" &&
                         val !== "image" &&
+                        val !== "videos1" &&
                         val !== "ColorSet" &&
                         val !== "SubCategories" &&
                         !val.startsWith("image") &&
-                        // val !== "count" &&
                         Number(val) !== -1 && (
                           <Input
                             type="text"
