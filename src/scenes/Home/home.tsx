@@ -92,9 +92,9 @@ function HomeComponent() {
       China:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTeDtzhkJE6Wa563YRAMZHmm3ay4LmOOnQdA&s",
       Russia:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Australia.svg/1920px-Flag_of_Australia.svg.png",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Russia.svg/800px-Flag_of_Russia.svg.png",
       Japan:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5b8GuKck0Wsdn1ncqXMS4u3-V0hHBRlnuRw&s",
+        "https://thumbs.dreamstime.com/b/%CE%B5%CE%B8%CE%BD%CE%B9%CE%BA%CE%AE-%CF%83%CE%B7%CE%BC%CE%B1%CE%AF%CE%B1-%CF%84%CE%B7%CF%82-%CE%B9%CE%B1%CF%80%CF%89%CE%BD%CE%AF%CE%B1%CF%82-6594258.jpg",
     };
 
     return (

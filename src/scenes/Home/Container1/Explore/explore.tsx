@@ -175,7 +175,7 @@ function LineChart() {
               color="danger"
               sx={{ height: "22px", border: "1px solid #d68888" }}
             >
-              {`+ ${dayUser}%`}
+              {`+ ${dayUser || 0}%`}
             </Chip>
           </div>
           <h5>Last 30 days</h5>
