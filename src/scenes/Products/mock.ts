@@ -237,7 +237,7 @@ export const TYPES = [
   "Textiles",
   "Mirrors",
   "Wall Art",
-  "Clock",
+  "Clocks",
   "Vases",
   "Candles",
   "Shelves",
