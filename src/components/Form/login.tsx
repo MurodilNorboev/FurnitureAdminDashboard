@@ -152,7 +152,9 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">
+                Email: dashboardadm11n@gmail.com
+              </FormLabel>
               <TextField
                 error={error !== null}
                 helperText={error}
@@ -171,7 +173,7 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">Password: Admin123!</FormLabel>
               <TextField
                 error={error !== null}
                 helperText={error}
@@ -194,7 +196,6 @@ const Login: React.FC = (props: { disableCustomTheme?: boolean }) => {
             <Button
               onSubmit={handleSubmit}
               type="submit"
-              disabled={loading}
               fullWidth
               variant="contained"
             >
